@@ -18,6 +18,8 @@ Conda
 conda create -n kadabra
 conda activate kadabra
 conda install python pip
+
+cd <path_to_this_repo>
 pip install -r requirements.txt
 ```
 
@@ -26,5 +28,7 @@ Mamba
 mamba create -n kadabra
 mamba activate kadabra
 mamba install python pip
+
+cd <path_to_this_repo>
 pip install -r requirements.txt
 ```
