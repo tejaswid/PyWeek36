@@ -32,3 +32,21 @@ mamba install python pip
 cd <path_to_this_repo>
 pip install -r requirements.txt
 ```
+
+
+## Running the game
+```bash
+cd <path_to_the_repo>
+cd TheGame
+python run_game.py
+```
+
+## Code structure
+
+### Folders
+- modules: Separate modules like game, player, game objects and assets.
+- resources: All resources like images, sounds, etc.
+
+The main game is written in `game.py`. This is like the stage. 
+The `GameObject` class in `game_objects.py` is the abstract class to define all individual objects in the game - player, enemy, etc.
+Assets for each of these objects are defined in the `GameAssets` class in `game_assets.py`.
