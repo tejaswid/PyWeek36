@@ -47,5 +47,6 @@ class GameAssets(object):
         # load images
         self.create_image_asset("img_player_ship", "images/player_ship.png", True)
         self.create_image_asset("img_bullet", "images/bullet.png", True)
+        self.create_image_asset("img_enemy", "images/enemy.png", True)
         
         
