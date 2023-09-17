@@ -45,6 +45,6 @@ class GameAssets(object):
         pyglet.resource.reindex()
 
         # load images
-        self.create_image_asset("img_robot", "images/player_ship.png", True)
+        self.create_image_asset("img_player_ship", "images/player_ship.png", True)
         
         
