@@ -25,10 +25,11 @@ class GameObject(pyglet.sprite.Sprite):
         self.collision_radius = 0   # circle collider radius
         self.collider_type = None   # "circle" or "polygon"
         self.event_handlers = []    # Tell the game handler about any event handlers
-        
+
         self.max_health = 100       # maximum health of the object
         self.current_health = self.max_health   # current health of the object
         self.damage = 10            # damage that this object can cause to other objects
+        self.damage_taken = 0       # damage that this object has taken from other objects
 
     def update_object(self, dt):
         """
@@ -75,6 +76,25 @@ class GameObject(pyglet.sprite.Sprite):
         Function to handle damage to this object
         :param damage: damage caused by the other object
         """
+        self.damage_taken = damage
         self.current_health -= damage
         if self.current_health <= 0:
             self.dead = True
+
+    def draw_damage_label(self, health_bar_batch):
+        if self.damage_taken > 0:
+            print("drawing damage label")
+            damage_label = pyglet.text.Label(
+                f"-{self.damage_taken}",
+                font_name='Arial',
+                font_size=12,
+                x=self.x,
+                y=self.y + self.height + 50,
+                anchor_x='center',
+                anchor_y='center',
+                color=(255, 0, 0, 255),
+                batch=health_bar_batch  # Use the health_bar_batch for rendering
+            )
+            self.damage_taken = 0
+            return damage_label
+        return None

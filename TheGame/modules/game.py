@@ -102,6 +102,12 @@ def run():
             batch=health_bar_batch,
         )
         health_bars_to_add = [health_bar]
+        
+        
+        damage_label = obj.draw_damage_label(health_bar_batch)
+        if damage_label is not None:
+            health_bars_to_add.append(damage_label)
+        
         health_bars.extend(health_bars_to_add)
 
     # update loop
