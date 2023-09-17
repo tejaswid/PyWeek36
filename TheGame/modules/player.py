@@ -20,13 +20,14 @@ class Player(GameObject):
         self.mouse_handler = mouse.MouseStateHandler()
         self.event_handlers = [self, self.key_handler, self.mouse_handler]
 
-        self.mouse_x = 1000
-        self.mouse_y = 500
+        self.speed = 1
+        self.velocity = [self.speed,self.speed]
 
 
     def update_object(self, dt):
-        if self.key_handler[key.LEFT]:
-            self.rotation -= 10 * dt
+        if self.key_handler[key.A]:
+            self.speed = 3 # small boost
+            self.update_velocity()
         if self.key_handler[key.RIGHT]:
             self.rotation += 10 * dt
         self.update_position(dt)
@@ -34,9 +35,14 @@ class Player(GameObject):
 
     # updates the position of the player
     def update_position(self,dt):
-        self.x += 1
-        self.y += 1
+        self.x += self.velocity[0]
+        self.y += self.velocity[1]
 
     # update rotation of the player based on mouse position
     def update_rotation(self, mouse_x, mouse_y):
         self.rotation = math.atan2(mouse_y-self.y, mouse_x-self.x) * -180 / math.pi
+
+    # update the velocity of the player - new velocity vector must be aligned with rotation
+    def update_velocity(self):
+        self.velocity[0] = math.cos(self.rotation * math.pi / 180)
+        self.velocity[1] = -math.sin(self.rotation * math.pi / 180)

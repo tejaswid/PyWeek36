@@ -44,14 +44,14 @@ def run():
     @window.event
     def on_key_press(symbol, modifiers):
         if symbol == key.A:
-            print('The "A" key was pressed.')
+            pass
 
 
     # handle mouse inputs
     @window.event
     def on_mouse_press(x, y, button, modifiers):
         if button == mouse.LEFT:
-            print('The left mouse button was pressed.')
+            pass
 
 
     @window.event
