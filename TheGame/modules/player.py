@@ -4,6 +4,7 @@ from pyglet.window import key
 from pyglet.window import mouse
 
 from modules.game_objects import GameObject
+from modules.bullet import Bullet
 
 class Player(GameObject):
 
@@ -54,4 +55,7 @@ class Player(GameObject):
             self.velocity[1] = self.speed
         if self.velocity[1] < -self.speed:
             self.velocity[1] = -self.speed
-        
+    
+    def fire_bullet(self):
+        bullet = Bullet(self.assets, x=self.x, y=self.y, batch=self.batch, group=self.group)
+        self.child_objects.append(bullet)
