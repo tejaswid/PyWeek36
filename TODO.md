@@ -8,12 +8,12 @@
 
 ## Player 
 - [x] spawn
-- [ ] movement
+- [ ] movement (partially done)
 - [ ] collision
 
 ## Bullet
 - [x] spawn
-- [ ] movement
+- [x] movement
 - [ ] collision
 - [ ] interaction with dark matter
 

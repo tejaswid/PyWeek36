@@ -52,7 +52,7 @@ def run():
     def on_mouse_press(x, y, button, modifiers):
         if button == mouse.LEFT:
             # create a bullet
-            player_1.fire_bullet()
+            player_1.fire_bullet(x, y)
 
 
     @window.event

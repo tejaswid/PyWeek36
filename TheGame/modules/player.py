@@ -21,7 +21,7 @@ class Player(GameObject):
         self.mouse_handler = mouse.MouseStateHandler()
         self.event_handlers = [self, self.key_handler, self.mouse_handler]
 
-        self.speed = 100
+        self.speed = 10
         self.velocity = [self.speed,0]
         self.acceleration_magnitude = 500
         self.acceleration = [0,0]
@@ -40,7 +40,8 @@ class Player(GameObject):
 
     # update rotation of the player based on mouse position
     def update_rotation(self, mouse_x, mouse_y):
-        self.rotation = math.atan2(mouse_y-self.y, mouse_x-self.x) * -180 / math.pi
+        # Note: - is required in the below code for ccw rotation. DO NOT REMOVE
+        self.rotation = -math.degrees(math.atan2(mouse_y-self.y, mouse_x-self.x))
 
     # update the velocity of the player - new velocity vector must be aligned with rotation
     def update_velocity(self, dt):
@@ -56,6 +57,8 @@ class Player(GameObject):
         if self.velocity[1] < -self.speed:
             self.velocity[1] = -self.speed
     
-    def fire_bullet(self):
+    def fire_bullet(self, target_x, target_y):
         bullet = Bullet(self.assets, x=self.x, y=self.y, batch=self.batch, group=self.group)
+        bullet.set_rotation(target_x, target_y)
+        bullet.set_velocity(target_x, target_y)
         self.child_objects.append(bullet)

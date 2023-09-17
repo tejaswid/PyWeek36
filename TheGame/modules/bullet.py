@@ -20,17 +20,37 @@ class Bullet(GameObject):
         self.event_handlers = [self, self.key_handler, self.mouse_handler]
 
         self.speed = 500
+        self.velocity = [0, 0]
+
+        self.rotation = 0
+
+    def set_rotation(self, target_x, target_y):
+        # Note: - is required in the below code for ccw rotation. DO NOT REMOVE
+        self.rotation = -math.degrees(math.atan2(target_y-self.y, target_x-self.x))
 
     def update_object(self, dt):
         # TODO add collision detection
-
-        self.update_velocity(dt)
         self.update_position(dt)
 
     # compute the velocity of the bullet
-    def update_velocity(self, dt):
-        pass
+    def set_velocity(self, target_x, target_y):
+        self.velocity = [0,0]
+        
+        # compute direction towards target
+        dir_x = target_x - self.x
+        dir_y = target_y - self.y
+        mag = math.sqrt(dir_x**2 + dir_y**2)
 
-    # update the position of the bullet based on the velocity
+        if mag != 0:
+            dir_x /= mag
+            dir_y /= mag
+
+        # set velocity
+        self.velocity[0] = dir_x * self.speed
+        self.velocity[1] = dir_y * self.speed
+
+    # update the position of the bullet based on the current velocity
     def update_position(self, dt):
+        self.x += self.velocity[0] * dt
+        self.y += self.velocity[1] * dt
         pass
