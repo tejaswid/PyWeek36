@@ -26,6 +26,9 @@ def run():
     # list of all objects in the simulation
     game_objects = []
 
+    # create an instance of a player
+    player_1 = Player(assets, x=200, y=500, batch=main_batch, group=groups[5])
+
     # change mouse cursor
     cursor = window.get_system_mouse_cursor(window.CURSOR_CROSSHAIR)
     window.set_mouse_cursor(cursor)
@@ -53,12 +56,13 @@ def run():
 
     @window.event
     def on_mouse_motion(x, y, dx, dy):
-        print(x,y)
+        player_1.update_rotation(x,y)
 
     # loads the main scene
     def load_main_scene():
-        # create an instance of a player
-        player_1 = Player(assets, x=200, y=500, batch=main_batch, group=groups[5])
+        # player was already created before
+        window.push_handlers(player_1.key_handler)
+        window.push_handlers(player_1.mouse_handler)
         game_objects.append(player_1)
     
 

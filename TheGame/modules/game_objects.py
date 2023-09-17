@@ -17,12 +17,13 @@ class GameObject(pyglet.sprite.Sprite):
         super(GameObject, self).__init__(*args, **kwargs)
 
         # Declaring all the member variables of the class
-        self.type = None            # Specifies the type of the object - robot, obstacles, lights etc.
+        self.type = None            # Specifies the type of the object - player, enemies, bullets etc.
         self.child_objects = []     # List of objects that can be spawned by this object
-        self.sim_state = None       # Simulation state object
+        self.sim_state = None       # State of the object - useful in a state machine
         self.dead = False           # whether this object has to be removed from screen or not
         self.collision_radius = 0   # circle collider radius
         self.collider_type = None   # "circle" or "polygon"
+        self.event_handlers = []    # Tell the game handler about any event handlers
 
     def update_object(self, dt):
         """
