@@ -17,17 +17,15 @@
 - [ ] collision
 - [ ] interaction with dark matter
 
+## Enemy
+- [ ] spawn
+- [x] movement
+- [ ] collision
 ## Dark matter
 - [ ] spawn
 - [ ] movement
 - [ ] collision
-
 ## Asteroids
-- [ ] spawn
-- [ ] movement
-- [ ] collision
-
-## Enemy
 - [ ] spawn
 - [ ] movement
 - [ ] collision

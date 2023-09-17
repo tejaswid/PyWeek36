@@ -4,6 +4,7 @@ from pyglet.window import mouse
 
 from modules.game_assets import GameAssets
 from modules.player import Player
+from modules.enemy import Enemy
 
 def run():
     print(pyglet.version)
@@ -28,6 +29,7 @@ def run():
 
     # create an instance of a player
     player_1 = Player(assets, x=200, y=500, batch=main_batch, group=groups[5])
+    enemy_1 = Enemy(assets, x=500, y=500, batch=main_batch, group=groups[5])
 
     # change mouse cursor
     cursor = window.get_system_mouse_cursor(window.CURSOR_CROSSHAIR)
@@ -65,7 +67,7 @@ def run():
         window.push_handlers(player_1.key_handler)
         window.push_handlers(player_1.mouse_handler)
         game_objects.append(player_1)
-    
+        game_objects.append(enemy_1)
 
     # update loop
     def update(dt):
@@ -76,6 +78,10 @@ def run():
             obj.update_object(dt)
             objects_to_add.extend(obj.child_objects)
             obj.child_objects = []  # clear the list
+
+            # if object is an enemy, seek the player
+            if obj.type == "enemy":
+                obj.seek_player(player_1.x, player_1.y)
 
         # add new objects
         game_objects.extend(objects_to_add)
