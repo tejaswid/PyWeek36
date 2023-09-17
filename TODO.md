@@ -2,15 +2,18 @@
 ## Base framework
 - [x] Initial game window
 - [x] Base classes
-- [ ] Display health and stats
+- [x] Display health and stats
+- [ ] Drawing assets
 - [ ] Score board
 - [ ] Titles
 - [ ] Story
+- [ ] Sound effects
+- [ ] Music
 
 ## Player 
 - [x] spawn
 - [ ] movement (partially done)
-- [ ] collision - damage handled, need to add rebound upon collision
+- [x] collision
 
 ## Bullet
 - [x] spawn
@@ -21,7 +24,7 @@
 ## Enemy
 - [ ] spawn - currently fixed. make it random.
 - [x] movement
-- [ ] collision - damage handled, need to add rebound upon collision
+- [x] collision
 ## Dark matter
 - [ ] spawn
 - [ ] movement
