@@ -23,18 +23,19 @@ class Player(GameObject):
         self.speed = 100
         self.velocity = [self.speed,0]
         self.acceleration_magnitude = 500
+        self.acceleration = [0,0]
 
 
     def update_object(self, dt):
+        self.acceleration = [0,0]
         if self.key_handler[key.A]:
             self.update_velocity(dt)
         self.update_position(dt)
         
-
     # updates the position of the player
     def update_position(self,dt):
-        self.x += self.velocity[0] * dt
-        self.y += self.velocity[1] * dt
+        self.x += self.velocity[0] * dt + 0.5 * self.acceleration[0] * dt**2
+        self.y += self.velocity[1] * dt + 0.5 * self.acceleration[1] * dt**2
 
     # update rotation of the player based on mouse position
     def update_rotation(self, mouse_x, mouse_y):
