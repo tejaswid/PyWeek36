@@ -21,7 +21,7 @@ class Player(GameObject):
         self.mouse_handler = mouse.MouseStateHandler()
         self.event_handlers = [self, self.key_handler, self.mouse_handler]
 
-        self.speed = 10
+        self.speed = 80
         self.velocity = [self.speed,0]
         self.acceleration_magnitude = 500
         self.acceleration = [0,0]
