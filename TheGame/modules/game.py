@@ -17,6 +17,7 @@ def run():
     # Store objects in a batch to load them efficiently
     main_batch = pyglet.graphics.Batch()
     health_bar_batch = pyglet.graphics.Batch()
+    damage_label_batch = pyglet.graphics.Batch()
 
     # health_bar = shapes.Rectangle(
     #         x=10,#obj.x - obj.width // 2,
@@ -42,6 +43,9 @@ def run():
     # list of health bar objects
     health_bars = []
 
+    # list of damage labels
+    damage_labels = []
+
     # create an instance of a player
     player_1 = Player(assets, x=200, y=500, batch=main_batch, group=groups[5])
     enemy_1 = Enemy(assets, x=1000, y=500, batch=main_batch, group=groups[5])
@@ -56,6 +60,7 @@ def run():
         window.clear()
         main_batch.draw()
         health_bar_batch.draw()
+        damage_label_batch.draw()
 
     # handle keyboard inputs
     @window.event
@@ -101,14 +106,16 @@ def run():
             color=(55, 55, 255, 255),
             batch=health_bar_batch,
         )
+        # the health bars need to be added to a list so that the objects do not go out of scope.
+        # this is because rendering using batch needs the objects to be in scope during the draw call.
         health_bars_to_add = [health_bar]
-        
-        
-        damage_label = obj.draw_damage_label(health_bar_batch)
-        if damage_label is not None:
-            health_bars_to_add.append(damage_label)
-        
         health_bars.extend(health_bars_to_add)
+
+        damage_label = obj.draw_damage_label(damage_label_batch)
+        if damage_label is not None:
+            damage_labels_to_add = [damage_label]
+            frames_persistent = 25
+            damage_labels.append(tuple((damage_labels_to_add, frames_persistent)))
 
     # update loop
     def update(dt):
@@ -140,6 +147,14 @@ def run():
 
         # remove dead objects
         game_objects[:] = [obj for obj in game_objects if not obj.dead]
+
+        # clean up damage labels
+        if len(damage_labels) > 0:
+            # damage_labels_new = damage_labels
+            for i in range(len(damage_labels)):
+                damage_labels[i] = (damage_labels[i][0], damage_labels[i][1] - 1)
+            # remove damage labels that have expired
+            damage_labels[:] = [obj for obj in damage_labels if obj[1] > 0]
 
         # draw health bar for all objects
         for obj in game_objects:
