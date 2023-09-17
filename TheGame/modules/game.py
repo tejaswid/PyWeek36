@@ -29,7 +29,7 @@ def run():
 
     # create an instance of a player
     player_1 = Player(assets, x=200, y=500, batch=main_batch, group=groups[5])
-    enemy_1 = Enemy(assets, x=500, y=500, batch=main_batch, group=groups[5])
+    enemy_1 = Enemy(assets, x=1000, y=500, batch=main_batch, group=groups[5])
 
     # change mouse cursor
     cursor = window.get_system_mouse_cursor(window.CURSOR_CROSSHAIR)
@@ -83,8 +83,21 @@ def run():
             if obj.type == "enemy":
                 obj.seek_player(player_1.x, player_1.y)
 
+            # check collision with all other objects
+            for other_obj in game_objects:
+                if other_obj is not obj:
+                    obj.handle_collision_with(other_obj)
+
         # add new objects
         game_objects.extend(objects_to_add)
+
+        for obj in game_objects:
+            if obj.dead:
+                print("removing ", obj.type)
+                obj.batch = None
+
+        # remove dead objects
+        game_objects[:] = [obj for obj in game_objects if not obj.dead]
 
 
     load_main_scene()

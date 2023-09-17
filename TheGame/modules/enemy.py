@@ -11,11 +11,18 @@ class Enemy(GameObject):
         self.assets = game_assets
         self.type = "enemy"
 
+        # movement
         self.speed = 50
         self.player_x = None
         self.player_y = None
-
         self.velocity = [0, 0]
+        # collision
+        self.collision_radius = 5
+        # health
+        self.max_health = 100
+        self.current_health = self.max_health
+        # damage to other objects
+        self.damage = 50
 
     def seek_player(self, player_x, player_y):
         self.player_x = player_x
@@ -44,3 +51,18 @@ class Enemy(GameObject):
     def update_position(self, dt):
         self.x += self.velocity[0] * dt
         self.y += self.velocity[1] * dt
+
+    def handle_collision_with(self, other_object):
+        # handle collision with bullet
+        if other_object.type == "bullet":
+            if self.has_collided_with(other_object):
+                print("enemy collided with bullet")
+                self.take_damage(other_object)
+                # remove bullet. again needed to possibly overcome the framerate issue
+                other_object.dead = True
+
+        if other_object.type == "player":
+            if self.has_collided_with(other_object):
+                print("enemy collided with player")
+                self.take_damage(other_object)
+        

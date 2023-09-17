@@ -21,11 +21,18 @@ class Player(GameObject):
         self.mouse_handler = mouse.MouseStateHandler()
         self.event_handlers = [self, self.key_handler, self.mouse_handler]
 
+        # movement
         self.speed = 80
         self.velocity = [self.speed,0]
         self.acceleration_magnitude = 500
         self.acceleration = [0,0]
-
+        # collision
+        self.collision_radius = 5
+        # health
+        self.max_health = 100
+        self.current_health = self.max_health
+        # damage to other objects
+        self.damage = 30
 
     def update_object(self, dt):
         self.acceleration = [0,0]
@@ -62,3 +69,10 @@ class Player(GameObject):
         bullet.set_rotation(target_x, target_y)
         bullet.set_velocity(target_x, target_y)
         self.child_objects.append(bullet)
+
+    def handle_collision_with(self, other_object):
+        # handle collision with enemy
+        if other_object.type == "enemy":
+            if self.has_collided_with(other_object):
+                print("player collided with enemy")
+                self.take_damage(other_object)

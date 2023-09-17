@@ -19,10 +19,18 @@ class Bullet(GameObject):
         self.mouse_handler = mouse.MouseStateHandler()
         self.event_handlers = [self, self.key_handler, self.mouse_handler]
 
+        # spawn
+        self.rotation = 0
+        # movement
         self.speed = 500
         self.velocity = [0, 0]
-
-        self.rotation = 0
+        # collision
+        self.collision_radius = 5
+        # health
+        self.max_health = 100
+        self.current_health = self.max_health
+        # damage to other objects
+        self.damage = 20
 
     def set_rotation(self, target_x, target_y):
         # Note: - is required in the below code for ccw rotation. DO NOT REMOVE
@@ -53,3 +61,13 @@ class Bullet(GameObject):
     def update_position(self, dt):
         self.x += self.velocity[0] * dt
         self.y += self.velocity[1] * dt
+
+    def handle_collision_with(self, other_object):
+        # handle collision with enemy
+        if other_object.type == "enemy":
+            if self.has_collided_with(other_object):
+                print("bullet collided with enemy")
+                # remove bullet
+                self.dead = True
+                # reduce health of enemy. This is needed to possibly overcome the framerate problem
+                other_object.take_damage(self)
