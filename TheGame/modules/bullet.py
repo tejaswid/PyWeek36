@@ -8,8 +8,8 @@ from modules.game_objects import GameObject
 class Bullet(GameObject):
     def __init__(self, game_assets, *args, **kwargs):
         
-        bullet_image = game_assets.image_assets["img_bullet"]
-        super(Bullet, self).__init__(img=bullet_image, *args, **kwargs)
+        self.img = game_assets.image_assets["img_bullet"]
+        super(Bullet, self).__init__(img=self.img, *args, **kwargs)
 
         self.assets = game_assets
         self.type = "bullet"

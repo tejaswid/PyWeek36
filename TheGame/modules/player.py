@@ -10,8 +10,8 @@ class Player(GameObject):
 
     def __init__(self, game_assets, *args, **kwargs):
 
-        robot_image = game_assets.image_assets["img_player_ship"]
-        super(Player, self).__init__(img=robot_image,*args, **kwargs)
+        self.img = game_assets.image_assets["img_player_ship"]
+        super(Player, self).__init__(img=self.img,*args, **kwargs)
 
         self.assets = game_assets
         self.type = "player"
