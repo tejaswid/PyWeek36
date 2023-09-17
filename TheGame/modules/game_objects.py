@@ -53,14 +53,28 @@ class GameObject(pyglet.sprite.Sprite):
         # calculate distance between the centres of the two objects
         distance = math.sqrt((self.x - other_object.x)**2 + (self.y - other_object.y)**2)
         if distance < self.collision_radius + other_object.collision_radius:
+
+            # add a rebound effect to the objects
+            if not (self.type is "bullet" or other_object.type is "bullet"):
+                old_self_x = self.x
+                old_self_y = self.y
+                old_other_object_x = other_object.x
+                old_other_object_y = other_object.y
+                rebound_factor = 5
+                self.x += (old_self_x - old_other_object_x) * rebound_factor
+                self.y += (old_self_y - old_other_object_y) * rebound_factor
+
+                other_object.x += (old_other_object_x - old_self_x) * rebound_factor
+                other_object.y += (old_other_object_y - old_self_y) * rebound_factor
+
             return True
         return False
 
-    def take_damage(self, other_object):
+    def take_damage(self, damage):
         """
         Function to handle damage to this object
-        :param other_object: the object that is causing the damage
+        :param damage: damage caused by the other object
         """
-        self.current_health -= other_object.damage
+        self.current_health -= damage
         if self.current_health <= 0:
             self.dead = True

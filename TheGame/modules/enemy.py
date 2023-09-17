@@ -22,7 +22,7 @@ class Enemy(GameObject):
         self.max_health = 100
         self.current_health = self.max_health
         # damage to other objects
-        self.damage = 50
+        self.damage = 30
 
     def seek_player(self, player_x, player_y):
         self.player_x = player_x
@@ -57,12 +57,14 @@ class Enemy(GameObject):
         if other_object.type == "bullet":
             if self.has_collided_with(other_object):
                 print("enemy collided with bullet")
-                self.take_damage(other_object)
+                self.take_damage(other_object.damage)
                 # remove bullet. again needed to possibly overcome the framerate issue
                 other_object.dead = True
 
         if other_object.type == "player":
             if self.has_collided_with(other_object):
                 print("enemy collided with player")
-                self.take_damage(other_object)
+                self.take_damage(other_object.damage)
+                # player takes damage, needed to possibly overcome the framerate issue
+                other_object.take_damage(self.damage)
         

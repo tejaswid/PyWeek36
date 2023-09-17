@@ -75,4 +75,6 @@ class Player(GameObject):
         if other_object.type == "enemy":
             if self.has_collided_with(other_object):
                 print("player collided with enemy")
-                self.take_damage(other_object)
+                self.take_damage(other_object.damage)
+                # enemy takes damage, needed to possibly overcome the framerate issue
+                other_object.take_damage(self.damage)
