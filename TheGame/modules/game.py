@@ -43,13 +43,19 @@ def run():
     asteroids = []
     num_max_asteroids = 5
     asteroid_spawn_interval = 5  # in seconds
-    time_since_last_asteroid_spawn = 5  # time since last spawn in seconds
+    time_since_last_asteroid_spawn = asteroid_spawn_interval  # time since last spawn in seconds
 
     # list of enemies
     enemies = []
     num_max_enemies = 4
     enemy_spawn_interval = 5  # in seconds
-    time_since_last_enemy_spawn = 5  # time since last spawn in seconds
+    time_since_last_enemy_spawn = enemy_spawn_interval  # time since last spawn in seconds
+
+    # list of powerups
+    powerups = []
+    num_max_powerups = 2
+    powerup_spawn_interval = 10  # in seconds
+    time_since_last_powerup_spawn = 0  # time since last spawn in seconds
 
     # create an instance of a player
     player_1 = Player(assets, x=200, y=500, batch=main_batch, group=groups[5])
@@ -100,9 +106,20 @@ def run():
 
         # Draw a health bar for the game object
         health_bar_width = obj.width  # Adjust the width based on the object's sprite
-        health_percentage = (
-            (obj.current_health / obj.max_health) if obj.max_health > 0 else 0
-        )
+        health_percentage = 1.0
+        health_bar_color = (55, 55, 255, 255)
+
+        # if it is a poweup then calculate the health bar width based on the time left
+        if obj.type == "powerup":
+            health_percentage = (
+                (obj.time_left / obj.max_time) if obj.max_time > 0 else 0
+            )
+            health_bar_color = (55, 255, 55, 255)
+        else:
+            health_percentage = (
+                (obj.current_health / obj.max_health) if obj.max_health > 0 else 0
+            )
+        
         health_bar_width *= health_percentage
 
         health_bar = shapes.Rectangle(
@@ -110,7 +127,7 @@ def run():
             y=obj.y + obj.height // 2 + 10,
             width=health_bar_width,
             height=5,
-            color=(55, 55, 255, 255),
+            color=health_bar_color,
             batch=health_bar_batch,
         )
         # the health bars need to be added to a list so that the objects do not go out of scope.
@@ -182,6 +199,22 @@ def run():
             )
             enemies.extend(new_enemies)
             objects_to_add.extend(new_enemies)
+    
+    def spawn_powerups(objects_to_add, dt):
+        # spawn powerups if necessary
+        nonlocal time_since_last_powerup_spawn
+        time_since_last_powerup_spawn += dt
+        if (
+            time_since_last_powerup_spawn > powerup_spawn_interval
+            and len(powerups) < num_max_powerups
+        ):
+            time_since_last_powerup_spawn = 0
+            new_powerups = game_manager.spawn_powerups(
+                num_max_powerups - len(powerups), player_1, main_batch, groups[5]
+            )
+            powerups.extend(new_powerups)
+            objects_to_add.extend(new_powerups)
+            print("spawned powerup")
 
     # update loop
     def update(dt):
@@ -193,6 +226,9 @@ def run():
 
         # spawn enemies if required
         spawn_enemies(objects_to_add, dt)
+
+        # spawn powerups if required
+        spawn_powerups(objects_to_add, dt)
 
         # update positions, state of each object and
         # collect all children that each object may spawn
@@ -237,11 +273,14 @@ def run():
                     if obj.died_by_player:
                         score += obj.score  # increase score
                     enemies.remove(obj)
+                # if it is a powerup remove it from the list of powerups
+                if obj.type == "powerup":
+                    powerups.remove(obj)
                 # if player is dead, game over
                 if obj.type == "player":
                     print("Game over")
                     pyglet.app.exit()
-                    
+
         # remove dead objects from game_objects
         game_objects[:] = [obj for obj in game_objects if not obj.dead]
 
