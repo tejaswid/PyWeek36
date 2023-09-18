@@ -22,6 +22,8 @@ class Asteroid(GameObject):
         self.current_health = self.max_health
         # damage to other objects
         self.damage = 2
+        # score
+        self.score = 5
 
     def set_initial_properties(self, x, y):
         # spawn pose
@@ -52,6 +54,10 @@ class Asteroid(GameObject):
             if self.has_collided_with(other_object):
                 print("asteroid collided with bullet")
                 self.take_damage(other_object.damage)
+                # if I am dead, then I was killed by the player
+                if self.dead:
+                    self.died_by_player = True
+
         # handle collision with player, enemy and other asteroids
         if other_object.type in ["player", "enemy", "asteroid"]:
             if self.has_collided_with(other_object):

@@ -54,6 +54,10 @@ def run():
     # create an instance of a player
     player_1 = Player(assets, x=200, y=500, batch=main_batch, group=groups[5])
 
+    # score
+    score_label = None
+    score = 0
+
     # change mouse cursor
     cursor = window.get_system_mouse_cursor(window.CURSOR_CROSSHAIR)
     window.set_mouse_cursor(cursor)
@@ -164,7 +168,6 @@ def run():
             asteroids.extend(new_asteroids)
             objects_to_add.extend(new_asteroids)
 
-
     def spawn_enemies(objects_to_add, dt):
         # spawn enemies if necessary
         nonlocal time_since_last_enemy_spawn
@@ -200,7 +203,7 @@ def run():
 
             # handle out of bounds
             handle_out_of_bounds(obj)
-                    
+
             # if object is an enemy, seek the player
             if obj.type == "enemy":
                 obj.seek_player(player_1.x, player_1.y)
@@ -218,18 +221,28 @@ def run():
         # add new objects
         game_objects.extend(objects_to_add)
 
+        # handle dead objects
+        nonlocal score
         for obj in game_objects:
             if obj.dead:
                 print("removing ", obj.type)
                 obj.batch = None
                 # if it is an asteroid remove it from the list of asteroids
                 if obj.type == "asteroid":
+                    if obj.died_by_player:
+                        score += obj.score  # increase score
                     asteroids.remove(obj)
                 # if it is an enemy remove it from the list of enemies
                 if obj.type == "enemy":
+                    if obj.died_by_player:
+                        score += obj.score  # increase score
                     enemies.remove(obj)
-
-        # remove dead objects
+                # if player is dead, game over
+                if obj.type == "player":
+                    print("Game over")
+                    pyglet.app.exit()
+                    
+        # remove dead objects from game_objects
         game_objects[:] = [obj for obj in game_objects if not obj.dead]
 
         # clean up damage labels
@@ -243,6 +256,20 @@ def run():
         # draw health bar for all objects
         for obj in game_objects:
             draw_health_bar(obj)
+
+        # draw score on the screen at top right
+        nonlocal score_label
+        score_label = pyglet.text.Label(
+            "Score: " + str(score),
+            font_name="Arial",
+            font_size=20,
+            x=window.width - 10,
+            y=window.height - 10,
+            anchor_x="right",
+            anchor_y="top",
+            batch=main_batch,
+            group=groups[5],
+        )
 
     load_main_scene()
     pyglet.clock.schedule_interval(update, 1 / 120.0)

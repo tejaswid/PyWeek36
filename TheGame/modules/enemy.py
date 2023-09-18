@@ -22,10 +22,12 @@ class Enemy(GameObject):
         self.current_health = self.max_health
         # damage to other objects
         self.damage = 30
-
+        # score
+        self.score = 10
         # repulsion with other enemies
         self.repulsion_distance = 50
         self.repulsion_factor = 2
+        
 
     def seek_player(self, player_x, player_y):
         self.player_x = player_x
@@ -55,6 +57,9 @@ class Enemy(GameObject):
                 self.take_damage(other_object.damage)
                 # remove bullet. again needed to possibly overcome the framerate issue
                 other_object.dead = True
+                # if I am dead, then I was killed by the player
+                if self.dead:
+                    self.died_by_player = True
 
         if other_object.type in ["player", "asteroid"]:
             if self.has_collided_with(other_object):

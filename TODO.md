@@ -4,19 +4,19 @@
 - [x] Base classes
 - [x] Display health and stats
 - [ ] Drawing assets
-- [ ] Score board
+- [x] Score board
 - [ ] Powerups
-- [ ] Stage
+- [ ] Stage - Windowing
 - [x] Bounds
 - [ ] Levels
-- [ ] Titles
+- [ ] Titles and screens
 - [ ] Story
 - [ ] Sound effects
 - [ ] Music
 
 ## Player 
 - [x] spawn
-- [ ] movement (partially done)
+- [x] movement
 - [x] collision
 
 ## Bullet

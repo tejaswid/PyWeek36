@@ -33,6 +33,9 @@ class GameObject(pyglet.sprite.Sprite):
         self.damage = 10  # damage that this object can cause to other objects
         self.damage_taken = 0  # damage that this object has taken from other objects
 
+        self.score = 0  # score that this object gives when it dies
+        self.died_by_player = False  # whether this object was killed by the player or not
+
     def update_object(self, dt):
         """
         Virtual update_object function. This is not named update because the Sprite object has a

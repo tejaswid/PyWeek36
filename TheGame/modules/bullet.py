@@ -65,3 +65,6 @@ class Bullet(GameObject):
                 self.dead = True
                 # reduce health of enemy. This is needed to possibly overcome the framerate problem
                 other_object.take_damage(self.damage)
+                # if the other object is dead, increase the score
+                if other_object.dead:
+                    other_object.died_by_player = True
