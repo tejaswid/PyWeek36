@@ -98,3 +98,6 @@ class GameObject(pyglet.sprite.Sprite):
             self.damage_taken = 0
             return damage_label
         return None
+    
+    def die(self, dt):
+        self.dead = True

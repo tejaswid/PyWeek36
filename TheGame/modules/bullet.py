@@ -2,6 +2,7 @@ import math
 
 from pyglet.window import key
 from pyglet.window import mouse
+from pyglet import clock
 
 from modules.game_objects import GameObject
 
@@ -10,6 +11,7 @@ class Bullet(GameObject):
         
         self.img = game_assets.image_assets["img_bullet"]
         super(Bullet, self).__init__(img=self.img, *args, **kwargs)
+        clock.schedule_once(self.die, 0.5)  # schedule the bullet to die after 0.5 seconds
 
         self.assets = game_assets
         self.type = "bullet"
