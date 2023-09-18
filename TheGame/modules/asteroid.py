@@ -16,7 +16,7 @@ class Asteroid(GameObject):
         self.speed = 0
         self.velocity = [0, 0]
         # collision
-        self.collision_radius = 5
+        self.collision_radius = 15
         # health
         self.max_health = 50
         self.current_health = self.max_health

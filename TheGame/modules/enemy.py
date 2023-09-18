@@ -16,7 +16,7 @@ class Enemy(GameObject):
         self.player_y = None
         self.velocity = [0, 0]
         # collision
-        self.collision_radius = 5
+        self.collision_radius = 10
         # health
         self.max_health = 100
         self.current_health = self.max_health

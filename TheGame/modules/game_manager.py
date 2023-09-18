@@ -47,7 +47,7 @@ def spawn_powerups(num_powerups, player, batch, group):
         # spawn enemies far away from the player
         powerup_x = player.x
         powerup_y = player.y
-        while distance((powerup_x, powerup_y), (player.x, player.y)) < 500:
+        while distance((powerup_x, powerup_y), (player.x, player.y)) < 300:
             powerup_x = random.uniform(10, 990)
             powerup_y = random.uniform(10, 990)
         # spawn enemy

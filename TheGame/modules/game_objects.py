@@ -79,10 +79,10 @@ class GameObject(pyglet.sprite.Sprite):
     def take_damage(self, damage):
         """
         Function to handle damage to this object
-        :param damage: damage caused by the other object
+        :param damage: damage caused by the other object, can be negative for powerups
         """
         self.damage_taken = damage
-        self.current_health -= damage
+        self.current_health = min(self.max_health, max(0, self.current_health-damage))
         if self.current_health <= 0:
             self.dead = True
 

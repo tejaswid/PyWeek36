@@ -20,7 +20,7 @@ class Powerup(GameObject):
         # movement - only visual
         self.angular_velocity = random.uniform(-100, 100)    
         # collision
-        self.collision_radius = 5
+        self.collision_radius = 10
         # time left
         self.time_left = self.max_time
 
