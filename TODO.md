@@ -5,6 +5,9 @@
 - [x] Display health and stats
 - [ ] Drawing assets
 - [ ] Score board
+- [ ] Powerups
+- [ ] Stage and bounds
+- [ ] Levels
 - [ ] Titles
 - [ ] Story
 - [ ] Sound effects
@@ -22,10 +25,11 @@
 - [ ] interaction with dark matter
 
 ## Enemy
-- [ ] spawn - currently fixed. make it random.
+- [x] spawn
 - [x] movement
 - [x] collision
-
+- [ ] kinds of enemies
+- [ ] boss
 ## Asteroids
 - [x] spawn
 - [x] movement
