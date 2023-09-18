@@ -76,10 +76,16 @@ class Player(GameObject):
         self.child_objects.append(bullet)
 
     def handle_collision_with(self, other_object):
-        # handle collision with enemy
+        # handle collision with enemy and asteroid
         if other_object.type in ["enemy", "asteroid"]:
             if self.has_collided_with(other_object):
                 print("player collided with ", other_object.type)
                 self.take_damage(other_object.damage)
                 # enemy takes damage, needed to possibly overcome the framerate issue
                 other_object.take_damage(self.damage)
+        # handle collision with powerup
+        if other_object.type == "powerup":
+            if self.has_collided_with(other_object):
+                other_object.dead = True
+                print("player collided with powerup")
+                self.take_damage(-20)

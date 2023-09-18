@@ -46,3 +46,4 @@ class GameAssets(object):
         self.create_image_asset("img_bullet", "images/bullet.png", True)
         self.create_image_asset("img_enemy", "images/enemy.png", True)
         self.create_image_asset("img_asteroid", "images/asteroid.png", True)
+        self.create_image_asset("img_powerup", "images/powerup.png", True)
