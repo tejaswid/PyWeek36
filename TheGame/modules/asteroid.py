@@ -2,6 +2,7 @@ import math
 import random
 
 from modules.game_objects import GameObject
+from modules import utils
 
 class Asteroid(GameObject):
     def __init__(self, game_assets, *args, **kwargs):
@@ -30,12 +31,7 @@ class Asteroid(GameObject):
         self.rotation = random.uniform(0, 360)
         # spawn random linear movement
         self.speed = random.uniform(5, 30)
-        dir_x = random.uniform(-100, 100)
-        dir_y = random.uniform(-100, 100)
-        mag = math.sqrt(dir_x**2 + dir_y**2)
-        velocity_x = dir_x / mag * self.speed
-        velocity_y = dir_y / mag * self.speed
-        self.velocity = [velocity_x, velocity_y]
+        self.velocity = utils.random_velocity(self.speed)
         # spawn random angular movement
         self.angular_velocity = random.uniform(-100, 100)
 

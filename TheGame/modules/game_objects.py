@@ -1,6 +1,6 @@
 import math
 import pyglet
-
+from modules import utils
 
 class GameObject(pyglet.sprite.Sprite):
     """
@@ -52,7 +52,7 @@ class GameObject(pyglet.sprite.Sprite):
         :return: True if collision has occurred, False otherwise
         """
         # calculate distance between the centres of the two objects
-        distance = math.sqrt((self.x - other_object.x)**2 + (self.y - other_object.y)**2)
+        distance = utils.distance((self.x, self.y), (other_object.x, other_object.y))
         if distance < self.collision_radius + other_object.collision_radius:
 
             # add a rebound effect to the objects

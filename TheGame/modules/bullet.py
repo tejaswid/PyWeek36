@@ -5,6 +5,7 @@ from pyglet.window import mouse
 from pyglet import clock
 
 from modules.game_objects import GameObject
+from modules import utils
 
 class Bullet(GameObject):
     def __init__(self, game_assets, *args, **kwargs):
@@ -40,20 +41,7 @@ class Bullet(GameObject):
 
     # compute the velocity of the bullet
     def set_velocity(self, target_x, target_y):
-        self.velocity = [0,0]
-        
-        # compute direction towards target
-        dir_x = target_x - self.x
-        dir_y = target_y - self.y
-        mag = math.sqrt(dir_x**2 + dir_y**2)
-
-        if mag != 0:
-            dir_x /= mag
-            dir_y /= mag
-
-        # set velocity
-        self.velocity[0] = dir_x * self.speed
-        self.velocity[1] = dir_y * self.speed
+        self.velocity = utils.compute_velocity(self.speed, self.x, self.y, target_x, target_y)
 
     def update_object(self, dt):
         # TODO add collision detection
