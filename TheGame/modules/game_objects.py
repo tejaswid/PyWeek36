@@ -30,7 +30,7 @@ class GameObject(pyglet.sprite.Sprite):
 
         self.max_health = 100  # maximum health of the object
         self.current_health = self.max_health  # current health of the object
-        self.damage = 10  # damage that this object can cause to other objects
+        self.damage = 0  # damage that this object can cause to other objects
         self.damage_taken = 0  # damage that this object has taken from other objects
 
         self.score = 0  # score that this object gives when it dies
@@ -60,7 +60,8 @@ class GameObject(pyglet.sprite.Sprite):
         distance = utils.distance((self.x, self.y), (other_object.x, other_object.y))
         if distance < self.collision_radius + other_object.collision_radius:
             # add a rebound effect to the objects
-            if not (self.type is "bullet" or other_object.type is "bullet"):
+            no_rebound_list = ["bullet", "powerup"]
+            if not (self.type in no_rebound_list or other_object.type in no_rebound_list):
                 old_self_x = self.x
                 old_self_y = self.y
                 old_other_object_x = other_object.x
@@ -86,6 +87,7 @@ class GameObject(pyglet.sprite.Sprite):
             self.dead = True
 
     def draw_damage_label(self, health_bar_batch):
+        # draw damage label
         if self.damage_taken > 0:
             print("drawing damage label")
             damage_label = pyglet.text.Label(
@@ -101,6 +103,22 @@ class GameObject(pyglet.sprite.Sprite):
             )
             self.damage_taken = 0
             return damage_label
+        # draw heal label
+        if self.damage_taken < 0:
+            print("drawing heal label")
+            heal_label = pyglet.text.Label(
+                f"+{-self.damage_taken}",
+                font_name="Arial",
+                font_size=12,
+                x=self.x,
+                y=self.y + self.height + 50,
+                anchor_x="center",
+                anchor_y="center",
+                color=(0, 255, 0, 255),
+                batch=health_bar_batch,  # Use the health_bar_batch for rendering
+            )
+            self.damage_taken = 0
+            return heal_label
         return None
 
     def die(self, dt):
