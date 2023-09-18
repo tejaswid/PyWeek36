@@ -25,11 +25,13 @@
 - [ ] spawn - currently fixed. make it random.
 - [x] movement
 - [x] collision
+
+## Asteroids
+- [x] spawn
+- [x] movement
+- [x] collision
+
 ## Dark matter
 - [ ] spawn
 - [ ] movement
-- [ ] collision - need to add rebound upon collision
-## Asteroids
-- [ ] spawn
-- [ ] movement
-- [ ] collision - need to add rebound upon collision
+- [ ] collision

@@ -47,6 +47,8 @@ python run_game.py
 - modules: Separate modules like game, player, game objects and assets.
 - resources: All resources like images, sounds, etc.
 
-The main game is written in `game.py`. This is like the stage. 
-The `GameObject` class in `game_objects.py` is the abstract class to define all individual objects in the game - player, enemy, etc.
-Assets for each of these objects are defined in the `GameAssets` class in `game_assets.py`.
+The main game is written in `game.py`. This is like the stage.   
+The `GameObject` class in `game_objects.py` is the abstract class to define all individual objects in the game - player, enemy, etc.  
+Assets for each of these objects are defined in the `GameAssets` class in `game_assets.py`.  
+Utility functions are defined in `utils.py`.  
+Some behind the scenes management is done in `game_manager.py`
