@@ -45,7 +45,6 @@ class Asteroid(GameObject):
         self.x += self.velocity[0] * dt
         self.y += self.velocity[1] * dt
         self.rotation += self.angular_velocity * dt
-        print(self.rotation)
 
     def handle_collision_with(self, other_object):
         # handle collision with bullet
