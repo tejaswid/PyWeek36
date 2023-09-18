@@ -1,4 +1,5 @@
 from modules.asteroid import Asteroid
+from modules.enemy import Enemy
 from modules.utils import distance
 
 import random
@@ -21,3 +22,19 @@ def spawn_asteroids(num_asteroids, player, batch, group):
 
         new_asteroids.append(new_asteroid)
     return new_asteroids
+
+
+def spawn_enemies(num_enemies, player, batch, group):
+    new_enemies = []
+    for i in range(num_enemies):
+        # spawn enemies far away from the player
+        enemy_x = player.x
+        enemy_y = player.y
+        while distance((enemy_x, enemy_y), (player.x, player.y)) < 100:
+            enemy_x = random.uniform(10, 990)
+            enemy_y = random.uniform(10, 990)
+        # spawn enemy
+        new_enemy = Enemy(player.assets, x=enemy_x, y=enemy_y, batch=batch, group=group)
+
+        new_enemies.append(new_enemy)
+    return new_enemies

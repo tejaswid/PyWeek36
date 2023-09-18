@@ -23,6 +23,10 @@ class Enemy(GameObject):
         # damage to other objects
         self.damage = 30
 
+        # repulsion with other enemies
+        self.repulsion_distance = 50
+        self.repulsion_factor = 2
+
     def seek_player(self, player_x, player_y):
         self.player_x = player_x
         self.player_y = player_y
@@ -58,3 +62,23 @@ class Enemy(GameObject):
                 self.take_damage(other_object.damage)
                 # player takes damage, needed to possibly overcome the framerate issue
                 other_object.take_damage(self.damage)
+
+
+    def compute_repulsion(self, other_object):
+        if other_object.type != "enemy":
+            return
+        
+        # TODO: for now this updates the position, instead add velocity or force based control
+        distance = utils.distance((self.x, self.y), (other_object.x, other_object.y))
+        if distance < self.repulsion_distance:
+            # add a repulsion effect to the objects
+            old_self_x = self.x
+            old_self_y = self.y
+            old_other_object_x = other_object.x
+            old_other_object_y = other_object.y
+
+            self.x += (old_self_x - old_other_object_x) * self.repulsion_factor
+            self.y += (old_self_y - old_other_object_y) * self.repulsion_factor
+
+            other_object.x += (old_other_object_x - old_self_x) * other_object.repulsion_factor
+            other_object.y += (old_other_object_y - old_self_y) * other_object.repulsion_factor

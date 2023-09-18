@@ -43,11 +43,16 @@ def run():
     asteroids = []
     num_max_asteroids = 5
     asteroid_spawn_interval = 5  # in seconds
-    time_since_last_spawn = 5  # time since last spawn in seconds
+    time_since_last_asteroid_spawn = 5  # time since last spawn in seconds
+
+    # list of enemies
+    enemies = []
+    num_max_enemies = 4
+    enemy_spawn_interval = 5  # in seconds
+    time_since_last_enemy_spawn = 5  # time since last spawn in seconds
 
     # create an instance of a player
     player_1 = Player(assets, x=200, y=500, batch=main_batch, group=groups[5])
-    enemy_1 = Enemy(assets, x=1000, y=500, batch=main_batch, group=groups[5])
 
     # change mouse cursor
     cursor = window.get_system_mouse_cursor(window.CURSOR_CROSSHAIR)
@@ -84,7 +89,6 @@ def run():
         window.push_handlers(player_1.key_handler)
         window.push_handlers(player_1.mouse_handler)
         game_objects.append(player_1)
-        game_objects.append(enemy_1)
 
     def draw_health_bar(obj):
         if obj.type == "bullet":
@@ -122,18 +126,32 @@ def run():
         objects_to_add = []  # list of new objects to add
 
         # spawn asteroids if necessary
-        nonlocal time_since_last_spawn
-        time_since_last_spawn += dt
+        nonlocal time_since_last_asteroid_spawn
+        time_since_last_asteroid_spawn += dt
         if (
-            time_since_last_spawn > asteroid_spawn_interval
+            time_since_last_asteroid_spawn > asteroid_spawn_interval
             and len(asteroids) < num_max_asteroids
         ):
-            time_since_last_spawn = 0
+            time_since_last_asteroid_spawn = 0
             new_asteroids = game_manager.spawn_asteroids(
                 num_max_asteroids - len(asteroids), player_1, main_batch, groups[5]
             )
             asteroids.extend(new_asteroids)
             objects_to_add.extend(new_asteroids)
+
+        # spawn enemies if necessary
+        nonlocal time_since_last_enemy_spawn
+        time_since_last_enemy_spawn += dt
+        if (
+            time_since_last_enemy_spawn > enemy_spawn_interval
+            and len(enemies) < num_max_enemies
+        ):
+            time_since_last_enemy_spawn = 0
+            new_enemies = game_manager.spawn_enemies(
+                num_max_enemies - len(enemies), player_1, main_batch, groups[5]
+            )
+            enemies.extend(new_enemies)
+            objects_to_add.extend(new_enemies)
 
         # update positions, state of each object and
         # collect all children that each object may spawn
@@ -145,6 +163,11 @@ def run():
             # if object is an enemy, seek the player
             if obj.type == "enemy":
                 obj.seek_player(player_1.x, player_1.y)
+
+                # avoid other enemies
+                for other_obj in game_objects:
+                    if other_obj is not obj and other_obj.type == "enemy":
+                        obj.compute_repulsion(other_obj)
 
             # check collision with all other objects
             for other_obj in game_objects:
@@ -161,6 +184,9 @@ def run():
                 # if it is an asteroid remove it from the list of asteroids
                 if obj.type == "asteroid":
                     asteroids.remove(obj)
+                # if it is an enemy remove it from the list of enemies
+                if obj.type == "enemy":
+                    enemies.remove(obj)
 
         # remove dead objects
         game_objects[:] = [obj for obj in game_objects if not obj.dead]
