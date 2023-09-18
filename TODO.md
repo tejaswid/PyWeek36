@@ -6,7 +6,8 @@
 - [ ] Drawing assets
 - [ ] Score board
 - [ ] Powerups
-- [ ] Stage and bounds
+- [ ] Stage
+- [x] Bounds
 - [ ] Levels
 - [ ] Titles
 - [ ] Story

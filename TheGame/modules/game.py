@@ -120,11 +120,36 @@ def run():
             frames_persistent = 25
             damage_labels.append(tuple((damage_labels_to_add, frames_persistent)))
 
-    # update loop
-    def update(dt):
-        health_bars.clear()
-        objects_to_add = []  # list of new objects to add
+    def handle_out_of_bounds(obj):
+        # if object is an asteroid or bullet, remove it if it goes out of bounds
+        if obj.type in ["asteroid", "bullet"]:
+            if (
+                (obj.x + obj.width // 2) < 0
+                or (obj.x - obj.width // 2) > window.width
+                or (obj.y + obj.height // 2) < 0
+                or (obj.y - obj.height // 2) > window.height
+            ):
+                obj.dead = True
 
+        # if object is a player or enemy, bounce it back if it goes out of bounds
+        if obj.type in ["player", "enemy"]:
+            if (obj.x - obj.width // 2) <= 0:
+                obj.velocity[0] = -obj.velocity[0]
+                obj.x = obj.width // 2
+
+            if (obj.x + obj.width // 2) >= window.width:
+                obj.velocity[0] = -obj.velocity[0]
+                obj.x = window.width - obj.width // 2
+
+            if (obj.y - obj.height // 2) <= 0:
+                obj.velocity[1] = -obj.velocity[1]
+                obj.y = obj.height // 2
+
+            if (obj.y + obj.height // 2) >= window.height:
+                obj.velocity[1] = -obj.velocity[1]
+                obj.y = window.height - obj.height // 2
+
+    def spawn_asteroids(objects_to_add, dt):
         # spawn asteroids if necessary
         nonlocal time_since_last_asteroid_spawn
         time_since_last_asteroid_spawn += dt
@@ -139,6 +164,8 @@ def run():
             asteroids.extend(new_asteroids)
             objects_to_add.extend(new_asteroids)
 
+
+    def spawn_enemies(objects_to_add, dt):
         # spawn enemies if necessary
         nonlocal time_since_last_enemy_spawn
         time_since_last_enemy_spawn += dt
@@ -153,6 +180,17 @@ def run():
             enemies.extend(new_enemies)
             objects_to_add.extend(new_enemies)
 
+    # update loop
+    def update(dt):
+        health_bars.clear()
+        objects_to_add = []  # list of new objects to add
+
+        # spawn asteroids if necessary
+        spawn_asteroids(objects_to_add, dt)
+
+        # spawn enemies if required
+        spawn_enemies(objects_to_add, dt)
+
         # update positions, state of each object and
         # collect all children that each object may spawn
         for obj in game_objects:
@@ -160,6 +198,9 @@ def run():
             objects_to_add.extend(obj.child_objects)
             obj.child_objects = []  # clear the list
 
+            # handle out of bounds
+            handle_out_of_bounds(obj)
+                    
             # if object is an enemy, seek the player
             if obj.type == "enemy":
                 obj.seek_player(player_1.x, player_1.y)
