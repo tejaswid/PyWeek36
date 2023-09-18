@@ -54,9 +54,9 @@ class Bullet(GameObject):
 
     def handle_collision_with(self, other_object):
         # handle collision with enemy
-        if other_object.type == "enemy":
+        if other_object.type in ["enemy", "asteroid"]:
             if self.has_collided_with(other_object):
-                print("bullet collided with enemy")
+                print("bullet collided with ", other_object.type)
                 # remove bullet
                 self.dead = True
                 # reduce health of enemy. This is needed to possibly overcome the framerate problem

@@ -52,9 +52,9 @@ class Enemy(GameObject):
                 # remove bullet. again needed to possibly overcome the framerate issue
                 other_object.dead = True
 
-        if other_object.type == "player":
+        if other_object.type in ["player", "asteroid"]:
             if self.has_collided_with(other_object):
-                print("enemy collided with player")
+                print("enemy collided with ", other_object.type)
                 self.take_damage(other_object.damage)
                 # player takes damage, needed to possibly overcome the framerate issue
                 other_object.take_damage(self.damage)
