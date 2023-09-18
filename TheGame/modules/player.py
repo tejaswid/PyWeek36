@@ -5,6 +5,7 @@ from pyglet.window import mouse
 
 from modules.game_objects import GameObject
 from modules.bullet import Bullet
+from modules import utils
 
 
 class Player(GameObject):
@@ -22,9 +23,14 @@ class Player(GameObject):
 
         # movement
         self.speed = 80
+        self.max_speed = 200
         self.velocity = [self.speed, 0]
-        self.acceleration_magnitude = 500
-        self.acceleration = [0, 0]
+        self.acceleration_magnitude = 0
+        self.max_acceleration = 50000
+        # self.acceleration = [0, 0]
+        self.acceleration_time = 3  # in seconds
+        self.acceleration_time_elapsed = 0
+
         # collision
         self.collision_radius = 5
         # health
@@ -34,38 +40,58 @@ class Player(GameObject):
         self.damage = 30
 
     def update_object(self, dt):
-        self.acceleration = [0, 0]
+        # self.acceleration = [0, 0]
         if self.key_handler[key.A]:
-            self.update_velocity(dt)
+            self.update_acceleration_magnitude(dt, "increase")
+        if self.key_handler[key.D]:
+            self.update_acceleration_magnitude(dt, "decrease")
+
+        self.update_acceleration()
+        self.update_velocity(dt)
         self.update_position(dt)
+
+        print(self.velocity)
 
     # updates the position of the player
     def update_position(self, dt):
-        self.x += self.velocity[0] * dt + 0.5 * self.acceleration[0] * dt**2
-        self.y += self.velocity[1] * dt + 0.5 * self.acceleration[1] * dt**2
+        self.x += self.velocity[0] * dt + 0.5 * self.acceleration_magnitude * dt**2
+        self.y += self.velocity[1] * dt + 0.5 * self.acceleration_magnitude * dt**2
 
     # update rotation of the player based on mouse position
     def update_rotation(self, mouse_x, mouse_y):
         # Note: - is required in the below code for ccw rotation. DO NOT REMOVE
         self.rotation = -math.degrees(math.atan2(mouse_y - self.y, mouse_x - self.x))
 
+    def update_acceleration_magnitude(self, dt, state):
+        if state == "increase":
+            # increase acceleration magnitude for certain time
+            if self.acceleration_time_elapsed < self.acceleration_time:
+                self.acceleration_time_elapsed += dt
+                self.acceleration_magnitude = min(self.acceleration_magnitude + 10000 * dt, self.max_acceleration)
+            else:
+                self.acceleration_time_elapsed = 0
+                self.acceleration_magnitude = 0
+        elif state == "decrease":
+            # decrease acceleration magnitude for certain time
+            if self.acceleration_time_elapsed < self.acceleration_time:
+                self.acceleration_time_elapsed += dt
+                self.acceleration_magnitude = max(self.acceleration_magnitude - 10000 * dt, -self.max_acceleration)
+            else:
+                self.acceleration_time_elapsed = 0
+                self.acceleration_magnitude = 0
+
+    def update_acceleration(self):
+        # self.acceleration[0] = self.acceleration_magnitude * math.cos(math.radians(self.rotation))
+        # self.acceleration[1] = self.acceleration_magnitude * -math.sin(math.radians(self.rotation))
+        pass
+
     # update the velocity of the player - new velocity vector must be aligned with rotation
     def update_velocity(self, dt):
-        self.velocity[0] += (
-            self.acceleration_magnitude * math.cos(self.rotation * math.pi / 180) * dt
-        )
-        self.velocity[1] += (
-            self.acceleration_magnitude * -math.sin(self.rotation * math.pi / 180) * dt
-        )
+        self.velocity[0] = math.cos(math.radians(self.rotation)) * (self.speed + self.acceleration_magnitude * dt)
+        self.velocity[1] = -math.sin(math.radians(self.rotation)) * (self.speed + self.acceleration_magnitude * dt)
 
-        if self.velocity[0] > self.speed:
-            self.velocity[0] = self.speed
-        if self.velocity[0] < -self.speed:
-            self.velocity[0] = -self.speed
-        if self.velocity[1] > self.speed:
-            self.velocity[1] = self.speed
-        if self.velocity[1] < -self.speed:
-            self.velocity[1] = -self.speed
+        # self.velocity[0] = max(-self.max_speed, min(self.max_speed, self.velocity[0] + self.acceleration_magnitude * dt))
+        # self.velocity[1] = max(-self.max_speed, min(self.max_speed, self.velocity[1] + self.acceleration_magnitude * dt))
 
     def fire_bullet(self, target_x, target_y):
         bullet = Bullet(
