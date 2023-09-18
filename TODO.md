@@ -36,6 +36,11 @@
 - [x] movement
 - [x] collision
 
+## Powerup
+- [ ] spawn (partially done - implement randomly timed spawning)
+- [x] collision
+- [ ] kinds of powerups
+
 ## Dark matter
 - [ ] spawn
 - [ ] movement
