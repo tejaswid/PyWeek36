@@ -1,5 +1,6 @@
 from modules.asteroid import Asteroid
 from modules.enemy import Enemy
+from modules.powerup import Powerup
 from modules.utils import distance
 
 import random
@@ -38,3 +39,19 @@ def spawn_enemies(num_enemies, player, batch, group):
 
         new_enemies.append(new_enemy)
     return new_enemies
+
+
+def spawn_powerups(num_powerups, player, batch, group):
+    new_powerups = []
+    for i in range(num_powerups):
+        # spawn enemies far away from the player
+        powerup_x = player.x
+        powerup_y = player.y
+        while distance((powerup_x, powerup_y), (player.x, player.y)) < 500:
+            powerup_x = random.uniform(10, 990)
+            powerup_y = random.uniform(10, 990)
+        # spawn enemy
+        new_powerup = Powerup(player.assets, x=powerup_x, y=powerup_y, batch=batch, group=group)
+
+        new_powerups.append(new_powerup)
+    return new_powerups
