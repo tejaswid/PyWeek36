@@ -21,15 +21,6 @@ def run():
     health_bar_batch = pyglet.graphics.Batch()
     damage_label_batch = pyglet.graphics.Batch()
 
-    # health_bar = shapes.Rectangle(
-    #         x=10,#obj.x - obj.width // 2,
-    #         y=100,#obj.y - obj.height // 2 + 50,
-    #         width=200,
-    #         height=50,
-    #         color=(55, 55, 255, 255),
-    #         batch=main_batch,
-    #     )
-
     # groups - 0 drawn first, 10 drawn last
     groups = []
     for i in range(10):

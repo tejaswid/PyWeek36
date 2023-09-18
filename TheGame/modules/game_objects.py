@@ -1,6 +1,6 @@
-import math
 import pyglet
 from modules import utils
+
 
 class GameObject(pyglet.sprite.Sprite):
     """
@@ -18,18 +18,20 @@ class GameObject(pyglet.sprite.Sprite):
         super(GameObject, self).__init__(*args, **kwargs)
 
         # Declaring all the member variables of the class
-        self.type = None            # Specifies the type of the object - player, enemies, bullets etc.
-        self.child_objects = []     # List of objects that can be spawned by this object
-        self.sim_state = None       # State of the object - useful in a state machine
-        self.dead = False           # whether this object has to be removed from screen or not
-        self.collision_radius = 0   # circle collider radius
-        self.collider_type = None   # "circle" or "polygon"
-        self.event_handlers = []    # Tell the game handler about any event handlers
+        self.type = (
+            None  # Specifies the type of the object - player, enemies, bullets etc.
+        )
+        self.child_objects = []  # List of objects that can be spawned by this object
+        self.sim_state = None  # State of the object - useful in a state machine
+        self.dead = False  # whether this object has to be removed from screen or not
+        self.collision_radius = 0  # circle collider radius
+        self.collider_type = None  # "circle" or "polygon"
+        self.event_handlers = []  # Tell the game handler about any event handlers
 
-        self.max_health = 100       # maximum health of the object
-        self.current_health = self.max_health   # current health of the object
-        self.damage = 10            # damage that this object can cause to other objects
-        self.damage_taken = 0       # damage that this object has taken from other objects
+        self.max_health = 100  # maximum health of the object
+        self.current_health = self.max_health  # current health of the object
+        self.damage = 10  # damage that this object can cause to other objects
+        self.damage_taken = 0  # damage that this object has taken from other objects
 
     def update_object(self, dt):
         """
@@ -54,7 +56,6 @@ class GameObject(pyglet.sprite.Sprite):
         # calculate distance between the centres of the two objects
         distance = utils.distance((self.x, self.y), (other_object.x, other_object.y))
         if distance < self.collision_radius + other_object.collision_radius:
-
             # add a rebound effect to the objects
             if not (self.type is "bullet" or other_object.type is "bullet"):
                 old_self_x = self.x
@@ -86,18 +87,18 @@ class GameObject(pyglet.sprite.Sprite):
             print("drawing damage label")
             damage_label = pyglet.text.Label(
                 f"-{self.damage_taken}",
-                font_name='Arial',
+                font_name="Arial",
                 font_size=12,
                 x=self.x,
                 y=self.y + self.height + 50,
-                anchor_x='center',
-                anchor_y='center',
+                anchor_x="center",
+                anchor_y="center",
                 color=(255, 0, 0, 255),
-                batch=health_bar_batch  # Use the health_bar_batch for rendering
+                batch=health_bar_batch,  # Use the health_bar_batch for rendering
             )
             self.damage_taken = 0
             return damage_label
         return None
-    
+
     def die(self, dt):
         self.dead = True

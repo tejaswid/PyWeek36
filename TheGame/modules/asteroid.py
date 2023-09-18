@@ -1,12 +1,11 @@
-import math
 import random
 
 from modules.game_objects import GameObject
 from modules import utils
 
+
 class Asteroid(GameObject):
     def __init__(self, game_assets, *args, **kwargs):
-        
         self.img = game_assets.image_assets["img_asteroid"]
         super(Asteroid, self).__init__(img=self.img, *args, **kwargs)
 
@@ -60,4 +59,3 @@ class Asteroid(GameObject):
                 print("asteroid collided with player")
                 self.take_damage(other_object.damage)
                 other_object.take_damage(self.damage)
-        

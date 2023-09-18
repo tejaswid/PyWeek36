@@ -1,6 +1,7 @@
 import math
 import random
 
+
 def distance(point_1=(0, 0), point_2=(0, 0)) -> float:
     """
     Function to calculate the distance between two points
@@ -8,9 +9,10 @@ def distance(point_1=(0, 0), point_2=(0, 0)) -> float:
     :param point_2: tuple containing the x and y coordinates of the second point
     :return: distance between the two points
     """
-    return math.sqrt((point_1[0] - point_2[0])**2 + (point_1[1] - point_2[1])**2)
+    return math.sqrt((point_1[0] - point_2[0]) ** 2 + (point_1[1] - point_2[1]) ** 2)
 
-def random_velocity(speed = 100) -> [float, float]:
+
+def random_velocity(speed=100) -> [float, float]:
     """
     Function to generate a random velocity vector
     :param speed: speed of the object
@@ -27,6 +29,7 @@ def random_velocity(speed = 100) -> [float, float]:
     velocity_x = dir_x * speed
     velocity_y = dir_y * speed
     return [velocity_x, velocity_y]
+
 
 def compute_velocity(speed, source_x, source_y, target_x, target_y) -> [float, float]:
     """
@@ -45,7 +48,7 @@ def compute_velocity(speed, source_x, source_y, target_x, target_y) -> [float, f
     if mag != 0:
         dir_x /= mag
         dir_y /= mag
-        
+
     velocity_x = dir_x * speed
     velocity_y = dir_y * speed
     return [velocity_x, velocity_y]

@@ -7,12 +7,14 @@ from pyglet import clock
 from modules.game_objects import GameObject
 from modules import utils
 
+
 class Bullet(GameObject):
     def __init__(self, game_assets, *args, **kwargs):
-        
         self.img = game_assets.image_assets["img_bullet"]
         super(Bullet, self).__init__(img=self.img, *args, **kwargs)
-        clock.schedule_once(self.die, 0.5)  # schedule the bullet to die after 0.5 seconds
+        clock.schedule_once(
+            self.die, 0.5
+        )  # schedule the bullet to die after 0.5 seconds
 
         self.assets = game_assets
         self.type = "bullet"
@@ -37,11 +39,13 @@ class Bullet(GameObject):
 
     def set_rotation(self, target_x, target_y):
         # Note: - is required in the below code for ccw rotation. DO NOT REMOVE
-        self.rotation = -math.degrees(math.atan2(target_y-self.y, target_x-self.x))
+        self.rotation = -math.degrees(math.atan2(target_y - self.y, target_x - self.x))
 
     # compute the velocity of the bullet
     def set_velocity(self, target_x, target_y):
-        self.velocity = utils.compute_velocity(self.speed, self.x, self.y, target_x, target_y)
+        self.velocity = utils.compute_velocity(
+            self.speed, self.x, self.y, target_x, target_y
+        )
 
     def update_object(self, dt):
         # TODO add collision detection

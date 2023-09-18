@@ -2,7 +2,6 @@ import pyglet
 
 
 class GameAssets(object):
-
     def __init__(self, *args, **kwargs):
         """
         Initializes the class object.
@@ -11,7 +10,7 @@ class GameAssets(object):
         """
         super(GameAssets, self).__init__(*args, **kwargs)
 
-        self.image_assets = dict()        # dictionary of game assets
+        self.image_assets = dict()  # dictionary of game assets
 
         self.load_assets()
 
@@ -23,7 +22,6 @@ class GameAssets(object):
         """
         image.anchor_x = image.width // 2
         image.anchor_y = image.height // 2
-
 
     def create_image_asset(self, keyword, file, centered=True):
         """
@@ -39,9 +37,8 @@ class GameAssets(object):
             self.set_anchor_at_centre(image_asset)
         self.image_assets.update({keyword: image_asset})
 
-
     def load_assets(self):
-        pyglet.resource.path = ['resources']
+        pyglet.resource.path = ["resources"]
         pyglet.resource.reindex()
 
         # load images
@@ -49,5 +46,3 @@ class GameAssets(object):
         self.create_image_asset("img_bullet", "images/bullet.png", True)
         self.create_image_asset("img_enemy", "images/enemy.png", True)
         self.create_image_asset("img_asteroid", "images/asteroid.png", True)
-        
-        
