@@ -3,9 +3,11 @@ from pyglet.window import key
 from pyglet.window import mouse
 from pyglet import shapes
 
+from modules import game_manager
 from modules.game_assets import GameAssets
 from modules.player import Player
 from modules.enemy import Enemy
+from modules.asteroid import Asteroid
 
 
 def run():
@@ -45,6 +47,12 @@ def run():
 
     # list of damage labels
     damage_labels = []
+
+    # list of asteroids
+    asteroids = []
+    num_max_asteroids = 5
+    asteroid_spawn_interval = 5  # in seconds
+    time_since_last_spawn = 5  # time since last spawn in seconds
 
     # create an instance of a player
     player_1 = Player(assets, x=200, y=500, batch=main_batch, group=groups[5])
@@ -121,6 +129,21 @@ def run():
     def update(dt):
         health_bars.clear()
         objects_to_add = []  # list of new objects to add
+
+        # spawn asteroids if necessary
+        nonlocal time_since_last_spawn
+        time_since_last_spawn += dt
+        if (
+            time_since_last_spawn > asteroid_spawn_interval
+            and len(asteroids) < num_max_asteroids
+        ):
+            time_since_last_spawn = 0
+            new_asteroids = game_manager.spawn_asteroids(
+                num_max_asteroids - len(asteroids), player_1, main_batch, groups[5]
+            )
+            asteroids.extend(new_asteroids)
+            objects_to_add.extend(new_asteroids)
+
         # update positions, state of each object and
         # collect all children that each object may spawn
         for obj in game_objects:
@@ -144,6 +167,9 @@ def run():
             if obj.dead:
                 print("removing ", obj.type)
                 obj.batch = None
+                # if it is an asteroid remove it from the list of asteroids
+                if obj.type == "asteroid":
+                    asteroids.remove(obj)
 
         # remove dead objects
         game_objects[:] = [obj for obj in game_objects if not obj.dead]
