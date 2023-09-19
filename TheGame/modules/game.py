@@ -6,8 +6,7 @@ from pyglet import shapes
 from modules import game_manager
 from modules.game_assets import GameAssets
 from modules.player import Player
-from modules.enemy import Enemy
-from modules.asteroid import Asteroid
+from modules.background import Background
 
 
 def run():
@@ -30,7 +29,7 @@ def run():
     # load required assets
     assets = GameAssets()
 
-    # list of all objects in the simulation
+    # list of all interactive objects in the simulation
     game_objects = []
 
     # list of health bar objects
@@ -43,19 +42,32 @@ def run():
     asteroids = []
     num_max_asteroids = 5
     asteroid_spawn_interval = 5  # in seconds
-    time_since_last_asteroid_spawn = asteroid_spawn_interval  # time since last spawn in seconds
+    time_since_last_asteroid_spawn = (
+        asteroid_spawn_interval  # time since last spawn in seconds
+    )
 
     # list of enemies
     enemies = []
     num_max_enemies = 4
     enemy_spawn_interval = 5  # in seconds
-    time_since_last_enemy_spawn = enemy_spawn_interval  # time since last spawn in seconds
+    time_since_last_enemy_spawn = (
+        enemy_spawn_interval  # time since last spawn in seconds
+    )
 
     # list of powerups
     powerups = []
-    num_max_powerups = 2
+    num_max_powerups = 1
     powerup_spawn_interval = 10  # in seconds
     time_since_last_powerup_spawn = 0  # time since last spawn in seconds
+
+    # create an instance of the background
+    _ = Background(
+        assets,
+        x=window.width // 2,
+        y=window.height // 2,
+        batch=main_batch,
+        group=groups[0],
+    )
 
     # create an instance of a player
     player_1 = Player(assets, x=200, y=500, batch=main_batch, group=groups[5])
@@ -119,7 +131,7 @@ def run():
             health_percentage = (
                 (obj.current_health / obj.max_health) if obj.max_health > 0 else 0
             )
-        
+
         health_bar_width *= health_percentage
 
         health_bar = shapes.Rectangle(
@@ -199,7 +211,7 @@ def run():
             )
             enemies.extend(new_enemies)
             objects_to_add.extend(new_enemies)
-    
+
     def spawn_powerups(objects_to_add, dt):
         # spawn powerups if necessary
         nonlocal time_since_last_powerup_spawn
