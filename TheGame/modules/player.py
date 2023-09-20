@@ -37,11 +37,22 @@ class Player(GameObject):
         # update player position in game state
         self.game_state.player_position = [self.x, self.y]
 
+        # arbitrary motion variables
+        self.in_arbitrary_motion = False
+        self.arbitrary_motion_time = 2
+        self.arbitrary_motion_time_left = self.arbitrary_motion_time
+        self.arbitrary_speed_factor = 5
+        self.arbitrary_angular_velocity = 1000
+        self.arbitrary_recover_speed = 10
+
     def update_object(self, dt):
-        self.acceleration = [0, 0]
-        if self.key_handler[key.A]:
-            self.update_velocity(dt)
-        self.update_position(dt)
+        if not self.in_arbitrary_motion:
+            self.acceleration = [0, 0]
+            if self.key_handler[key.A]:
+                self.update_velocity(dt)
+            self.update_position(dt)
+        else:
+            self.move_arbitraryly(dt)
 
         self.game_state.player_position = [self.x, self.y]
 
@@ -52,6 +63,9 @@ class Player(GameObject):
 
     # update rotation of the player based on mouse position
     def update_rotation(self, mouse_x, mouse_y):
+        if self.in_arbitrary_motion:
+            return
+        
         # Note: - is required in the below code for ccw rotation. DO NOT REMOVE
         self.rotation = -math.degrees(math.atan2(mouse_y - self.y, mouse_x - self.x))
 
@@ -72,6 +86,20 @@ class Player(GameObject):
             self.velocity[1] = self.speed
         if self.velocity[1] < -self.speed:
             self.velocity[1] = -self.speed
+
+    def initiate_arbitrary_motion(self):
+        self.in_arbitrary_motion = True
+        self.arbitrary_motion_time_left = self.arbitrary_motion_time
+        self.velocity = utils.random_velocity(self.speed * self.arbitrary_speed_factor)
+    
+    def move_arbitraryly(self, dt):
+        self.arbitrary_motion_time_left -= dt
+        if self.arbitrary_motion_time_left <= 0:
+            self.in_arbitrary_motion = False
+            self.velocity = utils.random_velocity(self.arbitrary_recover_speed)
+        else:
+            self.update_position(dt)
+            self.rotation += self.arbitrary_angular_velocity * dt
 
     def fire_bullet(self, target_x, target_y):
         bullet = Bullet(
@@ -94,4 +122,11 @@ class Player(GameObject):
             if self.has_collided_with(other_object):
                 other_object.dead = True
                 print("player collided with powerup")
-                self.take_damage(-20)
+                self.take_damage(-other_object.damage)
+        # handle collision with dark matter
+        if other_object.type == "dark_matter":
+            if self.has_collided_with(other_object) and self.in_arbitrary_motion is False:
+                print("player collided with dark matter")
+                self.take_damage(other_object.damage)
+                # deflect the player in an arbitrary direction and spin
+                self.initiate_arbitrary_motion()

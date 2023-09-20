@@ -24,6 +24,8 @@ class Powerup(GameObject):
         self.collision_radius = 10
         # time left
         self.time_left = self.max_time
+        # negative damage = positive health
+        self.damage = -20
 
     def update_object(self, dt):
         # update rotation - just for visual effect

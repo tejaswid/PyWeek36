@@ -13,6 +13,8 @@ class DarkMatter(GameObject):
 
         # collision
         self.collision_radius = 30
+        # damage to other objects
+        self.damage = 40
 
     def update_object(self, dt):
         pass
@@ -20,10 +22,10 @@ class DarkMatter(GameObject):
     def handle_collision_with(self, other_object):
         # handle collision with player
         if other_object.type == "player":
-            # if self.has_collided_with(other_object):
-            #     self.dead = True
-            #     print("dark matter collided with player")
-            #     other_object.take_damage(-20)   # give health to player
+            if self.has_collided_with(other_object) and not other_object.in_arbitrary_motion:
+                print("dark matter collided with player")
+                other_object.take_damage(self.damage)
+                other_object.initiate_circular_motion(self.collision_radius, self.x, self.y)
             pass
 
         # if enemy touches it, nothing happens
