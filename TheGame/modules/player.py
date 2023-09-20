@@ -5,6 +5,7 @@ from pyglet.window import mouse
 
 from modules.game_object import GameObject
 from modules.bullet import Bullet
+from modules import utils
 
 
 class Player(GameObject):
@@ -23,7 +24,7 @@ class Player(GameObject):
 
         # movement
         self.speed = 80
-        self.velocity = [self.speed, 0]
+        self.velocity = utils.random_velocity(self.speed)
         self.acceleration_magnitude = 500
         self.acceleration = [0, 0]
         # collision
