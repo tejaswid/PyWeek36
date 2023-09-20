@@ -16,15 +16,13 @@ from modules.enemy_spawner import EnemySpawner
 def run():
     print(pyglet.version)
 
-    # actual stage size
-    stage_width = 1024
-    stage_height = 1024
+    game_state = GameState()
 
     # viewport size - this is the size of the window that we see
     viewport_width = 800
     viewport_height = 800
-    viewport_x = stage_width // 2  # centre of the stage
-    viewport_y = stage_height // 2  # centre of the stage
+    viewport_x = game_state.stage_width // 2  # centre of the stage
+    viewport_y = game_state.stage_height // 2  # centre of the stage
     viewport_margin = 50  # margin tp move the screen when player moves
 
     # create the game window - size is 1000px x 1000px
@@ -40,8 +38,6 @@ def run():
     health_bar_batch = pyglet.graphics.Batch()
     damage_label_batch = pyglet.graphics.Batch()
     gui_batch = pyglet.graphics.Batch()
-
-    game_state = GameState()
 
 
     # groups - 0 drawn first, 10 drawn last
@@ -94,8 +90,8 @@ def run():
     def reset_viewport():
         nonlocal viewport_x
         nonlocal viewport_y
-        viewport_x = stage_width // 2
-        viewport_y = stage_height // 2
+        viewport_x = game_state.stage_width // 2
+        viewport_y = game_state.stage_height // 2
 
     def get_camera_bottom_left():
         return (-window.view[12], -window.view[13])
@@ -156,8 +152,8 @@ def run():
         _ = Background(
             assets,
             level=1,
-            x=stage_width // 2,
-            y=stage_height // 2,
+            x=game_state.stage_width // 2,
+            y=game_state.stage_height // 2,
             batch=gui_batch,
             group=groups[0],
         )
@@ -182,8 +178,8 @@ def run():
         _ = Background(
             assets,
             level=2,
-            x=stage_width // 2,
-            y=stage_height // 2,
+            x=game_state.stage_width // 2,
+            y=game_state.stage_height // 2,
             batch=gui_batch,
             group=groups[0],
         )
@@ -251,9 +247,9 @@ def run():
         if obj.type in ["asteroid", "bullet"]:
             if (
                 (obj.x + obj.width // 2) < 0
-                or (obj.x - obj.width // 2) > stage_width
+                or (obj.x - obj.width // 2) > game_state.stage_width
                 or (obj.y + obj.height // 2) < 0
-                or (obj.y - obj.height // 2) > stage_height
+                or (obj.y - obj.height // 2) > game_state.stage_height
             ):
                 obj.dead = True
 
@@ -263,17 +259,17 @@ def run():
                 obj.velocity[0] = -obj.velocity[0]
                 obj.x = obj.width // 2
 
-            if (obj.x + obj.width // 2) >= stage_width:
+            if (obj.x + obj.width // 2) >= game_state.stage_width:
                 obj.velocity[0] = -obj.velocity[0]
-                obj.x = stage_width - obj.width // 2
+                obj.x = game_state.stage_width - obj.width // 2
 
             if (obj.y - obj.height // 2) <= 0:
                 obj.velocity[1] = -obj.velocity[1]
                 obj.y = obj.height // 2
 
-            if (obj.y + obj.height // 2) >= stage_height:
+            if (obj.y + obj.height // 2) >= game_state.stage_height:
                 obj.velocity[1] = -obj.velocity[1]
-                obj.y = stage_height - obj.height // 2
+                obj.y = game_state.stage_height - obj.height // 2
 
     def update_viewport():
         nonlocal viewport_x
@@ -288,8 +284,8 @@ def run():
                 int(player_position[0]) - viewport_x - viewport_width // 2 + viewport_margin
             )
             # move the viewport to the right
-            viewport_x = min(stage_width - viewport_width // 2, viewport_x + diff_x)
-            if viewport_x == stage_width - viewport_width // 2:
+            viewport_x = min(game_state.stage_width - viewport_width // 2, viewport_x + diff_x)
+            if viewport_x == game_state.stage_width - viewport_width // 2:
                 diff_x = 0
 
         if player_position[0] < viewport_x - viewport_width // 2 + viewport_margin:
@@ -307,10 +303,10 @@ def run():
             )
             # move the viewport up
             viewport_y = min(
-                stage_height - viewport_height // 2,
+                game_state.stage_height - viewport_height // 2,
                 viewport_y + diff_y,
             )
-            if viewport_y == stage_height - viewport_height // 2:
+            if viewport_y == game_state.stage_height - viewport_height // 2:
                 diff_y = 0
 
         if player_position[1] < viewport_y - viewport_height // 2 + viewport_margin:
@@ -372,10 +368,8 @@ def run():
 
         # spawn asteroids if necessary
         objects_to_add.extend(asteroid_spawner.spawn(dt))
-
         # spawn enemies if required
         objects_to_add.extend(enemy_spawner.spawn(dt))
-
         # spawn powerups if required
         objects_to_add.extend(powerup_spawner.spawn(dt))
 
