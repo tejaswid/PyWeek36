@@ -36,6 +36,9 @@ class GameObject(pyglet.sprite.Sprite):
         self.score = 0  # score that this object gives when it dies
         self.died_by_player = False  # whether this object was killed by the player or not
 
+        self.batch = kwargs.get("batch", None)  # batch to which this object belongs
+        self.group = kwargs.get("group", None)  # group to which this object belongs
+
     def update_object(self, dt):
         """
         Virtual update_object function. This is not named update because the Sprite object has a

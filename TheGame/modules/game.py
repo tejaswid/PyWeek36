@@ -3,11 +3,15 @@ from pyglet.window import key
 from pyglet.window import mouse
 from pyglet import shapes
 
-from modules import game_manager
+
 from modules.game_assets import GameAssets
 from modules.player import Player
 from modules.background import Background
 from modules.game_state import GameState
+
+from modules.powerup_spawner import PowerupSpawner
+from modules.asteroid_spawner import AsteroidSpawner
+from modules.enemy_spawner import EnemySpawner
 
 def run():
     print(pyglet.version)
@@ -58,27 +62,10 @@ def run():
     # list of damage labels
     damage_labels = []
 
-    # list of asteroids
-    asteroids = []
-    num_max_asteroids = 5
-    asteroid_spawn_interval = 5  # in seconds
-    time_since_last_asteroid_spawn = (
-        asteroid_spawn_interval  # time since last spawn in seconds
-    )
-
-    # list of enemies
-    enemies = []
-    num_max_enemies = 4
-    enemy_spawn_interval = 5  # in seconds
-    time_since_last_enemy_spawn = (
-        enemy_spawn_interval  # time since last spawn in seconds
-    )
-
-    # list of powerups
-    powerups = []
-    num_max_powerups = 1
-    powerup_spawn_interval = 10  # in seconds
-    time_since_last_powerup_spawn = 0  # time since last spawn in seconds
+    # spawners
+    asteroid_spawner = AsteroidSpawner(assets, game_state, main_batch, groups[5])
+    enemy_spawner = EnemySpawner(assets, game_state, main_batch,groups[5])
+    powerup_spawner = PowerupSpawner(assets, game_state, main_batch, groups[5])
 
     # score
     score_label = None
@@ -288,56 +275,6 @@ def run():
                 obj.velocity[1] = -obj.velocity[1]
                 obj.y = stage_height - obj.height // 2
 
-    def spawn_asteroids(objects_to_add, dt):
-        # spawn asteroids if necessary
-        nonlocal time_since_last_asteroid_spawn
-        time_since_last_asteroid_spawn += dt
-        if (
-            time_since_last_asteroid_spawn > asteroid_spawn_interval
-            and len(asteroids) < num_max_asteroids
-        ):
-            time_since_last_asteroid_spawn = 0
-            new_asteroids = game_manager.spawn_asteroids(
-                num_max_asteroids - len(asteroids), assets, game_state, main_batch, groups[5]
-            )
-            asteroids.extend(new_asteroids)
-            objects_to_add.extend(new_asteroids)
-
-            if level == 2:
-                print("new_asteroids: ", len(new_asteroids))
-                print("asteroids: ", len(asteroids))
-
-    def spawn_enemies(objects_to_add, dt):
-        # spawn enemies if necessary
-        nonlocal time_since_last_enemy_spawn
-        time_since_last_enemy_spawn += dt
-        if (
-            time_since_last_enemy_spawn > enemy_spawn_interval
-            and len(enemies) < num_max_enemies
-        ):
-            time_since_last_enemy_spawn = 0
-            new_enemies = game_manager.spawn_enemies(
-                num_max_enemies - len(enemies), assets, game_state, main_batch, groups[5]
-            )
-            enemies.extend(new_enemies)
-            objects_to_add.extend(new_enemies)
-
-    def spawn_powerups(objects_to_add, dt):
-        # spawn powerups if necessary
-        nonlocal time_since_last_powerup_spawn
-        time_since_last_powerup_spawn += dt
-        if (
-            time_since_last_powerup_spawn > powerup_spawn_interval
-            and len(powerups) < num_max_powerups
-        ):
-            time_since_last_powerup_spawn = 0
-            new_powerups = game_manager.spawn_powerups(
-                num_max_powerups - len(powerups), assets, game_state, main_batch, groups[5]
-            )
-            powerups.extend(new_powerups)
-            objects_to_add.extend(new_powerups)
-            print("spawned powerup")
-
     def update_viewport():
         nonlocal viewport_x
         nonlocal viewport_y
@@ -391,17 +328,9 @@ def run():
         window.view = window.view.translate((-diff_x, -diff_y, 0))
 
     def reset_spawners():
-        nonlocal time_since_last_asteroid_spawn
-        nonlocal time_since_last_enemy_spawn
-        nonlocal time_since_last_powerup_spawn
-
-        time_since_last_asteroid_spawn = asteroid_spawn_interval
-        time_since_last_enemy_spawn = enemy_spawn_interval
-        time_since_last_powerup_spawn = 0
-
-        asteroids.clear()
-        enemies.clear()
-        powerups.clear()
+        asteroid_spawner.reset()
+        enemy_spawner.reset()
+        powerup_spawner.reset()
 
     def remove_non_essential_objects():
         for obj in game_objects:
@@ -442,13 +371,13 @@ def run():
         update_viewport()
 
         # spawn asteroids if necessary
-        spawn_asteroids(objects_to_add, dt)
+        objects_to_add.extend(asteroid_spawner.spawn(dt))
 
         # spawn enemies if required
-        spawn_enemies(objects_to_add, dt)
+        objects_to_add.extend(enemy_spawner.spawn(dt))
 
         # spawn powerups if required
-        spawn_powerups(objects_to_add, dt)
+        objects_to_add.extend(powerup_spawner.spawn(dt))
 
         # update positions, state of each object and
         # collect all children that each object may spawn
@@ -485,15 +414,15 @@ def run():
                 if obj.type == "asteroid":
                     if obj.died_by_player:
                         score += obj.score  # increase score
-                    asteroids.remove(obj)
+                    asteroid_spawner.remove(obj)
                 # if it is an enemy remove it from the list of enemies
                 if obj.type == "enemy":
                     if obj.died_by_player:
                         score += obj.score  # increase score
-                    enemies.remove(obj)
+                    enemy_spawner.remove(obj)
                 # if it is a powerup remove it from the list of powerups
                 if obj.type == "powerup":
-                    powerups.remove(obj)
+                    powerup_spawner.remove(obj)
                 # if player is dead, game over
                 if obj.type == "player":
                     print("Game over")

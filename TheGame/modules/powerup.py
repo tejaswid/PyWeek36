@@ -5,7 +5,7 @@ import pyglet.clock
 
 
 class Powerup(GameObject):
-    def __init__(self, game_assets, *args, **kwargs):
+    def __init__(self, game_assets, game_state, *args, **kwargs):
         self.img = game_assets.image_assets["img_powerup"]
         self.max_time = 8
 
@@ -13,6 +13,7 @@ class Powerup(GameObject):
         pyglet.clock.schedule_once(self.die, self.max_time)
 
         self.assets = game_assets
+        self.game_state = game_state
         self.type = "powerup"
 
         # spawn

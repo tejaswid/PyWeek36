@@ -5,16 +5,20 @@ from modules import utils
 
 
 class Asteroid(GameObject):
-    def __init__(self, game_assets, *args, **kwargs):
+    def __init__(self, game_assets, game_state, *args, **kwargs):
         self.img = game_assets.image_assets["img_asteroid"]
         super(Asteroid, self).__init__(img=self.img, *args, **kwargs)
 
         self.assets = game_assets
+        self.game_state = game_state
         self.type = "asteroid"
 
+        # spawn
+        self.rotation = random.uniform(0, 360)
         # movement
-        self.speed = 0
-        self.velocity = [0, 0]
+        self.speed = random.uniform(5, 30)
+        self.velocity = utils.random_velocity(self.speed)
+        self.angular_velocity = random.uniform(-100, 100)
         # collision
         self.collision_radius = 15
         # health
@@ -24,17 +28,6 @@ class Asteroid(GameObject):
         self.damage = 2
         # score
         self.score = 5
-
-    def set_initial_properties(self, x, y):
-        # spawn pose
-        self.x = x
-        self.y = y
-        self.rotation = random.uniform(0, 360)
-        # spawn random linear movement
-        self.speed = random.uniform(5, 30)
-        self.velocity = utils.random_velocity(self.speed)
-        # spawn random angular movement
-        self.angular_velocity = random.uniform(-100, 100)
 
     def update_object(self, dt):
         self.update_velocity()
