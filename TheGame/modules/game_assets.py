@@ -47,6 +47,8 @@ class GameAssets(object):
         self.create_image_asset("img_enemy", "images/enemy.png", True)
         self.create_image_asset("img_asteroid", "images/asteroid.png", True)
         self.create_image_asset("img_powerup", "images/powerup.png", True)
-        self.create_image_asset("img_bkg_1", "images/Starfield_01-1024x1024.png", True)
-        self.create_image_asset("img_bkg_2", "images/Starfield_02-1024x1024.png", True)
+        self.create_image_asset("img_bkg_1_1", "images/Starfield_01-1024x1024.png", True)
+        self.create_image_asset("img_bkg_1_2", "images/Starfield_01-1024x1024.png", True)
+        self.create_image_asset("img_bkg_2_1", "images/Purple_Nebula_06-1024x1024.png", True)
+        self.create_image_asset("img_bkg_2_2", "images/Purple_Nebula_07-1024x1024.png", True)
 
