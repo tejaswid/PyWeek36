@@ -7,7 +7,7 @@ from modules import game_manager
 from modules.game_assets import GameAssets
 from modules.player import Player
 from modules.background import Background
-
+from modules.game_state import GameState
 
 def run():
     print(pyglet.version)
@@ -36,6 +36,9 @@ def run():
     health_bar_batch = pyglet.graphics.Batch()
     damage_label_batch = pyglet.graphics.Batch()
     gui_batch = pyglet.graphics.Batch()
+
+    game_state = GameState()
+
 
     # groups - 0 drawn first, 10 drawn last
     groups = []
@@ -77,31 +80,52 @@ def run():
     powerup_spawn_interval = 10  # in seconds
     time_since_last_powerup_spawn = 0  # time since last spawn in seconds
 
-    # create an instance of the background centred on the stage
-    _ = Background(
-        assets,
-        x=stage_width // 2,
-        y=stage_height // 2,
-        batch=gui_batch,
-        group=groups[0],
-    )
-
-    # create an instance of a player
-    player_1 = Player(assets, x=700, y=700, batch=main_batch, group=groups[5])
-
     # score
     score_label = None
     score = 0
+
+    # level
+    level = 0
+    change_level = True
 
     # change mouse cursor
     cursor = window.get_system_mouse_cursor(window.CURSOR_CROSSHAIR)
     window.set_mouse_cursor(cursor)
 
     def window_to_world(x, y):
-        return (x + viewport_x - viewport_width // 2, y + viewport_y - viewport_height // 2)
-    
+        return (
+            x + viewport_x - viewport_width // 2,
+            y + viewport_y - viewport_height // 2,
+        )
+
     def world_to_window(x, y):
-        return (x - viewport_x + viewport_width // 2, y - viewport_y + viewport_height // 2)
+        return (
+            x - viewport_x + viewport_width // 2,
+            y - viewport_y + viewport_height // 2,
+        )
+
+    def reset_viewport():
+        nonlocal viewport_x
+        nonlocal viewport_y
+        viewport_x = stage_width // 2
+        viewport_y = stage_height // 2
+
+    def get_camera_bottom_left():
+        return (-window.view[12], -window.view[13])
+
+    def get_camera_centre():
+        camera_bl_x, camera_bl_y = get_camera_bottom_left()
+        print(" camera bottom left: {}, {}".format(camera_bl_x, camera_bl_y))
+        return (camera_bl_x + viewport_width // 2, camera_bl_y + viewport_height // 2)
+
+    def reset_camera():
+        # get current corner of the camera
+        camera_bl_x, camera_bl_y = get_camera_bottom_left()
+        # compute difference between current corner and desired corner
+        diff_x = (viewport_x - viewport_width // 2) - camera_bl_x
+        diff_y = (viewport_y - viewport_height // 2) - camera_bl_y
+        # translate the camera by the difference
+        window.view = window.view.translate((-diff_x, -diff_y, 0))
 
     # drawing items on screen
     @window.event
@@ -126,27 +150,73 @@ def run():
         # convert to world coordinate frame
         x, y = window_to_world(x, y)
         if button == mouse.LEFT:
-            # create a bullet
-            player_1.fire_bullet(x, y)
+            for obj in game_objects:
+                if obj.type == "player":
+                    obj.fire_bullet(x, y)
 
     @window.event
     def on_mouse_motion(x, y, dx, dy):
         # Note: x and y are in window coordinate frame
         # convert to world coordinate frame
         x, y = window_to_world(x, y)
-        
-        print("mouse_x: {}, mouse_y: {}".format(x, y))
-        player_1.update_rotation(x, y)
+        for obj in game_objects:
+            if obj.type == "player":
+                obj.update_rotation(x, y)
 
     # loads the main scene
-    def load_main_scene():
+    def load_stage_1():
+        # create an instance of the background centred on the stage
+        _ = Background(
+            assets,
+            level=1,
+            x=stage_width // 2,
+            y=stage_height // 2,
+            batch=gui_batch,
+            group=groups[0],
+        )
+
+        # spawn the player
+        player_1 = Player(assets, game_state, x=700, y=700, batch=main_batch, group=groups[5])
+
+        # reset the view_port
+        reset_viewport()
+        # reset the camera
+        reset_camera()
+
         # player was already created before
         window.push_handlers(player_1.key_handler)
         window.push_handlers(player_1.mouse_handler)
         game_objects.append(player_1)
-        window.view = window.view.translate(
-            (-viewport_x + viewport_width // 2, -viewport_y + viewport_height // 2, 0)
+        
+
+    # loads the second scene
+    def load_stage_2():
+        # create an instance of the background centred on the stage
+        _ = Background(
+            assets,
+            level=2,
+            x=stage_width // 2,
+            y=stage_height // 2,
+            batch=gui_batch,
+            group=groups[0],
         )
+
+        # spawn the player
+        player_1 = Player(assets, game_state, x=200, y=200, batch=main_batch, group=groups[5])
+
+        # reset the view_port
+        reset_viewport()
+
+        # player was already created before
+        window.push_handlers(player_1.key_handler)
+        window.push_handlers(player_1.mouse_handler)
+        game_objects.append(player_1)
+        # window.view = window.view.translate(
+        #     (-viewport_x + viewport_width // 2, -viewport_y + viewport_height // 2, 0)
+        # )
+
+        # reset the camera
+        reset_camera()
 
     def draw_health_bar(obj):
         if obj.type == "bullet":
@@ -228,10 +298,14 @@ def run():
         ):
             time_since_last_asteroid_spawn = 0
             new_asteroids = game_manager.spawn_asteroids(
-                num_max_asteroids - len(asteroids), player_1, main_batch, groups[5]
+                num_max_asteroids - len(asteroids), assets, game_state, main_batch, groups[5]
             )
             asteroids.extend(new_asteroids)
             objects_to_add.extend(new_asteroids)
+
+            if level == 2:
+                print("new_asteroids: ", len(new_asteroids))
+                print("asteroids: ", len(asteroids))
 
     def spawn_enemies(objects_to_add, dt):
         # spawn enemies if necessary
@@ -243,7 +317,7 @@ def run():
         ):
             time_since_last_enemy_spawn = 0
             new_enemies = game_manager.spawn_enemies(
-                num_max_enemies - len(enemies), player_1, main_batch, groups[5]
+                num_max_enemies - len(enemies), assets, game_state, main_batch, groups[5]
             )
             enemies.extend(new_enemies)
             objects_to_add.extend(new_enemies)
@@ -258,7 +332,7 @@ def run():
         ):
             time_since_last_powerup_spawn = 0
             new_powerups = game_manager.spawn_powerups(
-                num_max_powerups - len(powerups), player_1, main_batch, groups[5]
+                num_max_powerups - len(powerups), assets, game_state, main_batch, groups[5]
             )
             powerups.extend(new_powerups)
             objects_to_add.extend(new_powerups)
@@ -270,29 +344,29 @@ def run():
 
         diff_x = 0
         diff_y = 0
-        if player_1.x > viewport_x + viewport_width // 2 - viewport_margin:
+        player_position = game_state.player_position
+
+        if player_position[0] > viewport_x + viewport_width // 2 - viewport_margin:
             diff_x = (
-                int(player_1.x) - viewport_x - viewport_width // 2 + viewport_margin
+                int(player_position[0]) - viewport_x - viewport_width // 2 + viewport_margin
             )
             # move the viewport to the right
             viewport_x = min(stage_width - viewport_width // 2, viewport_x + diff_x)
             if viewport_x == stage_width - viewport_width // 2:
-                print("reached end of stage")
                 diff_x = 0
 
-        if player_1.x < viewport_x - viewport_width // 2 + viewport_margin:
+        if player_position[0] < viewport_x - viewport_width // 2 + viewport_margin:
             diff_x = -(
-                viewport_x - viewport_width // 2 + viewport_margin - int(player_1.x)
+                viewport_x - viewport_width // 2 + viewport_margin - int(player_position[0])
             )
             # move the viewport to the left
             viewport_x = max(viewport_width // 2, viewport_x + diff_x)
             if viewport_x == viewport_width // 2:
-                print("reached start of stage")
                 diff_x = 0
 
-        if player_1.y > viewport_y + viewport_height // 2 - viewport_margin:
+        if player_position[1] > viewport_y + viewport_height // 2 - viewport_margin:
             diff_y = (
-                int(player_1.y) - viewport_y - viewport_height // 2 + viewport_margin
+                int(player_position[1]) - viewport_y - viewport_height // 2 + viewport_margin
             )
             # move the viewport up
             viewport_y = min(
@@ -300,12 +374,11 @@ def run():
                 viewport_y + diff_y,
             )
             if viewport_y == stage_height - viewport_height // 2:
-                print("reached top of stage")
                 diff_y = 0
 
-        if player_1.y < viewport_y - viewport_height // 2 + viewport_margin:
+        if player_position[1] < viewport_y - viewport_height // 2 + viewport_margin:
             diff_y = -(
-                viewport_y - viewport_height // 2 + viewport_margin - int(player_1.y)
+                viewport_y - viewport_height // 2 + viewport_margin - int(player_position[1])
             )
             # move the viewport down
             viewport_y = max(
@@ -313,13 +386,55 @@ def run():
                 viewport_y + diff_y,
             )
             if viewport_y == viewport_height // 2:
-                print("reached bottom of stage")
                 diff_y = 0
         # translate the window by the difference
         window.view = window.view.translate((-diff_x, -diff_y, 0))
 
+    def reset_spawners():
+        nonlocal time_since_last_asteroid_spawn
+        nonlocal time_since_last_enemy_spawn
+        nonlocal time_since_last_powerup_spawn
+
+        time_since_last_asteroid_spawn = asteroid_spawn_interval
+        time_since_last_enemy_spawn = enemy_spawn_interval
+        time_since_last_powerup_spawn = 0
+
+        asteroids.clear()
+        enemies.clear()
+        powerups.clear()
+
+    def remove_non_essential_objects():
+        for obj in game_objects:
+            obj.dead = True
+            obj.batch = None
+            obj.child_objects = []  # clear the list
+        game_objects.clear()
+
+    def handle_level_change():
+        nonlocal level
+        nonlocal change_level
+
+        # if change_level
+        if level == 0:
+            load_stage_1()
+            level = 1
+        elif level == 1:
+            # check if the level has to change based on the score
+            if score > 10:
+                print("changing level")
+
+                # remove all objects
+                remove_non_essential_objects()
+                # reset spawners
+                reset_spawners()
+
+                load_stage_2()
+                level = 2
+
     # update loop
     def update(dt):
+        handle_level_change()
+
         health_bars.clear()
         objects_to_add = []  # list of new objects to add
 
@@ -345,10 +460,8 @@ def run():
             # handle out of bounds
             handle_out_of_bounds(obj)
 
-            # if object is an enemy, seek the player
+            # if object is an enemy
             if obj.type == "enemy":
-                obj.seek_player(player_1.x, player_1.y)
-
                 # avoid other enemies
                 for other_obj in game_objects:
                     if other_obj is not obj and other_obj.type == "enemy":
@@ -412,9 +525,9 @@ def run():
             anchor_x="right",
             anchor_y="top",
             batch=gui_batch,
-            group=groups[5],
+            group=groups[0],
         )
 
-    load_main_scene()
+
     pyglet.clock.schedule_interval(update, 1 / 120.0)
     pyglet.app.run()

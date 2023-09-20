@@ -6,7 +6,7 @@
 - [ ] Drawing assets
 - [x] Score board
 - [ ] Powerups
-- [ ] Stage - Windowing
+- [x] Stage - Windowing
 - [x] Bounds
 - [ ] Levels
 - [ ] Titles and screens

@@ -3,16 +3,17 @@ import math
 from pyglet.window import key
 from pyglet.window import mouse
 
-from modules.game_objects import GameObject
+from modules.game_object import GameObject
 from modules.bullet import Bullet
 
 
 class Player(GameObject):
-    def __init__(self, game_assets, *args, **kwargs):
+    def __init__(self, game_assets, game_state, *args, **kwargs):
         self.img = game_assets.image_assets["img_player_ship"]
         super(Player, self).__init__(img=self.img, *args, **kwargs)
 
         self.assets = game_assets
+        self.game_state = game_state
         self.type = "player"
 
         # Tell the game handler about any event handlers
@@ -32,12 +33,16 @@ class Player(GameObject):
         self.current_health = self.max_health
         # damage to other objects
         self.damage = 30
+        # update player position in game state
+        self.game_state.player_position = [self.x, self.y]
 
     def update_object(self, dt):
         self.acceleration = [0, 0]
         if self.key_handler[key.A]:
             self.update_velocity(dt)
         self.update_position(dt)
+
+        self.game_state.player_position = [self.x, self.y]
 
     # updates the position of the player
     def update_position(self, dt):

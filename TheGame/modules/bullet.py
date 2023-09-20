@@ -4,7 +4,7 @@ from pyglet.window import key
 from pyglet.window import mouse
 from pyglet import clock
 
-from modules.game_objects import GameObject
+from modules.game_object import GameObject
 from modules import utils
 
 

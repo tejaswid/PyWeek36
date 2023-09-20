@@ -1,19 +1,18 @@
-from modules.game_objects import GameObject
+from modules.game_object import GameObject
 from modules import utils
 
 
 class Enemy(GameObject):
-    def __init__(self, game_assets, *args, **kwargs):
+    def __init__(self, game_assets, game_state, *args, **kwargs):
         self.img = game_assets.image_assets["img_enemy"]
         super(Enemy, self).__init__(img=self.img, *args, **kwargs)
 
         self.assets = game_assets
+        self.game_state = game_state
         self.type = "enemy"
 
         # movement
         self.speed = 50
-        self.player_x = None
-        self.player_y = None
         self.velocity = [0, 0]
         # collision
         self.collision_radius = 10
@@ -28,21 +27,18 @@ class Enemy(GameObject):
         self.repulsion_distance = 50
         self.repulsion_factor = 2
         
-
-    def seek_player(self, player_x, player_y):
-        self.player_x = player_x
-        self.player_y = player_y
-
     def update_object(self, dt):
         # TODO add collision detection
         self.update_velocity()
         self.update_position(dt)
 
     def update_velocity(self):
-        if self.player_x is not None and self.player_y is not None:
+        player_x = self.game_state.player_position[0]
+        player_y = self.game_state.player_position[1]
+        if player_x is not None and player_y is not None:
             # compute direction towards player
             self.velocity = utils.compute_velocity(
-                self.speed, self.x, self.y, self.player_x, self.player_y
+                self.speed, self.x, self.y, player_x, player_y
             )
 
     def update_position(self, dt):

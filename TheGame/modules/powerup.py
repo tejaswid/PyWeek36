@@ -1,6 +1,6 @@
 import random
 
-from modules.game_objects import GameObject
+from modules.game_object import GameObject
 import pyglet.clock
 
 
