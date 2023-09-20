@@ -56,7 +56,7 @@ def run():
     asteroid_spawner = AsteroidSpawner(assets, game_state, main_batch, groups[5])
     enemy_spawner = EnemySpawner(assets, game_state, main_batch,groups[5])
     powerup_spawner = PowerupSpawner(assets, game_state, main_batch, groups[5])
-    dark_matter_spawner = DarkMatterSpawner(assets, game_state, main_batch, groups[5])
+    dark_matter_spawner = DarkMatterSpawner(assets, game_state, main_batch, groups[4])
 
     # score
     score_label = None
