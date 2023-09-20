@@ -21,8 +21,18 @@ class Spawner(object):
         self.batch = batch
         self.group = group
 
+        self.spawn_margin = 10
+
     def get_num_to_spawn(self):
         return self.max_num_objects - len(self.spawned_objects)
+
+    def get_spawn_bounds(self):
+        viewport_x, viewport_y = self.game_state.get_viewport()
+        min_x = viewport_x - self.game_state.viewport_width//2 + self.spawn_margin
+        max_x = viewport_x + self.game_state.viewport_width//2 - self.spawn_margin
+        min_y = viewport_y - self.game_state.viewport_height//2 + self.spawn_margin
+        max_y = viewport_y + self.game_state.viewport_height//2 - self.spawn_margin
+        return min_x, max_x, min_y, max_y
 
     def spawn(self, dt):
         self.time_since_last_spawn += dt
@@ -52,8 +62,9 @@ class Spawner(object):
                 )
                 < self.dist_from_player
             ):
-                object_x = random.uniform(10, 990)
-                object_y = random.uniform(10, 990)
+                min_x, max_x, min_y, max_y = self.get_spawn_bounds()
+                object_x = random.uniform(min_x, max_x)
+                object_y = random.uniform(min_y, max_y)
 
             # spawn object
             new_object = self.game_object(

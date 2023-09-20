@@ -18,17 +18,10 @@ def run():
 
     game_state = GameState()
 
-    # viewport size - this is the size of the window that we see
-    viewport_width = 800
-    viewport_height = 800
-    viewport_x = game_state.stage_width // 2  # centre of the stage
-    viewport_y = game_state.stage_height // 2  # centre of the stage
-    viewport_margin = 50  # margin tp move the screen when player moves
-
     # create the game window - size is 1000px x 1000px
     window = pyglet.window.Window(
-        width=viewport_width,
-        height=viewport_height,
+        width=game_state.viewport_width,
+        height=game_state.viewport_height,
         caption="The game",
         resizable=False,
     )
@@ -77,21 +70,15 @@ def run():
 
     def window_to_world(x, y):
         return (
-            x + viewport_x - viewport_width // 2,
-            y + viewport_y - viewport_height // 2,
+            x + game_state.viewport_x - game_state.viewport_width // 2,
+            y + game_state.viewport_y - game_state.viewport_height // 2,
         )
 
     def world_to_window(x, y):
         return (
-            x - viewport_x + viewport_width // 2,
-            y - viewport_y + viewport_height // 2,
+            x - game_state.viewport_x + game_state.viewport_width // 2,
+            y - game_state.viewport_y + game_state.viewport_height // 2,
         )
-
-    def reset_viewport():
-        nonlocal viewport_x
-        nonlocal viewport_y
-        viewport_x = game_state.stage_width // 2
-        viewport_y = game_state.stage_height // 2
 
     def get_camera_bottom_left():
         return (-window.view[12], -window.view[13])
@@ -99,14 +86,14 @@ def run():
     def get_camera_centre():
         camera_bl_x, camera_bl_y = get_camera_bottom_left()
         print(" camera bottom left: {}, {}".format(camera_bl_x, camera_bl_y))
-        return (camera_bl_x + viewport_width // 2, camera_bl_y + viewport_height // 2)
+        return (camera_bl_x + game_state.viewport_width // 2, camera_bl_y + game_state.viewport_height // 2)
 
     def reset_camera():
         # get current corner of the camera
         camera_bl_x, camera_bl_y = get_camera_bottom_left()
         # compute difference between current corner and desired corner
-        diff_x = (viewport_x - viewport_width // 2) - camera_bl_x
-        diff_y = (viewport_y - viewport_height // 2) - camera_bl_y
+        diff_x = (game_state.viewport_x - game_state.viewport_width // 2) - camera_bl_x
+        diff_y = (game_state.viewport_y - game_state.viewport_height // 2) - camera_bl_y
         # translate the camera by the difference
         window.view = window.view.translate((-diff_x, -diff_y, 0))
 
@@ -162,7 +149,7 @@ def run():
         player_1 = Player(assets, game_state, x=700, y=700, batch=main_batch, group=groups[5])
 
         # reset the view_port
-        reset_viewport()
+        game_state.reset_viewport()
         # reset the camera
         reset_camera()
 
@@ -188,14 +175,14 @@ def run():
         player_1 = Player(assets, game_state, x=200, y=200, batch=main_batch, group=groups[5])
 
         # reset the view_port
-        reset_viewport()
+        game_state.reset_viewport()
 
         # player was already created before
         window.push_handlers(player_1.key_handler)
         window.push_handlers(player_1.mouse_handler)
         game_objects.append(player_1)
         # window.view = window.view.translate(
-        #     (-viewport_x + viewport_width // 2, -viewport_y + viewport_height // 2, 0)
+        #     (-game_state.viewport_x + game_state.viewport_width // 2, -game_state.viewport_y + game_state.viewport_height // 2, 0)
         # )
 
         # reset the camera
@@ -272,54 +259,56 @@ def run():
                 obj.y = game_state.stage_height - obj.height // 2
 
     def update_viewport():
-        nonlocal viewport_x
-        nonlocal viewport_y
-
         diff_x = 0
         diff_y = 0
         player_position = game_state.player_position
 
-        if player_position[0] > viewport_x + viewport_width // 2 - viewport_margin:
+        new_viewport_x, new_viewport_y = game_state.get_viewport()
+
+        if player_position[0] > game_state.viewport_x + game_state.viewport_width // 2 - game_state.viewport_margin:
             diff_x = (
-                int(player_position[0]) - viewport_x - viewport_width // 2 + viewport_margin
+                int(player_position[0]) - game_state.viewport_x - game_state.viewport_width // 2 + game_state.viewport_margin
             )
             # move the viewport to the right
-            viewport_x = min(game_state.stage_width - viewport_width // 2, viewport_x + diff_x)
-            if viewport_x == game_state.stage_width - viewport_width // 2:
+            new_viewport_x = min(game_state.stage_width - game_state.viewport_width // 2, game_state.viewport_x + diff_x)
+            if new_viewport_x == game_state.stage_width - game_state.viewport_width // 2:
                 diff_x = 0
 
-        if player_position[0] < viewport_x - viewport_width // 2 + viewport_margin:
+        if player_position[0] < game_state.viewport_x - game_state.viewport_width // 2 + game_state.viewport_margin:
             diff_x = -(
-                viewport_x - viewport_width // 2 + viewport_margin - int(player_position[0])
+                game_state.viewport_x - game_state.viewport_width // 2 + game_state.viewport_margin - int(player_position[0])
             )
             # move the viewport to the left
-            viewport_x = max(viewport_width // 2, viewport_x + diff_x)
-            if viewport_x == viewport_width // 2:
+            new_viewport_x = max(game_state.viewport_width // 2, game_state.viewport_x + diff_x)
+            if new_viewport_x == game_state.viewport_width // 2:
                 diff_x = 0
 
-        if player_position[1] > viewport_y + viewport_height // 2 - viewport_margin:
+        if player_position[1] > game_state.viewport_y + game_state.viewport_height // 2 - game_state.viewport_margin:
             diff_y = (
-                int(player_position[1]) - viewport_y - viewport_height // 2 + viewport_margin
+                int(player_position[1]) - game_state.viewport_y - game_state.viewport_height // 2 + game_state.viewport_margin
             )
             # move the viewport up
-            viewport_y = min(
-                game_state.stage_height - viewport_height // 2,
-                viewport_y + diff_y,
+            new_viewport_y = min(
+                game_state.stage_height - game_state.viewport_height // 2,
+                game_state.viewport_y + diff_y,
             )
-            if viewport_y == game_state.stage_height - viewport_height // 2:
+            if new_viewport_y == game_state.stage_height - game_state.viewport_height // 2:
                 diff_y = 0
 
-        if player_position[1] < viewport_y - viewport_height // 2 + viewport_margin:
+        if player_position[1] < game_state.viewport_y - game_state.viewport_height // 2 + game_state.viewport_margin:
             diff_y = -(
-                viewport_y - viewport_height // 2 + viewport_margin - int(player_position[1])
+                game_state.viewport_y - game_state.viewport_height // 2 + game_state.viewport_margin - int(player_position[1])
             )
             # move the viewport down
-            viewport_y = max(
-                viewport_height // 2,
-                viewport_y + diff_y,
+            new_viewport_y = max(
+                game_state.viewport_height // 2,
+                game_state.viewport_y + diff_y,
             )
-            if viewport_y == viewport_height // 2:
+            if new_viewport_y == game_state.viewport_height // 2:
                 diff_y = 0
+        # update viewport of the state
+        game_state.update_viewport(new_viewport_x, new_viewport_y)
+
         # translate the window by the difference
         window.view = window.view.translate((-diff_x, -diff_y, 0))
 
@@ -443,8 +432,8 @@ def run():
             "Score: " + str(score),
             font_name="Arial",
             font_size=20,
-            x=viewport_x + viewport_width // 2 - 10,
-            y=viewport_y + viewport_height // 2 - 10,
+            x=game_state.viewport_x + game_state.viewport_width // 2 - 10,
+            y=game_state.viewport_y + game_state.viewport_height // 2 - 10,
             anchor_x="right",
             anchor_y="top",
             batch=gui_batch,
