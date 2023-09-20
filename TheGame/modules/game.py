@@ -12,6 +12,7 @@ from modules.game_state import GameState
 from modules.powerup_spawner import PowerupSpawner
 from modules.asteroid_spawner import AsteroidSpawner
 from modules.enemy_spawner import EnemySpawner
+from modules.dark_matter_spawner import DarkMatterSpawner
 
 def run():
     print(pyglet.version)
@@ -55,6 +56,7 @@ def run():
     asteroid_spawner = AsteroidSpawner(assets, game_state, main_batch, groups[5])
     enemy_spawner = EnemySpawner(assets, game_state, main_batch,groups[5])
     powerup_spawner = PowerupSpawner(assets, game_state, main_batch, groups[5])
+    dark_matter_spawner = DarkMatterSpawner(assets, game_state, main_batch, groups[5])
 
     # score
     score_label = None
@@ -189,7 +191,7 @@ def run():
         reset_camera()
 
     def draw_health_bar(obj):
-        if obj.type == "bullet":
+        if obj.type in ["bullet", "dark_matter"]:
             return
 
         # Draw a health bar for the game object
@@ -316,6 +318,7 @@ def run():
         asteroid_spawner.reset()
         enemy_spawner.reset()
         powerup_spawner.reset()
+        dark_matter_spawner.reset()
 
     def remove_non_essential_objects():
         for obj in game_objects:
@@ -361,6 +364,8 @@ def run():
         objects_to_add.extend(enemy_spawner.spawn(dt))
         # spawn powerups if required
         objects_to_add.extend(powerup_spawner.spawn(dt))
+        # spawn dark matter if required
+        objects_to_add.extend(dark_matter_spawner.spawn(dt))
 
         # update positions, state of each object and
         # collect all children that each object may spawn

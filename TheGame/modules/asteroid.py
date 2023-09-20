@@ -57,3 +57,9 @@ class Asteroid(GameObject):
                 print("asteroid collided with player")
                 self.take_damage(other_object.damage)
                 other_object.take_damage(self.damage)
+
+        if other_object.type == "dark_matter":
+            if self.has_collided_with(other_object):
+                print("asteroid collided with dark_matter")
+                # remove asteroid
+                self.dead = True

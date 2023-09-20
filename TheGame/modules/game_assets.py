@@ -51,4 +51,5 @@ class GameAssets(object):
         self.create_image_asset("img_bkg_1_2", "images/Starfield_01-1024x1024.png", True)
         self.create_image_asset("img_bkg_2_1", "images/Purple_Nebula_06-1024x1024.png", True)
         self.create_image_asset("img_bkg_2_2", "images/Purple_Nebula_07-1024x1024.png", True)
+        self.create_image_asset("img_dark_matter", "images/dark_matter.png", True)
 

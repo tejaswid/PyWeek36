@@ -8,7 +8,8 @@ class EnemySpawner(Spawner):
         self.spawn_interval = 5
         self.time_since_last_spawn = self.spawn_interval
         self.max_num_objects = 4
+        self.spawn_at_start = True
 
         self.dist_from_player = 100
         self.game_object = Enemy
-        
+        self.spawn_bounds_type = "viewport"
