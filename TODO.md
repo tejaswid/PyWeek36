@@ -5,10 +5,9 @@
 - [x] Display health and stats
 - [ ] Drawing assets
 - [x] Score board
-- [ ] Powerups
 - [x] Stage - Windowing
 - [x] Bounds
-- [ ] Levels
+- [ ] Levels - partially done, implement difficulty
 - [ ] Titles and screens
 - [ ] Story
 - [ ] Sound effects
@@ -23,25 +22,33 @@
 - [x] spawn
 - [x] movement
 - [x] collision
-- [ ] interaction with dark matter
+- [x] interaction with dark matter
 
 ## Enemy
 - [x] spawn
 - [x] movement
 - [x] collision
 - [ ] kinds of enemies
-- [ ] boss
+
 ## Asteroids
 - [x] spawn
 - [x] movement
 - [x] collision
 
 ## Powerup
-- [ ] spawn (partially done - implement randomly timed spawning)
+- [x] spawn
 - [x] collision
 - [ ] kinds of powerups
-
+ 
 ## Dark matter
+- [x] spawn
+- [x] movement
+- [x] collision
+- [ ] Boons if special powerup is picked up
+
+## Boss
 - [ ] spawn
 - [ ] movement
+- [ ] attack
 - [ ] collision
+- [ ] death
