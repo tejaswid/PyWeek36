@@ -12,13 +12,30 @@ from modules.background import Background
 def run():
     print(pyglet.version)
 
+    # actual stage size
+    stage_width = 1024
+    stage_height = 1024
+
+    # viewport size - this is the size of the window that we see
+    viewport_width = 800
+    viewport_height = 800
+    viewport_x = stage_width // 2  # centre of the stage
+    viewport_y = stage_height // 2  # centre of the stage
+    viewport_margin = 50  # margin tp move the screen when player moves
+
     # create the game window - size is 1000px x 1000px
-    window = pyglet.window.Window(1000, 1000, "The game", resizable=False)
+    window = pyglet.window.Window(
+        width=viewport_width,
+        height=viewport_height,
+        caption="The game",
+        resizable=False,
+    )
 
     # Store objects in a batch to load them efficiently
     main_batch = pyglet.graphics.Batch()
     health_bar_batch = pyglet.graphics.Batch()
     damage_label_batch = pyglet.graphics.Batch()
+    gui_batch = pyglet.graphics.Batch()
 
     # groups - 0 drawn first, 10 drawn last
     groups = []
@@ -60,17 +77,17 @@ def run():
     powerup_spawn_interval = 10  # in seconds
     time_since_last_powerup_spawn = 0  # time since last spawn in seconds
 
-    # create an instance of the background
+    # create an instance of the background centred on the stage
     _ = Background(
         assets,
-        x=window.width // 2,
-        y=window.height // 2,
-        batch=main_batch,
+        x=stage_width // 2,
+        y=stage_height // 2,
+        batch=gui_batch,
         group=groups[0],
     )
 
     # create an instance of a player
-    player_1 = Player(assets, x=200, y=500, batch=main_batch, group=groups[5])
+    player_1 = Player(assets, x=700, y=700, batch=main_batch, group=groups[5])
 
     # score
     score_label = None
@@ -80,10 +97,18 @@ def run():
     cursor = window.get_system_mouse_cursor(window.CURSOR_CROSSHAIR)
     window.set_mouse_cursor(cursor)
 
+    def window_to_world(x, y):
+        return (x + viewport_x - viewport_width // 2, y + viewport_y - viewport_height // 2)
+    
+    def world_to_window(x, y):
+        return (x - viewport_x + viewport_width // 2, y - viewport_y + viewport_height // 2)
+
     # drawing items on screen
     @window.event
     def on_draw():
         window.clear()
+
+        gui_batch.draw()
         main_batch.draw()
         health_bar_batch.draw()
         damage_label_batch.draw()
@@ -97,12 +122,20 @@ def run():
     # handle mouse inputs
     @window.event
     def on_mouse_press(x, y, button, modifiers):
+        # Note: x and y are in window coordinate frame
+        # convert to world coordinate frame
+        x, y = window_to_world(x, y)
         if button == mouse.LEFT:
             # create a bullet
             player_1.fire_bullet(x, y)
 
     @window.event
     def on_mouse_motion(x, y, dx, dy):
+        # Note: x and y are in window coordinate frame
+        # convert to world coordinate frame
+        x, y = window_to_world(x, y)
+        
+        print("mouse_x: {}, mouse_y: {}".format(x, y))
         player_1.update_rotation(x, y)
 
     # loads the main scene
@@ -111,6 +144,9 @@ def run():
         window.push_handlers(player_1.key_handler)
         window.push_handlers(player_1.mouse_handler)
         game_objects.append(player_1)
+        window.view = window.view.translate(
+            (-viewport_x + viewport_width // 2, -viewport_y + viewport_height // 2, 0)
+        )
 
     def draw_health_bar(obj):
         if obj.type == "bullet":
@@ -158,9 +194,9 @@ def run():
         if obj.type in ["asteroid", "bullet"]:
             if (
                 (obj.x + obj.width // 2) < 0
-                or (obj.x - obj.width // 2) > window.width
+                or (obj.x - obj.width // 2) > stage_width
                 or (obj.y + obj.height // 2) < 0
-                or (obj.y - obj.height // 2) > window.height
+                or (obj.y - obj.height // 2) > stage_height
             ):
                 obj.dead = True
 
@@ -170,17 +206,17 @@ def run():
                 obj.velocity[0] = -obj.velocity[0]
                 obj.x = obj.width // 2
 
-            if (obj.x + obj.width // 2) >= window.width:
+            if (obj.x + obj.width // 2) >= stage_width:
                 obj.velocity[0] = -obj.velocity[0]
-                obj.x = window.width - obj.width // 2
+                obj.x = stage_width - obj.width // 2
 
             if (obj.y - obj.height // 2) <= 0:
                 obj.velocity[1] = -obj.velocity[1]
                 obj.y = obj.height // 2
 
-            if (obj.y + obj.height // 2) >= window.height:
+            if (obj.y + obj.height // 2) >= stage_height:
                 obj.velocity[1] = -obj.velocity[1]
-                obj.y = window.height - obj.height // 2
+                obj.y = stage_height - obj.height // 2
 
     def spawn_asteroids(objects_to_add, dt):
         # spawn asteroids if necessary
@@ -228,10 +264,67 @@ def run():
             objects_to_add.extend(new_powerups)
             print("spawned powerup")
 
+    def update_viewport():
+        nonlocal viewport_x
+        nonlocal viewport_y
+
+        diff_x = 0
+        diff_y = 0
+        if player_1.x > viewport_x + viewport_width // 2 - viewport_margin:
+            diff_x = (
+                int(player_1.x) - viewport_x - viewport_width // 2 + viewport_margin
+            )
+            # move the viewport to the right
+            viewport_x = min(stage_width - viewport_width // 2, viewport_x + diff_x)
+            if viewport_x == stage_width - viewport_width // 2:
+                print("reached end of stage")
+                diff_x = 0
+
+        if player_1.x < viewport_x - viewport_width // 2 + viewport_margin:
+            diff_x = -(
+                viewport_x - viewport_width // 2 + viewport_margin - int(player_1.x)
+            )
+            # move the viewport to the left
+            viewport_x = max(viewport_width // 2, viewport_x + diff_x)
+            if viewport_x == viewport_width // 2:
+                print("reached start of stage")
+                diff_x = 0
+
+        if player_1.y > viewport_y + viewport_height // 2 - viewport_margin:
+            diff_y = (
+                int(player_1.y) - viewport_y - viewport_height // 2 + viewport_margin
+            )
+            # move the viewport up
+            viewport_y = min(
+                stage_height - viewport_height // 2,
+                viewport_y + diff_y,
+            )
+            if viewport_y == stage_height - viewport_height // 2:
+                print("reached top of stage")
+                diff_y = 0
+
+        if player_1.y < viewport_y - viewport_height // 2 + viewport_margin:
+            diff_y = -(
+                viewport_y - viewport_height // 2 + viewport_margin - int(player_1.y)
+            )
+            # move the viewport down
+            viewport_y = max(
+                viewport_height // 2,
+                viewport_y + diff_y,
+            )
+            if viewport_y == viewport_height // 2:
+                print("reached bottom of stage")
+                diff_y = 0
+        # translate the window by the difference
+        window.view = window.view.translate((-diff_x, -diff_y, 0))
+
     # update loop
     def update(dt):
         health_bars.clear()
         objects_to_add = []  # list of new objects to add
+
+        # update viewport
+        update_viewport()
 
         # spawn asteroids if necessary
         spawn_asteroids(objects_to_add, dt)
@@ -314,11 +407,11 @@ def run():
             "Score: " + str(score),
             font_name="Arial",
             font_size=20,
-            x=window.width - 10,
-            y=window.height - 10,
+            x=viewport_x + viewport_width // 2 - 10,
+            y=viewport_y + viewport_height // 2 - 10,
             anchor_x="right",
             anchor_y="top",
-            batch=main_batch,
+            batch=gui_batch,
             group=groups[5],
         )
 
