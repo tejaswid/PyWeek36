@@ -12,7 +12,7 @@ class DarkMatter(GameObject):
         self.type = "dark_matter"
 
         # collision
-        self.collision_radius = 10
+        self.collision_radius = 30
 
     def update_object(self, dt):
         pass
@@ -31,10 +31,11 @@ class DarkMatter(GameObject):
             pass
         # if bullet touches it, it deflects around it in a circle
         if other_object.type == "bullet":
-            # need to implement it
-            pass
+            if self.has_collided_with(other_object) and not other_object.in_circular_motion:
+                print("dark matter collided with bullet")
+                other_object.initiate_circular_motion(self.collision_radius, self.x, self.y)
         # if asteroid or powerup touches it, it dies
         if other_object.type in ["asteroid", "powerup"]:
             if self.has_collided_with(other_object):
-                print("dark matter collided with asteroid")
+                print("dark matter collided with ", other_object.type)
                 other_object.dead = True

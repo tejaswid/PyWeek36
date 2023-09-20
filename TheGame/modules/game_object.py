@@ -63,7 +63,7 @@ class GameObject(pyglet.sprite.Sprite):
         distance = utils.distance((self.x, self.y), (other_object.x, other_object.y))
         if distance < self.collision_radius + other_object.collision_radius:
             # add a rebound effect to the objects
-            no_rebound_list = ["bullet", "powerup"]
+            no_rebound_list = ["bullet", "powerup", "dark_matter"]
             if not (self.type in no_rebound_list or other_object.type in no_rebound_list):
                 old_self_x = self.x
                 old_self_y = self.y

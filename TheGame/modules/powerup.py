@@ -19,17 +19,15 @@ class Powerup(GameObject):
         # spawn
         self.rotation = random.uniform(0, 360)
         # movement - only visual
-        self.angular_velocity = random.uniform(-100, 100)    
+        self.angular_velocity = random.uniform(-100, 100)
         # collision
         self.collision_radius = 10
         # time left
         self.time_left = self.max_time
 
-
     def update_object(self, dt):
         # update rotation - just for visual effect
         self.rotation += self.angular_velocity * dt
-
         # update time left
         self.time_left -= dt
 
@@ -39,4 +37,8 @@ class Powerup(GameObject):
             if self.has_collided_with(other_object):
                 self.dead = True
                 print("powerup collided with player")
-                other_object.take_damage(-20)   # give health to player
+                other_object.take_damage(-20)  # give health to player
+        if other_object.type == "dark_matter":
+            if self.has_collided_with(other_object):
+                print("powerup collided with dark matter")
+                self.dead = True
