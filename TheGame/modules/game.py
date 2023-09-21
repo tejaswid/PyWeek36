@@ -13,6 +13,8 @@ from modules.powerup_spawner import PowerupSpawner
 from modules.asteroid_spawner import AsteroidSpawner
 from modules.enemy_spawner import EnemySpawner
 from modules.dark_matter_spawner import DarkMatterSpawner
+from modules.boss_spawner import BossSpawner
+
 
 def run():
     print(pyglet.version)
@@ -32,7 +34,6 @@ def run():
     health_bar_batch = pyglet.graphics.Batch()
     damage_label_batch = pyglet.graphics.Batch()
     gui_batch = pyglet.graphics.Batch()
-
 
     # groups - 0 drawn first, 10 drawn last
     groups = []
@@ -54,9 +55,10 @@ def run():
 
     # spawners
     asteroid_spawner = AsteroidSpawner(assets, game_state, main_batch, groups[5])
-    enemy_spawner = EnemySpawner(assets, game_state, main_batch,groups[5])
+    enemy_spawner = EnemySpawner(assets, game_state, main_batch, groups[5])
     powerup_spawner = PowerupSpawner(assets, game_state, main_batch, groups[5])
     dark_matter_spawner = DarkMatterSpawner(assets, game_state, main_batch, groups[4])
+    boss_spawner = BossSpawner(assets, game_state, main_batch, groups[3])
 
     # score
     score_label = None
@@ -88,7 +90,10 @@ def run():
     def get_camera_centre():
         camera_bl_x, camera_bl_y = get_camera_bottom_left()
         print(" camera bottom left: {}, {}".format(camera_bl_x, camera_bl_y))
-        return (camera_bl_x + game_state.viewport_width // 2, camera_bl_y + game_state.viewport_height // 2)
+        return (
+            camera_bl_x + game_state.viewport_width // 2,
+            camera_bl_y + game_state.viewport_height // 2,
+        )
 
     def reset_camera():
         # get current corner of the camera
@@ -148,7 +153,9 @@ def run():
         )
 
         # spawn the player
-        player_1 = Player(assets, game_state, x=700, y=700, batch=main_batch, group=groups[5])
+        player_1 = Player(
+            assets, game_state, x=700, y=700, batch=main_batch, group=groups[5]
+        )
 
         # reset the view_port
         game_state.reset_viewport()
@@ -159,7 +166,6 @@ def run():
         window.push_handlers(player_1.key_handler)
         window.push_handlers(player_1.mouse_handler)
         game_objects.append(player_1)
-        
 
     # loads the second scene
     def load_stage_2():
@@ -174,7 +180,9 @@ def run():
         )
 
         # spawn the player
-        player_1 = Player(assets, game_state, x=200, y=200, batch=main_batch, group=groups[5])
+        player_1 = Player(
+            assets, game_state, x=200, y=200, batch=main_batch, group=groups[5]
+        )
 
         # reset the view_port
         game_state.reset_viewport()
@@ -267,39 +275,82 @@ def run():
 
         new_viewport_x, new_viewport_y = game_state.get_viewport()
 
-        if player_position[0] > game_state.viewport_x + game_state.viewport_width // 2 - game_state.viewport_margin:
+        if (
+            player_position[0]
+            > game_state.viewport_x
+            + game_state.viewport_width // 2
+            - game_state.viewport_margin
+        ):
             diff_x = (
-                int(player_position[0]) - game_state.viewport_x - game_state.viewport_width // 2 + game_state.viewport_margin
+                int(player_position[0])
+                - game_state.viewport_x
+                - game_state.viewport_width // 2
+                + game_state.viewport_margin
             )
             # move the viewport to the right
-            new_viewport_x = min(game_state.stage_width - game_state.viewport_width // 2, game_state.viewport_x + diff_x)
-            if new_viewport_x == game_state.stage_width - game_state.viewport_width // 2:
+            new_viewport_x = min(
+                game_state.stage_width - game_state.viewport_width // 2,
+                game_state.viewport_x + diff_x,
+            )
+            if (
+                new_viewport_x
+                == game_state.stage_width - game_state.viewport_width // 2
+            ):
                 diff_x = 0
 
-        if player_position[0] < game_state.viewport_x - game_state.viewport_width // 2 + game_state.viewport_margin:
+        if (
+            player_position[0]
+            < game_state.viewport_x
+            - game_state.viewport_width // 2
+            + game_state.viewport_margin
+        ):
             diff_x = -(
-                game_state.viewport_x - game_state.viewport_width // 2 + game_state.viewport_margin - int(player_position[0])
+                game_state.viewport_x
+                - game_state.viewport_width // 2
+                + game_state.viewport_margin
+                - int(player_position[0])
             )
             # move the viewport to the left
-            new_viewport_x = max(game_state.viewport_width // 2, game_state.viewport_x + diff_x)
+            new_viewport_x = max(
+                game_state.viewport_width // 2, game_state.viewport_x + diff_x
+            )
             if new_viewport_x == game_state.viewport_width // 2:
                 diff_x = 0
 
-        if player_position[1] > game_state.viewport_y + game_state.viewport_height // 2 - game_state.viewport_margin:
+        if (
+            player_position[1]
+            > game_state.viewport_y
+            + game_state.viewport_height // 2
+            - game_state.viewport_margin
+        ):
             diff_y = (
-                int(player_position[1]) - game_state.viewport_y - game_state.viewport_height // 2 + game_state.viewport_margin
+                int(player_position[1])
+                - game_state.viewport_y
+                - game_state.viewport_height // 2
+                + game_state.viewport_margin
             )
             # move the viewport up
             new_viewport_y = min(
                 game_state.stage_height - game_state.viewport_height // 2,
                 game_state.viewport_y + diff_y,
             )
-            if new_viewport_y == game_state.stage_height - game_state.viewport_height // 2:
+            if (
+                new_viewport_y
+                == game_state.stage_height - game_state.viewport_height // 2
+            ):
                 diff_y = 0
 
-        if player_position[1] < game_state.viewport_y - game_state.viewport_height // 2 + game_state.viewport_margin:
+        if (
+            player_position[1]
+            < game_state.viewport_y
+            - game_state.viewport_height // 2
+            + game_state.viewport_margin
+        ):
             diff_y = -(
-                game_state.viewport_y - game_state.viewport_height // 2 + game_state.viewport_margin - int(player_position[1])
+                game_state.viewport_y
+                - game_state.viewport_height // 2
+                + game_state.viewport_margin
+                - int(player_position[1])
             )
             # move the viewport down
             new_viewport_y = max(
@@ -319,6 +370,7 @@ def run():
         enemy_spawner.reset()
         powerup_spawner.reset()
         dark_matter_spawner.reset()
+        boss_spawner.reset()
 
     def remove_non_essential_objects():
         for obj in game_objects:
@@ -328,14 +380,11 @@ def run():
         game_objects.clear()
 
     def handle_level_change():
-        nonlocal level
-        nonlocal change_level
-
         # if change_level
-        if level == 0:
+        if game_state.level == 0:
             load_stage_1()
-            level = 1
-        elif level == 1:
+            game_state.level = 1
+        elif game_state.level == 1:
             # check if the level has to change based on the score
             if score > 10:
                 print("changing level")
@@ -346,7 +395,7 @@ def run():
                 reset_spawners()
 
                 load_stage_2()
-                level = 2
+                game_state.level = 2
 
     # update loop
     def update(dt):
@@ -366,6 +415,8 @@ def run():
         objects_to_add.extend(powerup_spawner.spawn(dt))
         # spawn dark matter if required
         objects_to_add.extend(dark_matter_spawner.spawn(dt))
+        # spawn boss if required
+        objects_to_add.extend(boss_spawner.spawn(dt))
 
         # update positions, state of each object and
         # collect all children that each object may spawn
@@ -444,7 +495,6 @@ def run():
             batch=gui_batch,
             group=groups[0],
         )
-
 
     pyglet.clock.schedule_interval(update, 1 / 120.0)
     pyglet.app.run()
