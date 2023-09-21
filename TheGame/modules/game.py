@@ -150,6 +150,11 @@ def run():
             assets, game_state, x=700, y=700, batch=main_batch, group=groups[5]
         )
 
+        # spawn dark matter
+        dark_matter_objects = dark_matter_spawner.spawn(0.1)
+        for obj in dark_matter_objects:
+            game_state.dark_matter_positions.append((obj.x, obj.y))
+
         # reset the view_port
         game_state.reset_viewport()
         # reset the camera
@@ -159,6 +164,7 @@ def run():
         window.push_handlers(player_1.key_handler)
         window.push_handlers(player_1.mouse_handler)
         game_objects.append(player_1)
+        game_objects.extend(dark_matter_objects)
 
     # loads the second scene
     def load_stage_2():
@@ -177,6 +183,12 @@ def run():
             assets, game_state, x=200, y=200, batch=main_batch, group=groups[5]
         )
 
+        # spawn dark matter
+        dark_matter_objects = dark_matter_spawner.spawn(0.1)
+        game_state.dark_matter_positions.clear()
+        for obj in dark_matter_objects:
+            game_state.dark_matter_positions.append((obj.x, obj.y))
+
         # reset the view_port
         game_state.reset_viewport()
 
@@ -184,10 +196,8 @@ def run():
         window.push_handlers(player_1.key_handler)
         window.push_handlers(player_1.mouse_handler)
         game_objects.append(player_1)
-        # window.view = window.view.translate(
-        #     (-game_state.viewport_x + game_state.viewport_width // 2, -game_state.viewport_y + game_state.viewport_height // 2, 0)
-        # )
-
+        game_objects.extend(dark_matter_objects)
+        
         # reset the camera
         reset_camera()
 
@@ -408,8 +418,6 @@ def run():
         objects_to_add.extend(enemy_spawner.spawn(dt))
         # spawn powerups if required
         objects_to_add.extend(powerup_spawner.spawn(dt))
-        # spawn dark matter if required
-        objects_to_add.extend(dark_matter_spawner.spawn(dt))
         # spawn boss if required
         objects_to_add.extend(boss_spawner.spawn(dt))
 

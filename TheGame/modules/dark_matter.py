@@ -1,5 +1,3 @@
-import pyglet
-
 from modules.game_object import GameObject
 
 class DarkMatter(GameObject):

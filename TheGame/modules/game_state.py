@@ -21,6 +21,8 @@ class GameState(object):
         self.score_level_2 = 100    # can remove this later
 
         self.background_sprite = None
+
+        self.dark_matter_positions = [] # list of tuples (x, y)
     
     def reset_viewport(self):
         self.viewport_x = self.stage_width // 2
