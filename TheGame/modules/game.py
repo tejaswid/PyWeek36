@@ -30,7 +30,6 @@ def run():
     )
 
     # Store objects in a batch to load them efficiently
-    gui_batch = pyglet.graphics.Batch()
     main_batch = pyglet.graphics.Batch()
 
     # groups - 0 drawn first, 10 drawn last
@@ -102,8 +101,6 @@ def run():
     @window.event
     def on_draw():
         window.clear()
-
-        gui_batch.draw()
         main_batch.draw()
         
 
@@ -495,8 +492,8 @@ def run():
             y=game_state.viewport_y + game_state.viewport_height // 2 - 10,
             anchor_x="right",
             anchor_y="top",
-            batch=gui_batch,
-            group=groups[0],
+            batch=main_batch,
+            group=groups[9],
         )
 
     pyglet.clock.schedule_interval(update, 1 / 120.0)
