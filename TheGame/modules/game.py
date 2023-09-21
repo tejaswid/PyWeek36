@@ -30,10 +30,8 @@ def run():
     )
 
     # Store objects in a batch to load them efficiently
-    main_batch = pyglet.graphics.Batch()
-    health_bar_batch = pyglet.graphics.Batch()
-    damage_label_batch = pyglet.graphics.Batch()
     gui_batch = pyglet.graphics.Batch()
+    main_batch = pyglet.graphics.Batch()
 
     # groups - 0 drawn first, 10 drawn last
     groups = []
@@ -107,8 +105,7 @@ def run():
 
         gui_batch.draw()
         main_batch.draw()
-        health_bar_batch.draw()
-        damage_label_batch.draw()
+        
 
     # handle keyboard inputs
     @window.event
@@ -222,14 +219,14 @@ def run():
             width=health_bar_width,
             height=5,
             color=health_bar_color,
-            batch=health_bar_batch,
+            batch=main_batch,
         )
         # the health bars need to be added to a list so that the objects do not go out of scope.
         # this is because rendering using batch needs the objects to be in scope during the draw call.
         health_bars_to_add = [health_bar]
         health_bars.extend(health_bars_to_add)
 
-        damage_label = obj.draw_damage_label(damage_label_batch)
+        damage_label = obj.draw_damage_label(main_batch)
         if damage_label is not None:
             damage_labels_to_add = [damage_label]
             frames_persistent = 25
