@@ -21,7 +21,7 @@ def run():
 
     game_state = GameState()
 
-    # create the game window - size is 1000px x 1000px
+    # create the game window 
     window = pyglet.window.Window(
         width=game_state.viewport_width,
         height=game_state.viewport_height,
@@ -415,6 +415,14 @@ def run():
         objects_to_add.extend(enemy_spawner.spawn(dt))
         # spawn powerups if required
         objects_to_add.extend(powerup_spawner.spawn(dt))
+        # spawn dark matter if required
+        new_dark_matter_objects = dark_matter_spawner.spawn(dt)
+        if len(new_dark_matter_objects) > 0:
+            print("adding dark matter")
+            print(game_state.dark_matter_positions)
+        for obj in new_dark_matter_objects:
+            game_state.dark_matter_positions.append((obj.x, obj.y))
+        objects_to_add.extend(new_dark_matter_objects)
         # spawn boss if required
         objects_to_add.extend(boss_spawner.spawn(dt))
 
@@ -466,6 +474,8 @@ def run():
                 if obj.type == "player":
                     print("Game over")
                     pyglet.app.exit()
+                if obj.type == "dark_matter":
+                    dark_matter_spawner.remove(obj)
 
         # remove dead objects from game_objects
         game_objects[:] = [obj for obj in game_objects if not obj.dead]

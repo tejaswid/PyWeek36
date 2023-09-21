@@ -59,9 +59,23 @@ class Boss(GameObject):
         self.sp_bullet_cooldown = 3  # time between firing bullets
         self.sp_bullet_timer = self.sf_bullet_cooldown  # timer for firing bullets
 
+        # parameters for temporary shield mode
         self.shield_health = 100
         self.shield_active = False
         self.shield_sprite = self.assets.image_assets["img_boss_with_shield"]
+
+        # parameters for dash to player mode
+        self.dash_start_x = self.x
+        self.dash_start_y = self.y
+        self.dash_speed = 500
+        self.max_dash_distance = 200
+        self.current_dash_distance = 0
+
+        # parameters for seek dark matter mode
+        self.sdm_closest_dm_x = None
+        self.sdm_closest_dm_y = None
+        self.sdm_closest_dm_index = None
+        self.sdm_speed = 100
 
     def update_object(self, dt):
         self.time_since_last_mode_change += dt
@@ -69,6 +83,7 @@ class Boss(GameObject):
             self.time_since_last_mode_change = 0  # reset timer
             self.current_movement_mode = random.choice(self.movement_modes)
             self.mode_change_interval = random.randint(5, 10)
+            self.current_dash_distance = 0
 
         if self.current_movement_mode == "stand_and_fire":
             self.stand_and_fire_bullets_in_spiral(dt)
@@ -78,8 +93,12 @@ class Boss(GameObject):
             self.teleport()
         elif self.current_movement_mode == "temporary_shield":
             self.temporary_shield()
+        elif self.current_movement_mode == "dash_to_player":
+            self.dash_to_player(dt)
+        elif self.current_movement_mode == "seek_dark_matter":
+            self.seek_dark_matter(dt)
         else:
-            self.temporary_shield()
+            self.seek_player(dt)
 
     def set_movement_mode(self, mode):
         self.movement_mode = mode
@@ -168,6 +187,81 @@ class Boss(GameObject):
         self.shield_health = 50
         self.add_shield_sprite()
 
+    def dash_to_player(self, dt):
+        if self.current_dash_distance == 0:
+            self.dash_start_x = self.x
+            self.dash_start_y = self.y
+
+            player_x = self.game_state.player_position[0]
+            player_y = self.game_state.player_position[1]
+
+            if player_x is None or player_y is None:
+                return
+
+            self.velocity = utils.compute_velocity(
+                self.dash_speed,
+                self.dash_start_x,
+                self.dash_start_y,
+                player_x,
+                player_y,
+            )
+
+            self.rotation = -math.degrees(
+                math.atan2(player_y - self.y, player_x - self.x)
+            )
+
+            self.x += self.velocity[0] * dt
+            self.y += self.velocity[1] * dt
+
+            self.current_dash_distance = utils.distance(
+                (self.dash_start_x, self.dash_start_y), (self.x, self.y)
+            )
+        else:
+            self.x += self.velocity[0] * dt
+            self.y += self.velocity[1] * dt
+            self.current_dash_distance = utils.distance(
+                (self.dash_start_x, self.dash_start_y), (self.x, self.y)
+            )
+            if self.current_dash_distance >= self.max_dash_distance:
+                self.current_dash_distance = 0
+                self.current_movement_mode = "seek_player"
+                self.mode_change_interval = random.randint(5, 10)
+
+    def find_closest_dark_matter(self):
+        closest_distance = 99999999
+        for i, dm_position in enumerate(self.game_state.dark_matter_positions):
+            distance_to_dm = utils.distance((self.x, self.y), dm_position)
+            if distance_to_dm < closest_distance:
+                closest_distance = distance_to_dm
+                self.sdm_closest_dm_x = dm_position[0]
+                self.sdm_closest_dm_y = dm_position[1]
+                self.sdm_closest_dm_index = i
+
+    def seek_dark_matter(self, dt):
+        # seeks the closest dark matter and replaces it at another place
+        if self.sdm_closest_dm_x is None or self.sdm_closest_dm_y is None:
+            self.find_closest_dark_matter()
+            # move towards the closest dark matter
+            self.velocity = utils.compute_velocity(
+                self.sdm_speed,
+                self.x,
+                self.y,
+                self.sdm_closest_dm_x,
+                self.sdm_closest_dm_y,
+            )
+
+            self.rotation = -math.degrees(
+                math.atan2(
+                    self.sdm_closest_dm_y - self.y,
+                    self.sdm_closest_dm_x - self.x,
+                )
+            )
+            self.x += self.velocity[0] * dt
+            self.y += self.velocity[1] * dt
+        else:
+            self.x += self.velocity[0] * dt
+            self.y += self.velocity[1] * dt
+
     def handle_collision_with(self, other_object):
         # handle collision with bullet
         if other_object.type == "bullet" and other_object.fired_by_player:
@@ -183,3 +277,11 @@ class Boss(GameObject):
                 print("boss collided with player")
                 self.take_damage(other_object.damage)
                 other_object.take_damage(self.damage)
+        if other_object.type == "dark_matter" and self.current_movement_mode == "seek_dark_matter":
+            if self.has_collided_with(other_object):
+                print("boss collided with dark matter")
+                other_object.dead = True
+                self.game_state.dark_matter_positions.pop(self.sdm_closest_dm_index)
+                self.sdm_closest_dm_x = None
+                self.sdm_closest_dm_y = None
+                self.sdm_closest_dm_index = None

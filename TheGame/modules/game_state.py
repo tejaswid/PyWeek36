@@ -2,6 +2,7 @@ class GameState(object):
     """
     Class to store the current state of the game
     """
+
     def __init__(self) -> None:
         # dimensions of the stage
         self.stage_width = 2048
@@ -18,16 +19,16 @@ class GameState(object):
         self.player_position = [0, 0]
 
         self.level = 0
-        self.score_level_2 = 100    # can remove this later
+        self.score_level_2 = 100  # can remove this later
 
         self.background_sprite = None
 
-        self.dark_matter_positions = [] # list of tuples (x, y)
-    
+        self.dark_matter_positions = []  # list of tuples (x, y)
+
     def reset_viewport(self):
         self.viewport_x = self.stage_width // 2
         self.viewport_y = self.stage_height // 2
-    
+
     def update_viewport(self, x, y):
         self.viewport_x = x
         self.viewport_y = y
