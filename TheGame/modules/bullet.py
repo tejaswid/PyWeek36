@@ -67,7 +67,7 @@ class Bullet(GameObject):
         self.x += self.velocity[0] * dt
         self.y += self.velocity[1] * dt
 
-    def initate_circular_motion(self, radius, centre_x, centre_y):
+    def initiate_circular_motion(self, radius, centre_x, centre_y):
         self.in_circular_motion = True
         self.theta = math.atan2(self.y - centre_y, self.x - centre_x)
         self.delta = 0
@@ -105,4 +105,4 @@ class Bullet(GameObject):
         if other_object.type == "dark_matter":
             if self.has_collided_with(other_object) and not self.in_circular_motion:
                 print("bullet collided with dark_matter")
-                self.initate_circular_motion(other_object.collision_radius, other_object.x, other_object.y)
+                self.initiate_circular_motion(other_object.collision_radius, other_object.x, other_object.y)
