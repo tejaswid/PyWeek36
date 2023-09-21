@@ -18,6 +18,7 @@ class GameState(object):
         self.player_position = [0, 0]
 
         self.level = 0
+        self.score_level_2 = 100    # can remove this later
 
         self.background_sprite = None
     

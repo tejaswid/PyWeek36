@@ -381,7 +381,7 @@ def run():
             game_state.level = 1
         elif game_state.level == 1:
             # check if the level has to change based on the score
-            if score > 10:
+            if score > game_state.score_level_2:
                 print("changing level")
 
                 # remove all objects
