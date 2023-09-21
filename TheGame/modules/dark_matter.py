@@ -25,7 +25,7 @@ class DarkMatter(GameObject):
             if self.has_collided_with(other_object) and not other_object.in_arbitrary_motion:
                 print("dark matter collided with player")
                 other_object.take_damage(self.damage)
-                other_object.initiate_circular_motion(self.collision_radius, self.x, self.y)
+                other_object.initiate_arbitrary_motion()
             pass
 
         # if enemy touches it, nothing happens
