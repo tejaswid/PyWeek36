@@ -107,6 +107,7 @@ class Player(GameObject):
         )
         bullet.set_rotation(target_x, target_y)
         bullet.set_velocity(target_x, target_y)
+        bullet.fired_by_player = True
         self.child_objects.append(bullet)
 
     def handle_collision_with(self, other_object):

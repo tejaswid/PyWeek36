@@ -31,10 +31,10 @@ class DarkMatter(GameObject):
         # if enemy touches it, nothing happens
         if other_object.type == "enemy":
             pass
-        # if bullet touches it, it deflects around it in a circle
-        if other_object.type == "bullet":
+        # if player bullet touches it, it deflects around it in a circle
+        if other_object.type == "bullet" and other_object.fired_by_player == True:
             if self.has_collided_with(other_object) and not other_object.in_circular_motion:
-                print("dark matter collided with bullet")
+                print("dark matter collided with player bullet")
                 other_object.initiate_circular_motion(self.collision_radius, self.x, self.y)
         # if asteroid or powerup touches it, it dies
         if other_object.type in ["asteroid", "powerup"]:

@@ -43,9 +43,9 @@ class Asteroid(GameObject):
 
     def handle_collision_with(self, other_object):
         # handle collision with bullet
-        if other_object.type == "bullet":
+        if other_object.type == "bullet" and other_object.fired_by_player:
             if self.has_collided_with(other_object):
-                print("asteroid collided with bullet")
+                print("asteroid collided with player bullet")
                 self.take_damage(other_object.damage)
                 # if I am dead, then I was killed by the player
                 if self.dead:

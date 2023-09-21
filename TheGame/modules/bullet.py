@@ -37,6 +37,8 @@ class Bullet(GameObject):
         # damage to other objects
         self.damage = 20
 
+        self.fired_by_player = False
+
         # parameters for circular motion
         self.in_circular_motion = False
         self.delta = 0
@@ -100,9 +102,9 @@ class Bullet(GameObject):
                 # reduce health of enemy. This is needed to possibly overcome the framerate problem
                 other_object.take_damage(self.damage)
                 # if the other object is dead, increase the score
-                if other_object.dead:
+                if other_object.dead and self.fired_by_player:
                     other_object.died_by_player = True
-        if other_object.type == "dark_matter":
+        if other_object.type == "dark_matter" and self.fired_by_player == True:
             if self.has_collided_with(other_object) and not self.in_circular_motion:
-                print("bullet collided with dark_matter")
+                print("player bullet collided with dark_matter")
                 self.initiate_circular_motion(other_object.collision_radius, other_object.x, other_object.y)
