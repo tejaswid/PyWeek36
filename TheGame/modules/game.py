@@ -136,12 +136,12 @@ def run():
     # loads the main scene
     def load_stage_1():
         # create an instance of the background centred on the stage
-        _ = Background(
+        game_state.background_sprite = Background(
             assets,
             level=1,
             x=game_state.stage_width // 2,
             y=game_state.stage_height // 2,
-            batch=gui_batch,
+            batch=main_batch,
             group=groups[0],
         )
 
@@ -163,12 +163,12 @@ def run():
     # loads the second scene
     def load_stage_2():
         # create an instance of the background centred on the stage
-        _ = Background(
+        game_state.background_sprite = Background(
             assets,
             level=2,
             x=game_state.stage_width // 2,
             y=game_state.stage_height // 2,
-            batch=gui_batch,
+            batch=main_batch,
             group=groups[0],
         )
 
@@ -371,6 +371,8 @@ def run():
             obj.batch = None
             obj.child_objects = []  # clear the list
         game_objects.clear()
+
+        game_state.background_sprite.batch = None
 
     def handle_level_change():
         # if change_level
