@@ -30,7 +30,7 @@ class Player(GameObject):
         # collision
         self.collision_radius = 5
         # health
-        self.max_health = 100
+        self.max_health = 500
         self.current_health = self.max_health
         # damage to other objects
         self.damage = 30
@@ -131,3 +131,15 @@ class Player(GameObject):
                 self.take_damage(other_object.damage)
                 # deflect the player in an arbitrary direction and spin
                 self.initiate_arbitrary_motion()
+        # handle collision with bullet
+        if other_object.type == "bullet" and not other_object.fired_by_player:
+            if self.has_collided_with(other_object):
+                print("player collided with enemy bullet")
+                self.take_damage(other_object.damage)
+                other_object.dead = True
+        # handle collision with boss
+        if other_object.type == "boss":
+            if self.has_collided_with(other_object):
+                print("player collided with boss")
+                self.take_damage(other_object.damage)
+                other_object.take_damage(self.damage)

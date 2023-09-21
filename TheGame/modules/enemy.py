@@ -45,26 +45,6 @@ class Enemy(GameObject):
         self.x += self.velocity[0] * dt
         self.y += self.velocity[1] * dt
 
-    def handle_collision_with(self, other_object):
-        # handle collision with bullet
-        if other_object.type == "bullet" and other_object.fired_by_player:
-            if self.has_collided_with(other_object):
-                print("enemy collided with player bullet")
-                self.take_damage(other_object.damage)
-                # remove bullet. again needed to possibly overcome the framerate issue
-                other_object.dead = True
-                # if I am dead, then I was killed by the player
-                if self.dead:
-                    self.died_by_player = True
-
-        if other_object.type in ["player", "asteroid"]:
-            if self.has_collided_with(other_object):
-                print("enemy collided with ", other_object.type)
-                self.take_damage(other_object.damage)
-                # player takes damage, needed to possibly overcome the framerate issue
-                other_object.take_damage(self.damage)
-
-
     def compute_repulsion(self, other_object):
         if other_object.type != "enemy":
             return
@@ -83,3 +63,22 @@ class Enemy(GameObject):
 
             other_object.x += (old_other_object_x - old_self_x) * other_object.repulsion_factor
             other_object.y += (old_other_object_y - old_self_y) * other_object.repulsion_factor
+
+    def handle_collision_with(self, other_object):
+        # handle collision with bullet
+        if other_object.type == "bullet" and other_object.fired_by_player:
+            if self.has_collided_with(other_object):
+                print("enemy collided with player bullet")
+                self.take_damage(other_object.damage)
+                # remove bullet. again needed to possibly overcome the framerate issue
+                other_object.dead = True
+                # if I am dead, then I was killed by the player
+                if self.dead:
+                    self.died_by_player = True
+
+        if other_object.type in ["player", "asteroid"]:
+            if self.has_collided_with(other_object):
+                print("enemy collided with ", other_object.type)
+                self.take_damage(other_object.damage)
+                # player takes damage, needed to possibly overcome the framerate issue
+                other_object.take_damage(self.damage)

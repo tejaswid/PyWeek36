@@ -17,10 +17,11 @@ class GameObject(pyglet.sprite.Sprite):
         """
         super(GameObject, self).__init__(*args, **kwargs)
 
-        # Declaring all the member variables of the class
-        self.type = (
-            None  # Specifies the type of the object - player, enemies, bullets etc.
-        )
+        # Declaring all the common member variables of the class
+        self.batch = kwargs.get("batch", None)  # batch to which this object belongs
+        self.group = kwargs.get("group", None)  # group to which this object belongs
+
+        self.type = None  # object type - player, enemies, bullets etc.
         self.child_objects = []  # List of objects that can be spawned by this object
         self.sim_state = None  # State of the object - useful in a state machine
         self.dead = False  # whether this object has to be removed from screen or not
@@ -34,10 +35,12 @@ class GameObject(pyglet.sprite.Sprite):
         self.damage_taken = 0  # damage that this object has taken from other objects
 
         self.score = 0  # score that this object gives when it dies
-        self.died_by_player = False  # whether this object was killed by the player or not
+        self.died_by_player = False  # killed by the player or not
 
-        self.batch = kwargs.get("batch", None)  # batch to which this object belongs
-        self.group = kwargs.get("group", None)  # group to which this object belongs
+        self.rebound_factor = 1  # factor by which the object rebounds when it collides
+
+        self.shield_active = False  # whether the shield is active or not
+        self.shield_health = 0  # health of the shield
 
     def update_object(self, dt):
         """
@@ -64,17 +67,18 @@ class GameObject(pyglet.sprite.Sprite):
         if distance < self.collision_radius + other_object.collision_radius:
             # add a rebound effect to the objects
             no_rebound_list = ["bullet", "powerup", "dark_matter"]
-            if not (self.type in no_rebound_list or other_object.type in no_rebound_list):
-                old_self_x = self.x
-                old_self_y = self.y
-                old_other_object_x = other_object.x
-                old_other_object_y = other_object.y
-                rebound_factor = 5
-                self.x += (old_self_x - old_other_object_x) * rebound_factor
-                self.y += (old_self_y - old_other_object_y) * rebound_factor
+            if self.type in no_rebound_list or other_object.type in no_rebound_list:
+                return True
 
-                other_object.x += (old_other_object_x - old_self_x) * rebound_factor
-                other_object.y += (old_other_object_y - old_self_y) * rebound_factor
+            old_self_x = self.x
+            old_self_y = self.y
+            old_other_object_x = other_object.x
+            old_other_object_y = other_object.y
+            self.x += (old_self_x - old_other_object_x) * self.rebound_factor
+            self.y += (old_self_y - old_other_object_y) * self.rebound_factor
+
+            other_object.x += (old_other_object_x - old_self_x) * self.rebound_factor
+            other_object.y += (old_other_object_y - old_self_y) * self.rebound_factor
 
             return True
         return False
@@ -84,8 +88,15 @@ class GameObject(pyglet.sprite.Sprite):
         Function to handle damage to this object
         :param damage: damage caused by the other object, can be negative for powerups
         """
+        # shield takes damage first
+        if self.shield_active:
+            self.shield_health = self.shield_health - damage
+            if self.shield_health <= 0:
+                self.shield_active = False
+            return
+        
         self.damage_taken = damage
-        self.current_health = min(self.max_health, max(0, self.current_health-damage))
+        self.current_health = min(self.max_health, max(0, self.current_health - damage))
         if self.current_health <= 0:
             self.dead = True
 
