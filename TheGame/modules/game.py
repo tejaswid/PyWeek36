@@ -64,10 +64,6 @@ def run():
     score_label = None
     score = 0
 
-    # level
-    level = 0
-    change_level = True
-
     # change mouse cursor
     cursor = window.get_system_mouse_cursor(window.CURSOR_CROSSHAIR)
     window.set_mouse_cursor(cursor)

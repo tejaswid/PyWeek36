@@ -17,7 +17,7 @@ class GameState(object):
         self.score = 0
         self.player_position = [0, 0]
 
-        self.level = 1
+        self.level = 0
     
     def reset_viewport(self):
         self.viewport_x = self.stage_width // 2
