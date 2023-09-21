@@ -41,6 +41,7 @@ class GameObject(pyglet.sprite.Sprite):
 
         self.shield_active = False  # whether the shield is active or not
         self.shield_health = 0  # health of the shield
+        self.shield_sprite = None
 
     def update_object(self, dt):
         """
@@ -56,6 +57,18 @@ class GameObject(pyglet.sprite.Sprite):
         """
         pass
 
+    def add_shield_sprite(self):
+        """
+        Virtual function to add a shield to the sprite
+        """
+        pass
+
+    def remove_shield_sprite(self):
+        """
+        Virtual function to remove the shield from the sprite
+        """
+        pass
+            
     def has_collided_with(self, other_object):
         """
         Function to check if this object has collided with another object
@@ -89,10 +102,14 @@ class GameObject(pyglet.sprite.Sprite):
         :param damage: damage caused by the other object, can be negative for powerups
         """
         # shield takes damage first
-        if self.shield_active:
-            self.shield_health = self.shield_health - damage
+        if self.type in ["player", "enemy", "boss"] and self.shield_active:
+            print("shield taking damage")
+            self.shield_health -= damage
+            print("shield_health: ", self.shield_health)
             if self.shield_health <= 0:
+                print("shield destroyed")
                 self.shield_active = False
+                self.remove_shield_sprite()
             return
         
         self.damage_taken = damage

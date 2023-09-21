@@ -11,6 +11,7 @@ class Boss(GameObject):
         self.img = game_assets.image_assets["img_boss_3"]
         if game_state.level == 2:
             self.img = game_assets.image_assets["img_boss_2"]
+
         super(Boss, self).__init__(img=self.img, *args, **kwargs)
 
         self.assets = game_assets
@@ -60,6 +61,7 @@ class Boss(GameObject):
 
         self.shield_health = 100
         self.shield_active = False
+        self.shield_sprite = self.assets.image_assets["img_boss_with_shield"]
 
     def update_object(self, dt):
         self.time_since_last_mode_change += dt
@@ -77,7 +79,7 @@ class Boss(GameObject):
         elif self.current_movement_mode == "temporary_shield":
             self.temporary_shield()
         else:
-            self.seek_player(dt)
+            self.temporary_shield()
 
     def set_movement_mode(self, mode):
         self.movement_mode = mode
@@ -155,9 +157,16 @@ class Boss(GameObject):
         self.mode_change_interval = random.randint(5, 10)
         self.current_movement_mode = "seek_player"
 
+    def add_shield_sprite(self):
+        self.image = self.shield_sprite
+
+    def remove_shield_sprite(self):
+        self.image = self.img
+
     def temporary_shield(self):
         self.shield_active = True
-        self.shield_health = 100
+        self.shield_health = 50
+        self.add_shield_sprite()
 
     def handle_collision_with(self, other_object):
         # handle collision with bullet

@@ -55,4 +55,6 @@ class GameAssets(object):
         self.create_image_asset("img_boss_1", "images/boss_1.png", True)
         self.create_image_asset("img_boss_2", "images/boss_2.png", True)
         self.create_image_asset("img_boss_3", "images/boss_3.png", True)
+        self.create_image_asset("img_boss_with_shield", "images/boss_with_shield.png", True)
+        self.create_image_asset("img_boss_shield", "images/boss_shield.png", True)
 
