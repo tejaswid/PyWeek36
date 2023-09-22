@@ -44,11 +44,14 @@ python run_game.py
 ## Code structure
 
 ### Folders
-- modules: Separate modules like game, player, game objects and assets.
+- modules: Python files that implement individual components of the game.
 - resources: All resources like images, sounds, etc.
 
-The main game is written in `game.py`. This is like the stage.   
-The `GameObject` class in `game_objects.py` is the abstract class to define all individual objects in the game - player, enemy, etc.  
-Assets for each of these objects are defined in the `GameAssets` class in `game_assets.py`.  
-Utility functions are defined in `utils.py`.  
-Some behind the scenes management is done in `game_manager.py`
+### Files
+- The main game is written in `game.py`. This is like the stage.   
+- The `GameObject` class in `game_object.py` is the abstract class to define all individual objects in the game - player, enemy, asteroid, boss, powerup and dark matter.
+- The `Spawner` class in `spawner.py` is the abstract class to spawm the above objects.
+- Assets for each of these objects are defined in the `GameAssets` class in `game_assets.py`.  
+- Utility functions are defined in `utils.py`.  
+- The file `game_state.py` has behind the scenes management.
+
