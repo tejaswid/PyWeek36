@@ -2,7 +2,7 @@ from modules.game_object import GameObject
 
 class DarkMatter(GameObject):
     def __init__(self, game_assets, game_state, *args, **kwargs):
-        self.img = game_assets.image_assets["img_dark_matter_2"]
+        self.img = game_assets.image_assets["img_dark_matter"]
         super(DarkMatter, self).__init__(img=self.img, *args, **kwargs)
 
         self.assets = game_assets

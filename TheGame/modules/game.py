@@ -21,7 +21,7 @@ def run():
 
     game_state = GameState()
 
-    # create the game window 
+    # create the game window
     window = pyglet.window.Window(
         width=game_state.viewport_width,
         height=game_state.viewport_height,
@@ -102,7 +102,6 @@ def run():
     def on_draw():
         window.clear()
         main_batch.draw()
-        
 
     # handle keyboard inputs
     @window.event
@@ -120,7 +119,7 @@ def run():
             for obj in game_objects:
                 if obj.type == "player":
                     obj.fire_bullet(x, y)
-        
+
         if button == mouse.RIGHT:
             for obj in game_objects:
                 if obj.type == "player":
@@ -199,7 +198,37 @@ def run():
         window.push_handlers(player_1.mouse_handler)
         game_objects.append(player_1)
         game_objects.extend(dark_matter_objects)
-        
+
+        # reset the camera
+        reset_camera()
+
+    def load_stage_won():
+        # create an instance of the background centred on the stage
+        game_state.background_sprite = Background(
+            assets,
+            level=2,
+            x=game_state.stage_width // 2,
+            y=game_state.stage_height // 2,
+            batch=main_batch,
+            group=groups[0],
+        )
+
+        # reset the view_port
+        game_state.reset_viewport()
+
+        # spawn text saying game won
+        game_won_label = pyglet.text.Label(
+            "You won!",
+            font_name="Arial",
+            font_size=50,
+            x=game_state.viewport_x,
+            y=game_state.viewport_y,
+            anchor_x="center",
+            anchor_y="center",
+            batch=main_batch,
+            group=groups[9],
+        )
+
         # reset the camera
         reset_camera()
 
@@ -393,22 +422,41 @@ def run():
             game_state.level = 1
         elif game_state.level == 1:
             # check if the level has to change based on the score
-            if score > game_state.score_level_2:
-                print("changing level")
+            if game_state.revealed_dark_matter == len(game_state.dark_matter_positions):
+                print("revealed all dark matter. changing level")
+                game_objects.extend(boss_spawner.spawn(0.1))
 
+            if game_state.change_level:
                 # remove all objects
                 remove_non_essential_objects()
                 # reset spawners
                 reset_spawners()
-
                 load_stage_2()
                 game_state.level = 2
+                game_state.change_level = False
+
+        elif game_state.level == 2:
+            if game_state.revealed_dark_matter == len(game_state.dark_matter_positions):
+                print("revealed all dark matter. changing level")
+                game_objects.extend(boss_spawner.spawn(0.1))
+
+            if game_state.change_level:
+                # remove all objects
+                remove_non_essential_objects()
+                # reset spawners
+                reset_spawners()
+                load_stage_won()
+                game_state.change_level = False
+                game_state.level = 3
 
     # update loop
     def update(dt):
         handle_level_change()
-
         health_bars.clear()
+
+        if game_state.level == 3:
+            return
+
         objects_to_add = []  # list of new objects to add
 
         # update viewport
@@ -428,8 +476,6 @@ def run():
         for obj in new_dark_matter_objects:
             game_state.dark_matter_positions.append((obj.x, obj.y))
         objects_to_add.extend(new_dark_matter_objects)
-        # spawn boss if required
-        objects_to_add.extend(boss_spawner.spawn(dt))
 
         # update positions, state of each object and
         # collect all children that each object may spawn
@@ -481,6 +527,10 @@ def run():
                     pyglet.app.exit()
                 if obj.type == "dark_matter":
                     dark_matter_spawner.remove(obj)
+                if obj.type == "boss":
+                    boss_spawner.remove(obj)
+                    game_state.revealed_dark_matter = 0
+                    game_state.change_level = True
 
         # remove dead objects from game_objects
         game_objects[:] = [obj for obj in game_objects if not obj.dead]
