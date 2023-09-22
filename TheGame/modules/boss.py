@@ -8,11 +8,11 @@ from modules.bullet import Bullet
 
 class Boss(GameObject):
     def __init__(self, game_assets, game_state, *args, **kwargs):
-        self.img = game_assets.image_assets["img_boss_3"]
+        self.default_sprite = game_assets.image_assets["img_boss_3"]
         if game_state.level == 2:
-            self.img = game_assets.image_assets["img_boss_2"]
+            self.default_sprite = game_assets.image_assets["img_boss_2"]
 
-        super(Boss, self).__init__(img=self.img, *args, **kwargs)
+        super(Boss, self).__init__(img=self.default_sprite, *args, **kwargs)
 
         self.assets = game_assets
         self.type = "boss"
@@ -60,7 +60,8 @@ class Boss(GameObject):
         self.sp_bullet_timer = self.sf_bullet_cooldown  # timer for firing bullets
 
         # parameters for temporary shield mode
-        self.shield_health = 100
+        self.shield_max_health = 100
+        self.shield_current_health = self.shield_max_health
         self.shield_active = False
         self.shield_sprite = self.assets.image_assets["img_boss_with_shield"]
 
@@ -180,11 +181,10 @@ class Boss(GameObject):
         self.image = self.shield_sprite
 
     def remove_shield_sprite(self):
-        self.image = self.img
+        self.image = self.default_sprite
 
     def temporary_shield(self):
         self.shield_active = True
-        self.shield_health = 50
         self.add_shield_sprite()
 
     def dash_to_player(self, dt):

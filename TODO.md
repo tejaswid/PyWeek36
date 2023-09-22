@@ -39,7 +39,7 @@
 ## Powerup
 - [x] spawn
 - [x] collision
-- [ ] kinds of powerups
+- [x] kinds of powerups
  
 ## Dark matter
 - [x] spawn
@@ -74,6 +74,8 @@
 - [ ] Boss bullet 2
 - [ ] Powerup (health)
 - [ ] Powerup (speed boost)
+- [ ] Powerup (damage boost)
+- [ ] Powerup (shield)
 - [ ] Asteroid 1 (save in a few sizes)
 - [ ] Asteriod 2 (save in a few sizes)
 - [ ] Background stars (static)

@@ -43,6 +43,7 @@ class GameAssets(object):
 
         # load images
         self.create_image_asset("img_player_ship", "images/player_ship.png", True)
+        self.create_image_asset("img_player_ship_with_shield", "images/player_ship_with_shield.png", True)
         self.create_image_asset("img_bullet", "images/bullet.png", True)
         self.create_image_asset("img_enemy", "images/enemy.png", True)
         self.create_image_asset("img_enemy_seeker", "images/enemy_seeker.png", True)
@@ -50,6 +51,10 @@ class GameAssets(object):
         self.create_image_asset("img_enemy_shooter", "images/enemy_shooter.png", True)
         self.create_image_asset("img_asteroid", "images/asteroid.png", True)
         self.create_image_asset("img_powerup", "images/powerup.png", True)
+        self.create_image_asset("img_powerup_damage", "images/powerup_damage.png", True)
+        self.create_image_asset("img_powerup_speed", "images/powerup_speed.png", True)
+        self.create_image_asset("img_powerup_health", "images/powerup_health.png", True)
+        self.create_image_asset("img_powerup_shield", "images/powerup_shield.png", True)
         self.create_image_asset("img_bkg_1_1", "images/Starfield_01-2048x2048.png", True)
         self.create_image_asset("img_bkg_1_2", "images/Starfield_01-2048x2048.png", True)
         self.create_image_asset("img_bkg_2_1", "images/Purple_Nebula_06-1024x1024.png", True)

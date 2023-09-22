@@ -40,8 +40,9 @@ class GameObject(pyglet.sprite.Sprite):
         self.rebound_factor = 1  # factor by which the object rebounds when it collides
 
         self.shield_active = False  # whether the shield is active or not
-        self.shield_health = 0  # health of the shield
-        self.shield_sprite = None
+        self.shield_current_health = 0  # health of the shield
+        self.shield_max_health = 100  # maximum health of the shield
+        self.shield_sprite = None  # sprite for the object with the shield 
 
     def update_object(self, dt):
         """
@@ -102,14 +103,14 @@ class GameObject(pyglet.sprite.Sprite):
         :param damage: damage caused by the other object, can be negative for powerups
         """
         # shield takes damage first
-        if self.type in ["player", "enemy", "boss"] and self.shield_active:
+        if self.type in ["player", "boss"] and self.shield_active:
             print("shield taking damage")
-            self.shield_health -= damage
-            print("shield_health: ", self.shield_health)
-            if self.shield_health <= 0:
+            self.shield_current_health -= damage
+            if self.shield_current_health <= 0:
                 print("shield destroyed")
                 self.shield_active = False
                 self.remove_shield_sprite()
+                self.shield_current_health = self.shield_max_health
             return
         
         self.damage_taken = damage
