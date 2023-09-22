@@ -6,8 +6,10 @@ from modules import utils
 
 class Asteroid(GameObject):
     def __init__(self, game_assets, game_state, *args, **kwargs):
-        self.img = game_assets.image_assets["img_asteroid"]
-        super(Asteroid, self).__init__(img=self.img, *args, **kwargs)
+        images = [game_assets.image_assets["img_asteroid"],
+                  game_assets.image_assets["img_asteroid_2"]]
+                  
+        super(Asteroid, self).__init__(img=random.choice(images), *args, **kwargs)
 
         self.assets = game_assets
         self.game_state = game_state

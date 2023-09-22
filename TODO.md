@@ -72,12 +72,12 @@
 - [ ] Boss 2
 - [ ] Boss bullet 1
 - [ ] Boss bullet 2
-- [ ] Powerup (health)
-- [ ] Powerup (speed boost)
-- [ ] Powerup (damage boost)
-- [ ] Powerup (shield)
-- [ ] Asteroid 1 (save in a few sizes)
-- [ ] Asteriod 2 (save in a few sizes)
+- [x] Powerup (health)
+- [x] Powerup (speed boost)
+- [x] Powerup (damage boost)
+- [x] Powerup (shield)
+- [x] Asteroid 1 (save in a few sizes)
+- [x] Asteriod 2 (save in a few sizes)
 - [ ] Background stars (static)
 - [ ] Background stars (twinkling)
 - [ ] Foreground nebulae (static)
