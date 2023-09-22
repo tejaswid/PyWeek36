@@ -60,8 +60,8 @@
 - [x] Player bullet
 - [x] Player tracer bullet
 - [ ] Explosions
-- [ ] Dark matter (transparent)
-- [ ] Dark matter marked
+- [x] Dark matter (transparent)
+- [x] Dark matter revealed
 - [x] Enemy shooter
 - [x] Enemy spear
 - [x] Enemy seeker

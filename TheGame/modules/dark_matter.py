@@ -1,8 +1,9 @@
+import pyglet
 from modules.game_object import GameObject
 
 class DarkMatter(GameObject):
     def __init__(self, game_assets, game_state, *args, **kwargs):
-        self.img = game_assets.image_assets["img_dark_matter"]
+        self.img = game_assets.image_assets["img_dark_matter_invisible"]
         super(DarkMatter, self).__init__(img=self.img, *args, **kwargs)
 
         self.assets = game_assets
@@ -18,7 +19,12 @@ class DarkMatter(GameObject):
         pass
 
     def reveal(self):
-        self.image = self.assets.image_assets["img_dark_matter_revealed"]
+        images = [self.assets.image_assets["img_dark_matter_revealed_1"],
+                  self.assets.image_assets["img_dark_matter_revealed_2"]]
+        anim = pyglet.image.Animation.from_image_sequence(
+            images, duration=0.5, loop=True
+        )
+        self.image = anim
         self.game_state.revealed_dark_matter += 1
 
     def handle_collision_with(self, other_object):
