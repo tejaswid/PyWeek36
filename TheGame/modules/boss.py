@@ -68,8 +68,8 @@ class Boss(GameObject):
         self.dash_start_x = self.x
         self.dash_start_y = self.y
         self.dash_speed = 500
-        self.max_dash_distance = 200
-        self.current_dash_distance = 0
+        self.dash_max_distance = 200
+        self.dash_current_distance = 0
 
         # parameters for seek dark matter mode
         self.sdm_closest_dm_x = None
@@ -83,7 +83,7 @@ class Boss(GameObject):
             self.time_since_last_mode_change = 0  # reset timer
             self.current_movement_mode = random.choice(self.movement_modes)
             self.mode_change_interval = random.randint(5, 10)
-            self.current_dash_distance = 0
+            self.dash_current_distance = 0
 
         if self.current_movement_mode == "stand_and_fire":
             self.stand_and_fire_bullets_in_spiral(dt)
@@ -188,7 +188,7 @@ class Boss(GameObject):
         self.add_shield_sprite()
 
     def dash_to_player(self, dt):
-        if self.current_dash_distance == 0:
+        if self.dash_current_distance == 0:
             self.dash_start_x = self.x
             self.dash_start_y = self.y
 
@@ -213,17 +213,17 @@ class Boss(GameObject):
             self.x += self.velocity[0] * dt
             self.y += self.velocity[1] * dt
 
-            self.current_dash_distance = utils.distance(
+            self.dash_current_distance = utils.distance(
                 (self.dash_start_x, self.dash_start_y), (self.x, self.y)
             )
         else:
             self.x += self.velocity[0] * dt
             self.y += self.velocity[1] * dt
-            self.current_dash_distance = utils.distance(
+            self.dash_current_distance = utils.distance(
                 (self.dash_start_x, self.dash_start_y), (self.x, self.y)
             )
-            if self.current_dash_distance >= self.max_dash_distance:
-                self.current_dash_distance = 0
+            if self.dash_current_distance >= self.dash_max_distance:
+                self.dash_current_distance = 0
                 self.current_movement_mode = "seek_player"
                 self.mode_change_interval = random.randint(5, 10)
 
