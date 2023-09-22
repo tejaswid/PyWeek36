@@ -64,7 +64,7 @@
 - [ ] Dark matter marked
 - [x] Enemy shooter
 - [x] Enemy spear
-- [ ] Enemy seeker
+- [x] Enemy seeker
 - [x] Enemy bullet 1
 - [ ] Enemy bullet 2
 - [ ] Boss 1
