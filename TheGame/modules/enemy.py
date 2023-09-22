@@ -147,6 +147,10 @@ class Enemy(GameObject):
                     player_x,
                     player_y,
                 )
+            self.rotation = -math.degrees(
+                math.atan2(player_y - self.y, player_x - self.x)
+            )
+
         else:
             if self.spear_current_distance >= self.spear_max_distance:
                 self.spear_active = False
