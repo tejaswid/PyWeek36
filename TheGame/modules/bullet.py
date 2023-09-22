@@ -37,7 +37,7 @@ class Bullet(GameObject):
         # damage to other objects
         self.damage = 20
 
-        self.fired_by_player = False
+        self.bullet_type = None
 
         # parameters for circular motion
         self.in_circular_motion = False
@@ -48,12 +48,26 @@ class Bullet(GameObject):
         self.prev_velocity_x = 0
         self.prev_velocity_y = 0
 
+    def set_type(self, bullet_type):
+        self.bullet_type = bullet_type
+        if self.bullet_type == "player":
+            self.image = self.assets.image_assets["img_bullet_player"]
+        elif self.bullet_type == "enemy":
+            self.image = self.assets.image_assets["img_bullet_enemy"]
+        elif self.bullet_type == "tracer":
+            self.image = self.assets.image_assets["img_bullet_tracer"]
+        else:
+            raise ValueError("Invalid bullet type")    
+
     def set_rotation(self, target_x, target_y):
         # Note: - is required in the below code for ccw rotation. DO NOT REMOVE
         self.rotation = -math.degrees(math.atan2(target_y - self.y, target_x - self.x))
 
     # compute the velocity of the bullet
-    def set_velocity(self, target_x, target_y):
+    def set_velocity(self, target_x, target_y, speed=None):
+        if speed is not None:
+            self.speed = speed
+
         self.velocity = utils.compute_velocity(
             self.speed, self.x, self.y, target_x, target_y
         )
@@ -94,17 +108,44 @@ class Bullet(GameObject):
 
     def handle_collision_with(self, other_object):
         # handle collision with enemy
-        if other_object.type in ["enemy", "asteroid"]:
+        if other_object.type in ["enemy", "asteroid"] and self.bullet_type == "player":
             if self.has_collided_with(other_object):
-                print("bullet collided with ", other_object.type)
+                print("player bullet collided with ", other_object.type)
                 # remove bullet
                 self.dead = True
                 # reduce health of enemy. This is needed to possibly overcome the framerate problem
                 other_object.take_damage(self.damage)
                 # if the other object is dead, increase the score
-                if other_object.dead and self.fired_by_player:
+                if other_object.dead:
                     other_object.died_by_player = True
-        if other_object.type == "dark_matter" and self.fired_by_player == True:
-            if self.has_collided_with(other_object) and not self.in_circular_motion:
-                print("player bullet collided with dark_matter")
-                self.initiate_circular_motion(other_object.collision_radius, other_object.x, other_object.y)
+        # handle collision with dark matter
+        if other_object.type == "dark_matter":
+            if self.bullet_type == "player":
+                if self.has_collided_with(other_object) and not self.in_circular_motion:
+                    print("player bullet collided with dark_matter")
+                    self.initiate_circular_motion(other_object.collision_radius, other_object.x, other_object.y)
+            elif self.bullet_type == "tracer":
+                if self.has_collided_with(other_object):
+                    print("tracer bullet collided with dark_matter")
+                    self.dead = True
+                    other_object.reveal()
+            else:
+                return
+            
+        # handle collision with player
+        if other_object.type == "player" and self.bullet_type == "enemy":
+            if self.has_collided_with(other_object):
+                print("enemy bullet collided with player")
+                self.dead = True
+                other_object.take_damage(self.damage)
+        # handle collision with boss
+        if other_object.type == "boss" and self.bullet_type == "player":
+            if self.has_collided_with(other_object):
+                print("player bullet collided with boss")
+                # remove bullet
+                self.dead = True
+                # reduce health of boss. This is needed to possibly overcome the framerate problem
+                other_object.take_damage(self.damage)
+                # if the other object is dead, increase the score
+                if other_object.dead:
+                    other_object.died_by_player = True

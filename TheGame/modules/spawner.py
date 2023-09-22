@@ -80,8 +80,12 @@ class Spawner(object):
                 grid_height = (max_y - min_y) // self.grid_cells
 
                 # convert linear index i to grid index xi, yi
-                xi = i % self.grid_cells
-                yi = i // self.grid_cells
+                if self.grid_cells == 1:
+                    xi = 0
+                    yi = 0
+                else:
+                    xi = i % self.grid_cells
+                    yi = i // self.grid_cells
 
                 object_x = random.uniform(min_x + xi * grid_width, min_x + (xi + 1) * grid_width)
                 object_y = random.uniform(min_y + yi * grid_height, min_y + (yi + 1) * grid_height)

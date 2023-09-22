@@ -5,8 +5,7 @@ class DarkMatterSpawner(Spawner):
     def __init__(self, game_assets, game_state, batch, group, **kwargs):
         super().__init__(game_assets, game_state, batch, group, **kwargs)
 
-        # very large int for spawn interval
-        self.spawn_interval = 10000
+        self.spawn_interval = 0
         self.time_since_last_spawn = self.spawn_interval
         self.max_num_objects = 4
         self.spawn_at_start = True

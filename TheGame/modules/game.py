@@ -21,7 +21,7 @@ def run():
 
     game_state = GameState()
 
-    # create the game window - size is 1000px x 1000px
+    # create the game window
     window = pyglet.window.Window(
         width=game_state.viewport_width,
         height=game_state.viewport_height,
@@ -31,9 +31,6 @@ def run():
 
     # Store objects in a batch to load them efficiently
     main_batch = pyglet.graphics.Batch()
-    health_bar_batch = pyglet.graphics.Batch()
-    damage_label_batch = pyglet.graphics.Batch()
-    gui_batch = pyglet.graphics.Batch()
 
     # groups - 0 drawn first, 10 drawn last
     groups = []
@@ -104,11 +101,7 @@ def run():
     @window.event
     def on_draw():
         window.clear()
-
-        gui_batch.draw()
         main_batch.draw()
-        health_bar_batch.draw()
-        damage_label_batch.draw()
 
     # handle keyboard inputs
     @window.event
@@ -127,6 +120,11 @@ def run():
                 if obj.type == "player":
                     obj.fire_bullet(x, y)
 
+        if button == mouse.RIGHT:
+            for obj in game_objects:
+                if obj.type == "player":
+                    obj.fire_tracer(x, y)
+
     @window.event
     def on_mouse_motion(x, y, dx, dy):
         # Note: x and y are in window coordinate frame
@@ -139,12 +137,12 @@ def run():
     # loads the main scene
     def load_stage_1():
         # create an instance of the background centred on the stage
-        _ = Background(
+        game_state.background_sprite = Background(
             assets,
             level=1,
             x=game_state.stage_width // 2,
             y=game_state.stage_height // 2,
-            batch=gui_batch,
+            batch=main_batch,
             group=groups[0],
         )
 
@@ -152,6 +150,11 @@ def run():
         player_1 = Player(
             assets, game_state, x=700, y=700, batch=main_batch, group=groups[5]
         )
+
+        # spawn dark matter
+        dark_matter_objects = dark_matter_spawner.spawn(0.1)
+        for obj in dark_matter_objects:
+            game_state.dark_matter_positions.append((obj.x, obj.y))
 
         # reset the view_port
         game_state.reset_viewport()
@@ -162,16 +165,17 @@ def run():
         window.push_handlers(player_1.key_handler)
         window.push_handlers(player_1.mouse_handler)
         game_objects.append(player_1)
+        game_objects.extend(dark_matter_objects)
 
     # loads the second scene
     def load_stage_2():
         # create an instance of the background centred on the stage
-        _ = Background(
+        game_state.background_sprite = Background(
             assets,
             level=2,
             x=game_state.stage_width // 2,
             y=game_state.stage_height // 2,
-            batch=gui_batch,
+            batch=main_batch,
             group=groups[0],
         )
 
@@ -180,6 +184,12 @@ def run():
             assets, game_state, x=200, y=200, batch=main_batch, group=groups[5]
         )
 
+        # spawn dark matter
+        dark_matter_objects = dark_matter_spawner.spawn(0.1)
+        game_state.dark_matter_positions.clear()
+        for obj in dark_matter_objects:
+            game_state.dark_matter_positions.append((obj.x, obj.y))
+
         # reset the view_port
         game_state.reset_viewport()
 
@@ -187,9 +197,37 @@ def run():
         window.push_handlers(player_1.key_handler)
         window.push_handlers(player_1.mouse_handler)
         game_objects.append(player_1)
-        # window.view = window.view.translate(
-        #     (-game_state.viewport_x + game_state.viewport_width // 2, -game_state.viewport_y + game_state.viewport_height // 2, 0)
-        # )
+        game_objects.extend(dark_matter_objects)
+
+        # reset the camera
+        reset_camera()
+
+    def load_stage_won():
+        # create an instance of the background centred on the stage
+        game_state.background_sprite = Background(
+            assets,
+            level=2,
+            x=game_state.stage_width // 2,
+            y=game_state.stage_height // 2,
+            batch=main_batch,
+            group=groups[0],
+        )
+
+        # reset the view_port
+        game_state.reset_viewport()
+
+        # spawn text saying game won
+        game_won_label = pyglet.text.Label(
+            "You won!",
+            font_name="Arial",
+            font_size=50,
+            x=game_state.viewport_x,
+            y=game_state.viewport_y,
+            anchor_x="center",
+            anchor_y="center",
+            batch=main_batch,
+            group=groups[9],
+        )
 
         # reset the camera
         reset_camera()
@@ -222,14 +260,14 @@ def run():
             width=health_bar_width,
             height=5,
             color=health_bar_color,
-            batch=health_bar_batch,
+            batch=main_batch,
         )
         # the health bars need to be added to a list so that the objects do not go out of scope.
         # this is because rendering using batch needs the objects to be in scope during the draw call.
         health_bars_to_add = [health_bar]
         health_bars.extend(health_bars_to_add)
 
-        damage_label = obj.draw_damage_label(damage_label_batch)
+        damage_label = obj.draw_damage_label(main_batch)
         if damage_label is not None:
             damage_labels_to_add = [damage_label]
             frames_persistent = 25
@@ -375,6 +413,8 @@ def run():
             obj.child_objects = []  # clear the list
         game_objects.clear()
 
+        game_state.background_sprite.batch = None
+
     def handle_level_change():
         # if change_level
         if game_state.level == 0:
@@ -382,22 +422,41 @@ def run():
             game_state.level = 1
         elif game_state.level == 1:
             # check if the level has to change based on the score
-            if score > 10:
-                print("changing level")
+            if game_state.revealed_dark_matter == len(game_state.dark_matter_positions):
+                print("revealed all dark matter. changing level")
+                game_objects.extend(boss_spawner.spawn(0.1))
 
+            if game_state.change_level:
                 # remove all objects
                 remove_non_essential_objects()
                 # reset spawners
                 reset_spawners()
-
                 load_stage_2()
                 game_state.level = 2
+                game_state.change_level = False
+
+        elif game_state.level == 2:
+            if game_state.revealed_dark_matter == len(game_state.dark_matter_positions):
+                print("revealed all dark matter. changing level")
+                game_objects.extend(boss_spawner.spawn(0.1))
+
+            if game_state.change_level:
+                # remove all objects
+                remove_non_essential_objects()
+                # reset spawners
+                reset_spawners()
+                load_stage_won()
+                game_state.change_level = False
+                game_state.level = 3
 
     # update loop
     def update(dt):
         handle_level_change()
-
         health_bars.clear()
+
+        if game_state.level == 3:
+            return
+
         objects_to_add = []  # list of new objects to add
 
         # update viewport
@@ -410,9 +469,13 @@ def run():
         # spawn powerups if required
         objects_to_add.extend(powerup_spawner.spawn(dt))
         # spawn dark matter if required
-        objects_to_add.extend(dark_matter_spawner.spawn(dt))
-        # spawn boss if required
-        objects_to_add.extend(boss_spawner.spawn(dt))
+        new_dark_matter_objects = dark_matter_spawner.spawn(dt)
+        if len(new_dark_matter_objects) > 0:
+            print("adding dark matter")
+            print(game_state.dark_matter_positions)
+        for obj in new_dark_matter_objects:
+            game_state.dark_matter_positions.append((obj.x, obj.y))
+        objects_to_add.extend(new_dark_matter_objects)
 
         # update positions, state of each object and
         # collect all children that each object may spawn
@@ -462,6 +525,12 @@ def run():
                 if obj.type == "player":
                     print("Game over")
                     pyglet.app.exit()
+                if obj.type == "dark_matter":
+                    dark_matter_spawner.remove(obj)
+                if obj.type == "boss":
+                    boss_spawner.remove(obj)
+                    game_state.revealed_dark_matter = 0
+                    game_state.change_level = True
 
         # remove dead objects from game_objects
         game_objects[:] = [obj for obj in game_objects if not obj.dead]
@@ -488,8 +557,8 @@ def run():
             y=game_state.viewport_y + game_state.viewport_height // 2 - 10,
             anchor_x="right",
             anchor_y="top",
-            batch=gui_batch,
-            group=groups[0],
+            batch=main_batch,
+            group=groups[9],
         )
 
     pyglet.clock.schedule_interval(update, 1 / 120.0)

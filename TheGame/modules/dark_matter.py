@@ -1,5 +1,3 @@
-import pyglet
-
 from modules.game_object import GameObject
 
 class DarkMatter(GameObject):
@@ -19,6 +17,10 @@ class DarkMatter(GameObject):
     def update_object(self, dt):
         pass
 
+    def reveal(self):
+        self.image = self.assets.image_assets["img_dark_matter_revealed"]
+        self.game_state.revealed_dark_matter += 1
+
     def handle_collision_with(self, other_object):
         # handle collision with player
         if other_object.type == "player":
@@ -32,12 +34,26 @@ class DarkMatter(GameObject):
         if other_object.type == "enemy":
             pass
         # if player bullet touches it, it deflects around it in a circle
-        if other_object.type == "bullet" and other_object.fired_by_player == True:
-            if self.has_collided_with(other_object) and not other_object.in_circular_motion:
-                print("dark matter collided with player bullet")
-                other_object.initiate_circular_motion(self.collision_radius, self.x, self.y)
+        if other_object.type == "bullet":
+            if other_object.bullet_type == "player":
+                if self.has_collided_with(other_object) and not other_object.in_circular_motion:
+                    print("dark matter collided with player bullet")
+                    other_object.initiate_circular_motion(self.collision_radius, self.x, self.y)
+            if other_object.bullet_type == "tracer":
+                if self.has_collided_with(other_object):
+                    print("dark matter collided with tracer bullet")
+                    other_object.dead = True
+                    self.reveal()
         # if asteroid or powerup touches it, it dies
         if other_object.type in ["asteroid", "powerup"]:
             if self.has_collided_with(other_object):
                 print("dark matter collided with ", other_object.type)
                 other_object.dead = True
+        if other_object.type == "boss" and other_object.current_movement_mode == "seek_dark_matter":
+            if self.has_collided_with(other_object):
+                print("dark matter collided with boss")
+                self.dead = True
+                self.game_state.dark_matter_positions.pop(other_object.sdm_closest_dm_index)
+                other_object.sdm_closest_dm_x = None
+                other_object.sdm_closest_dm_y = None
+                other_object.sdm_closest_dm_index = None
