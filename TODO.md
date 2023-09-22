@@ -12,6 +12,7 @@
 - [ ] Story
 - [ ] Sound effects
 - [ ] Music
+- [ ] Deployment in browser and executables
 
 ## Player 
 - [x] spawn
@@ -28,7 +29,7 @@
 - [x] spawn
 - [x] movement
 - [x] collision
-- [ ] kinds of enemies
+- [x] kinds of enemies
 
 ## Asteroids
 - [x] spawn
@@ -44,28 +45,29 @@
 - [x] spawn
 - [x] movement
 - [x] collision
-- [ ] Boons if special powerup is picked up
+- [?] Boons if special powerup is picked up
 
 ## Boss
-- [ ] spawn
-- [ ] movement
-- [ ] attack
-- [ ] collision
-- [ ] death
+- [ ] spawn - apply conditions
+- [x] movement
+- [x] attack
+- [x] collision
+- [ ] death - apply conditions
 
 ## Art
 - [x] Player ship
 - [ ] Player ship exhaust
 - [ ] Player ship afterburner
 - [ ] Player bullet
+- [ ] Player tracer bullet
 - [ ] Explosions
 - [ ] Dark matter (transparent)
+- [ ] Dark matter marked
 - [ ] Enemy 1
 - [ ] Enemy 2
 - [ ] Enemy 3
-- [ ] Enemy 4
 - [ ] Enemy bullet 1
-- [ ] Enemy bullet 1
+- [ ] Enemy bullet 2
 - [ ] Boss 1
 - [ ] Boss 2
 - [ ] Boss bullet 1
@@ -78,18 +80,21 @@
 - [ ] Background stars (twinkling)
 - [ ] Foreground nebulae (static)
 - [ ] Foreground nebulae (twinkling)
+- [ ] Foreground/background constellations to identify dark matter
+- [ ] Title page
+- [ ] Menu page
+- [ ] Instructions page
+- [ ] Game over page
 
 ## Music
 - [ ] Background score
 - [ ] Boss background score
 - [ ] Bullet fire
+- [ ] Bullet hit
 - [ ] Explosion - played when a ship is destroyed
 - [ ] Collision between spaceships
+- [ ] Asteroid destroyed
 - [ ] Powerup spawn (make it tense, powerup lasts for a short time)
 - [ ] Powerup pickup
 - [ ] Win
 - [ ] Game over
-
-
-
-
