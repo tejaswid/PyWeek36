@@ -45,33 +45,32 @@
 - [x] spawn
 - [x] movement
 - [x] collision
-- [?] Boons if special powerup is picked up
 
 ## Boss
-- [ ] spawn - apply conditions
+- [x] spawn
 - [x] movement
 - [x] attack
 - [x] collision
-- [ ] death - apply conditions
+- [x] death
 
 ## Art
 - [x] Player ship
 - [ ] Player ship exhaust
 - [ ] Player ship afterburner
-- [ ] Player bullet
-- [ ] Player tracer bullet
+- [x] Player bullet
+- [x] Player tracer bullet
 - [ ] Explosions
 - [ ] Dark matter (transparent)
 - [ ] Dark matter marked
-- [ ] Enemy 1
-- [ ] Enemy 2
-- [ ] Enemy 3
-- [ ] Enemy bullet 1
+- [x] Enemy shooter
+- [x] Enemy spear
+- [ ] Enemy seeker
+- [x] Enemy bullet 1
 - [ ] Enemy bullet 2
 - [ ] Boss 1
 - [ ] Boss 2
-- [ ] Boss bullet 1
-- [ ] Boss bullet 2
+- [x] Boss bullet 1
+- [x] Boss bullet 2
 - [x] Powerup (health)
 - [x] Powerup (speed boost)
 - [x] Powerup (damage boost)
