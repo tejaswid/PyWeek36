@@ -52,3 +52,34 @@
 - [ ] attack
 - [ ] collision
 - [ ] death
+
+## Art
+- [x] Player ship
+- [ ] Player ship exhaust
+- [ ] Player ship afterburner
+- [ ] Player bullet
+- [ ] Explosions
+- [ ] Dark matter (transparent)
+- [ ] Enemy 1
+- [ ] Enemy 2
+- [ ] Enemy 3
+- [ ] Enemy 4
+- [ ] Enemy bullet 1
+- [ ] Enemy bullet 1
+- [ ] Boss 1
+- [ ] Boss 2
+- [ ] Boss bullet 1
+- [ ] Boss bullet 2
+- [ ] Powerup (health)
+- [ ] Powerup (speed boost)
+- [ ] Asteroid 1 (save in a few sizes)
+- [ ] Asteriod 2 (save in a few sizes)
+- [ ] Background stars (static)
+- [ ] Background stars (twinkling)
+- [ ] Foreground nebulae (static)
+- [ ] Foreground nebulae (twinkling)
+
+
+
+
+
