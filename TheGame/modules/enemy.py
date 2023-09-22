@@ -100,6 +100,7 @@ class Enemy(GameObject):
                 bullet = Bullet(
                     self.assets, x=self.x, y=self.y, batch=self.batch, group=self.group
                 )
+                bullet.set_type("enemy")
                 bullet.set_rotation(player_x, player_y)
                 bullet.set_velocity(player_x, player_y, self.shooter_bullet_speed)
                 bullet.collision_radius = self.shooter_bullet_radius
@@ -185,7 +186,7 @@ class Enemy(GameObject):
 
     def handle_collision_with(self, other_object):
         # handle collision with bullet
-        if other_object.type == "bullet" and other_object.fired_by_player:
+        if other_object.type == "bullet" and other_object.bullet_type == "player":
             if self.has_collided_with(other_object):
                 print("enemy collided with player bullet")
                 self.take_damage(other_object.damage)

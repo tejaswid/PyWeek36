@@ -94,7 +94,6 @@ class Player(GameObject):
     def update_rotation(self, mouse_x, mouse_y):
         if self.in_arbitrary_motion:
             return
-
         # Note: - is required in the below code for ccw rotation. DO NOT REMOVE
         self.rotation = -math.degrees(math.atan2(mouse_y - self.y, mouse_x - self.x))
 
@@ -137,8 +136,18 @@ class Player(GameObject):
         bullet.damage = self.bullet_damage
         bullet.set_rotation(target_x, target_y)
         bullet.set_velocity(target_x, target_y)
-        bullet.fired_by_player = True
+        bullet.set_type("player")
         self.child_objects.append(bullet)
+
+    def fire_tracer(self, target_x, target_y):
+        tracer = Bullet(
+            self.assets, x=self.x, y=self.y, batch=self.batch, group=self.group
+        )
+        tracer.damage = 0
+        tracer.set_rotation(target_x, target_y)
+        tracer.set_velocity(target_x, target_y)
+        tracer.set_type("tracer")
+        self.child_objects.append(tracer)
 
     def activate_damage_boost(self):
         self.powerup_db_active = True
@@ -207,7 +216,7 @@ class Player(GameObject):
                 self.initiate_arbitrary_motion()
 
         # handle collision with bullet
-        if other_object.type == "bullet" and not other_object.fired_by_player:
+        if other_object.type == "bullet" and other_object.bullet_type == "enemy":
             if self.has_collided_with(other_object):
                 print("player collided with enemy bullet")
                 self.take_damage(other_object.damage)

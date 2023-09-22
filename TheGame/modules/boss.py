@@ -122,6 +122,7 @@ class Boss(GameObject):
         bullet = Bullet(
             self.assets, x=start_x, y=start_y, batch=self.batch, group=self.group
         )
+        bullet.set_type("enemy")
         bullet.set_rotation(target_x, target_y)
         bullet.set_velocity(target_x, target_y, self.sf_bullet_speed)
         self.child_objects.append(bullet)
@@ -264,7 +265,7 @@ class Boss(GameObject):
 
     def handle_collision_with(self, other_object):
         # handle collision with bullet
-        if other_object.type == "bullet" and other_object.fired_by_player:
+        if other_object.type == "bullet" and other_object.bullet_type == "player":
             if self.has_collided_with(other_object):
                 print("boss collided with player bullet")
                 self.take_damage(other_object.damage)

@@ -120,6 +120,11 @@ def run():
             for obj in game_objects:
                 if obj.type == "player":
                     obj.fire_bullet(x, y)
+        
+        if button == mouse.RIGHT:
+            for obj in game_objects:
+                if obj.type == "player":
+                    obj.fire_tracer(x, y)
 
     @window.event
     def on_mouse_motion(x, y, dx, dy):
