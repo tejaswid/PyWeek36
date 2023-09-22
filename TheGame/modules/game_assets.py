@@ -44,6 +44,11 @@ class GameAssets(object):
         # load images
         self.create_image_asset("img_player_ship", "images/player_ship.png", True)
         self.create_image_asset("img_player_ship_with_shield", "images/player_ship_with_shield.png", True)
+        self.create_image_asset("img_player_ship_with_shield_s1", "images/player_ship_with_shield_s1.png", True)
+        self.create_image_asset("img_player_ship_with_shield_s2", "images/player_ship_with_shield_s2.png", True)
+        self.create_image_asset("img_player_ship_with_shield_s3", "images/player_ship_with_shield_s3.png", True)
+        self.create_image_asset("img_player_ship_with_shield_s4", "images/player_ship_with_shield_s4.png", True)
+        self.create_image_asset("img_player_ship_with_shield_s5", "images/player_ship_with_shield_s5.png", True)
         self.create_image_asset("img_bullet", "images/bullet.png", True)
         self.create_image_asset("img_bullet_player", "images/bullet_player.png", True)
         self.create_image_asset("img_bullet_enemy", "images/bullet_enemy.png", True)

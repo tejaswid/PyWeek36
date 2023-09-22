@@ -2,6 +2,7 @@ import math
 
 from pyglet.window import key
 from pyglet.window import mouse
+from pyglet.image import Animation
 
 from modules.game_object import GameObject
 from modules.bullet import Bullet
@@ -64,6 +65,13 @@ class Player(GameObject):
         self.shield_current_health = self.shield_max_health
         self.shield_active = False
         self.shield_sprite = self.assets.image_assets["img_player_ship_with_shield"]
+
+        self.shield_sprites = [self.assets.image_assets["img_player_ship_with_shield_s1"],
+                               self.assets.image_assets["img_player_ship_with_shield_s2"],
+                               self.assets.image_assets["img_player_ship_with_shield_s3"],
+                               self.assets.image_assets["img_player_ship_with_shield_s4"],
+                               self.assets.image_assets["img_player_ship_with_shield_s5"]]
+        self.shield_animation = Animation.from_image_sequence(self.shield_sprites, duration=0.2, loop=True)
 
     def update_object(self, dt):
         if not self.in_arbitrary_motion:
@@ -172,7 +180,7 @@ class Player(GameObject):
             self.powerup_sp_active = False
 
     def add_shield_sprite(self):
-        self.image = self.shield_sprite
+        self.image = self.shield_animation
 
     def remove_shield_sprite(self):
         self.image = self.default_sprite
