@@ -79,6 +79,16 @@
 - [ ] Foreground nebulae (static)
 - [ ] Foreground nebulae (twinkling)
 
+## Music
+- [ ] Background score
+- [ ] Boss background score
+- [ ] Bullet fire
+- [ ] Explosion - played when a ship is destroyed
+- [ ] Collision between spaceships
+- [ ] Powerup spawn (make it tense, powerup lasts for a short time)
+- [ ] Powerup pickup
+- [ ] Win
+- [ ] Game over
 
 
 
