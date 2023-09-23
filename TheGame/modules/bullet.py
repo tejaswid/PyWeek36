@@ -3,6 +3,7 @@ import math
 from pyglet.window import key
 from pyglet.window import mouse
 from pyglet import clock
+from pyglet.image import Animation
 
 from modules.game_object import GameObject
 from modules import utils
@@ -48,12 +49,19 @@ class Bullet(GameObject):
         self.prev_velocity_x = 0
         self.prev_velocity_y = 0
 
+        # green circular bullet
+        self.bullet_green_sprites = [self.assets.image_assets["img_bullet_enemy_green_s1"],
+                               self.assets.image_assets["img_bullet_enemy_green_s2"],
+                               self.assets.image_assets["img_bullet_enemy_green_s3"]]
+        self.bullet_green_animation = Animation.from_image_sequence(self.bullet_green_sprites, duration=0.3, loop=True)
+
+
     def set_type(self, bullet_type):
         self.bullet_type = bullet_type
         if self.bullet_type == "player":
             self.image = self.assets.image_assets["img_bullet_player"]
         elif self.bullet_type == "enemy":
-            self.image = self.assets.image_assets["img_bullet_enemy"]
+            self.image = self.bullet_green_animation
         elif self.bullet_type == "tracer":
             self.image = self.assets.image_assets["img_bullet_tracer"]
         else:
