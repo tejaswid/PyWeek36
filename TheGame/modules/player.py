@@ -32,7 +32,7 @@ class Player(GameObject):
         # collision
         self.collision_radius = 5
         # health
-        self.max_health = 500
+        self.max_health = 800
         self.current_health = self.max_health
         # damage to other objects
         self.damage = 30
@@ -176,7 +176,7 @@ class Player(GameObject):
 
     def check_powerup_db_status(self):
         if self.powerup_db_current_time >= self.powerup_db_max_time:
-            print("powerup_db expired")
+            #print("powerup_db expired")
             self.bullet_damage = self.powerup_db_original_damage
             self.powerup_db_current_time = 0
             self.powerup_db_active = False
@@ -187,7 +187,7 @@ class Player(GameObject):
 
     def check_powerup_sp_status(self):
         if self.powerup_sp_current_time >= self.powerup_sp_max_time:
-            print("powerup_sp expired")
+            #print("powerup_sp expired")
             self.speed = self.powerup_sp_original_speed
             self.powerup_sp_current_time = 0
             self.powerup_sp_active = False
@@ -206,7 +206,7 @@ class Player(GameObject):
         # handle collision with enemy and asteroid
         if other_object.type in ["enemy", "asteroid"]:
             if self.has_collided_with(other_object):
-                print("player collided with ", other_object.type)
+                #print("player collided with ", other_object.type)
                 self.take_damage(other_object.damage)
                 # enemy takes damage, needed to possibly overcome the framerate issue
                 other_object.take_damage(self.damage)
@@ -216,7 +216,7 @@ class Player(GameObject):
         if other_object.type == "powerup":
             if self.has_collided_with(other_object):
                 other_object.dead = True
-                print("player collided with powerup")
+                #print("player collided with powerup")
                 self.assets.sound_assets["snd_powerup_pickup"].play()
                 if other_object.powerup_type == "health":
                     self.take_damage(-other_object.damage)
@@ -233,7 +233,7 @@ class Player(GameObject):
                 self.has_collided_with(other_object)
                 and self.in_arbitrary_motion is False
             ):
-                print("player collided with dark matter")
+                #print("player collided with dark matter")
                 self.assets.sound_assets["snd_darkmatter_collide"].play()
                 self.take_damage(other_object.damage)
                 # deflect the player in an arbitrary direction and spin
@@ -242,7 +242,7 @@ class Player(GameObject):
         # handle collision with bullet
         if other_object.type == "bullet" and other_object.bullet_type in ["enemy", "boss"]:
             if self.has_collided_with(other_object):
-                print("player collided with enemy bullet")
+                #print("player collided with enemy bullet")
                 self.assets.sound_assets["snd_bullet_hit"].play()
                 self.take_damage(other_object.damage)
                 other_object.dead = True
@@ -250,7 +250,7 @@ class Player(GameObject):
         # handle collision with boss
         if other_object.type == "boss":
             if self.has_collided_with(other_object):
-                print("player collided with boss")
+                #print("player collided with boss")
                 self.assets.sound_assets["snd_collision"].play()
                 self.take_damage(other_object.damage)
                 other_object.take_damage(self.damage)

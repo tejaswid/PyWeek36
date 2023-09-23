@@ -20,7 +20,7 @@ from modules.boss_spawner import BossSpawner
 
 
 def run():
-    print(pyglet.version)
+    #print(pyglet.version)
 
     game_state = GameState()
 
@@ -95,7 +95,7 @@ def run():
 
     def get_camera_centre():
         camera_bl_x, camera_bl_y = get_camera_bottom_left()
-        print(" camera bottom left: {}, {}".format(camera_bl_x, camera_bl_y))
+        #print(" camera bottom left: {}, {}".format(camera_bl_x, camera_bl_y))
         return (
             camera_bl_x + game_state.viewport_width // 2,
             camera_bl_y + game_state.viewport_height // 2,
@@ -480,9 +480,9 @@ def run():
             game_state.revealed_dark_matter == len(game_state.dark_matter_positions)
             and game_state.should_spawn_boss
         ):
-            print("revealed all dark matter. changing level")
-            print("revealed dark matter: ", game_state.revealed_dark_matter)
-            print("total dark matter: ", len(game_state.dark_matter_positions))
+            #print("revealed all dark matter. changing level")
+            #print("revealed dark matter: ", game_state.revealed_dark_matter)
+            #print("total dark matter: ", len(game_state.dark_matter_positions))
             game_state.should_spawn_boss = False
             game_objects.extend(boss_spawner.spawn(0.1))
             p.queue(background_music)
@@ -544,11 +544,11 @@ def run():
                 p.next_source()
                 if game_state.game_won:
                     assets.sound_assets["snd_win"].play()
-                    print("game won")
+                    #print("game won")
                     load_screen("won")
                     game_state.level = 3
                 else:
-                    print("game over")
+                    #print("game over")
                     load_screen("game_over")
                     game_state.level = 4
                 game_state.change_level = False
@@ -601,9 +601,9 @@ def run():
         objects_to_add.extend(powerup_spawner.spawn(dt))
         # spawn dark matter if required
         new_dark_matter_objects = dark_matter_spawner.spawn(dt)
-        if len(new_dark_matter_objects) > 0:
-            print("adding dark matter")
-            print(game_state.dark_matter_positions)
+        # if len(new_dark_matter_objects) > 0:
+            #print("adding dark matter")
+            #print(game_state.dark_matter_positions)
         for obj in new_dark_matter_objects:
             game_state.dark_matter_positions.append((obj.x, obj.y))
         objects_to_add.extend(new_dark_matter_objects)
@@ -637,7 +637,7 @@ def run():
         nonlocal score
         for obj in game_objects:
             if obj.dead:
-                print("removing ", obj.type)
+                #print("removing ", obj.type)
                 obj.batch = None
                 # if it is an asteroid remove it from the list of asteroids
                 if obj.type == "asteroid":

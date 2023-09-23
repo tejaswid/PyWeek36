@@ -54,7 +54,7 @@ class Powerup(GameObject):
             if self.has_collided_with(other_object):
                 self.assets.sound_assets["snd_powerup_pickup"].play()
                 self.dead = True
-                print("powerup collided with player")
+                #print("powerup collided with player")
                 if self.powerup_type == "health":
                     other_object.take_damage(-20)  # give health to player
                 elif self.powerup_type == "shield":
@@ -66,5 +66,5 @@ class Powerup(GameObject):
 
         if other_object.type == "dark_matter":
             if self.has_collided_with(other_object):
-                print("powerup collided with dark matter")
+                #print("powerup collided with dark matter")
                 self.dead = True

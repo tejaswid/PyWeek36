@@ -45,7 +45,7 @@ class Boss(GameObject):
         # collision
         self.collision_radius = 50
         # health
-        self.max_health = 2500
+        self.max_health = 1500
         self.current_health = self.max_health
         # damage to other objects
         self.damage = 40
@@ -355,7 +355,7 @@ class Boss(GameObject):
         # handle collision with bullet
         if other_object.type == "bullet" and other_object.bullet_type == "player":
             if self.has_collided_with(other_object):
-                print("boss collided with player bullet")
+                # #print("boss collided with player bullet")
                 self.assets.sound_assets["snd_bullet_hit"].play()
                 self.take_damage(other_object.damage)
                 # if I am dead, then I was killed by the player
@@ -364,7 +364,7 @@ class Boss(GameObject):
         # handle collision with player, enemy and other asteroids
         if other_object.type == "player":
             if self.has_collided_with(other_object):
-                print("boss collided with player")
+                # #print("boss collided with player")
                 self.assets.sound_assets["snd_collision"].play()
                 self.take_damage(other_object.damage)
                 other_object.take_damage(self.damage)
@@ -373,7 +373,7 @@ class Boss(GameObject):
             and self.current_movement_mode == "seek_dark_matter"
         ):
             if self.has_collided_with(other_object):
-                print("boss collided with dark matter")
+                # #print("boss collided with dark matter")
                 other_object.dead = True
                 self.game_state.dark_matter_positions.pop(self.sdm_closest_dm_index)
                 self.sdm_closest_dm_x = None

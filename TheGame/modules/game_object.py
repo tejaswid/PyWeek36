@@ -104,10 +104,10 @@ class GameObject(pyglet.sprite.Sprite):
         """
         # shield takes damage first
         if self.type in ["player", "boss"] and self.shield_active:
-            print("shield taking damage")
+            #print("shield taking damage")
             self.shield_current_health -= damage
             if self.shield_current_health <= 0:
-                print("shield destroyed")
+                #print("shield destroyed")
                 self.shield_active = False
                 self.remove_shield_sprite()
                 self.shield_current_health = self.shield_max_health
@@ -127,7 +127,7 @@ class GameObject(pyglet.sprite.Sprite):
     def draw_damage_label(self, health_bar_batch):
         # draw damage label
         if self.damage_taken > 0:
-            print("drawing damage label")
+            #print("drawing damage label")
             damage_label = pyglet.text.Label(
                 f"-{self.damage_taken}",
                 font_name="Arial",
@@ -143,7 +143,7 @@ class GameObject(pyglet.sprite.Sprite):
             return damage_label
         # draw heal label
         if self.damage_taken < 0:
-            print("drawing heal label")
+            #print("drawing heal label")
             heal_label = pyglet.text.Label(
                 f"+{-self.damage_taken}",
                 font_name="Arial",

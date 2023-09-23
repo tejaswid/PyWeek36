@@ -125,7 +125,7 @@ class Bullet(GameObject):
         # handle collision with enemy
         if other_object.type in ["enemy", "asteroid"] and self.bullet_type == "player":
             if self.has_collided_with(other_object):
-                print("player bullet collided with ", other_object.type)
+                #print("player bullet collided with ", other_object.type)
                 self.assets.sound_assets["snd_bullet_hit"].play()
                 # remove bullet
                 self.dead = True
@@ -138,11 +138,11 @@ class Bullet(GameObject):
         if other_object.type == "dark_matter":
             if self.bullet_type == "player":
                 if self.has_collided_with(other_object) and not self.in_circular_motion:
-                    print("player bullet collided with dark_matter")
+                    #print("player bullet collided with dark_matter")
                     self.initiate_circular_motion(other_object.collision_radius, other_object.x, other_object.y)
             elif self.bullet_type == "tracer":
                 if self.has_collided_with(other_object):
-                    print("tracer bullet collided with dark_matter")
+                    #print("tracer bullet collided with dark_matter")
                     self.dead = True
                     other_object.reveal()
             else:
@@ -151,14 +151,14 @@ class Bullet(GameObject):
         # handle collision with player
         if other_object.type == "player" and self.bullet_type in ["enemy", "boss"]:
             if self.has_collided_with(other_object):
-                print("enemy bullet collided with player")
+                #print("enemy bullet collided with player")
                 self.assets.sound_assets["snd_bullet_hit"].play()
                 self.dead = True
                 other_object.take_damage(self.damage)
         # handle collision with boss
         if other_object.type == "boss" and self.bullet_type == "player":
             if self.has_collided_with(other_object):
-                print("player bullet collided with boss")
+                #print("player bullet collided with boss")
                 self.assets.sound_assets["snd_bullet_hit"].play()
                 # remove bullet
                 self.dead = True
