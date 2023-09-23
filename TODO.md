@@ -86,14 +86,14 @@
 - [x] Game over page
 
 ## Music
-- [ ] Background score
-- [ ] Boss background score
-- [ ] Bullet fire
-- [ ] Bullet hit
-- [ ] Explosion - played when a ship is destroyed
-- [ ] Collision between spaceships
-- [ ] Asteroid destroyed
-- [ ] Powerup spawn (make it tense, powerup lasts for a short time)
-- [ ] Powerup pickup
-- [ ] Win
-- [ ] Game over
+- [x] Background score
+- [x] Boss background score
+- [x] Bullet fire
+- [x] Bullet hit
+- [x] Explosion - played when a ship is destroyed
+- [x] Collision between spaceships
+- [x] Asteroid destroyed
+- [x] Powerup spawn (make it tense, powerup lasts for a short time)
+- [x] Powerup pickup
+- [x] Win
+- [x] Game over
