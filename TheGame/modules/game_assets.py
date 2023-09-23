@@ -133,7 +133,7 @@ class GameAssets(object):
         self.create_sound_asset("snd_bullet_fire", "sounds/Bullet_fire_697730__sustainededed__small-laser.mp3", True)
         self.create_sound_asset("snd_bullet_hit", "sounds/Bullet_impact_319226__worthahep88__single-rock-hitting-wood.wav", True)
         self.create_sound_asset("snd_explosion", "sounds/Explosion_536548__cascoes__explosion.wav", True)
-        self.create_sound_asset("snd_collision", "sounds/collision_391658__jeckkech__collision", True)
+        self.create_sound_asset("snd_collision", "sounds/collision_391658__jeckkech__collision.wav", True)
         self.create_sound_asset("snd_asteroid_destroyed", "sounds/Asteroid_explosion_546957__sieuamthanh__nolonduoinuoc1.wav", True)
         self.create_sound_asset("snd_powerup_spawn", "sounds/Powerup_spawn_657938__matrixxx__scifi-popup-warning-notice-or-note.wav", True)
         self.create_sound_asset("snd_powerup_pickup", "sounds/Powerup_pickup_523649__matrixxx__powerup-07.wav", True)
