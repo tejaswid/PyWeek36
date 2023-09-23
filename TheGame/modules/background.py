@@ -6,7 +6,15 @@ class Background(GameObject):
     def __init__(self, game_assets, level, *args, **kwargs):
         
         images = []
-        if level == 1:
+        if level == -1:
+            images = [
+                game_assets.image_assets["img_bkg_title"],
+            ]
+        elif level == 0:
+            images = [
+                game_assets.image_assets["img_bkg_won"],
+            ]
+        elif level == 1:
             images = [
                 game_assets.image_assets["img_bkg_1_1"],
                 game_assets.image_assets["img_bkg_1_2"],
