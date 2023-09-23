@@ -120,8 +120,12 @@ def run():
     def on_key_press(symbol, modifiers):
         if symbol == key.A:
             pass
-        if game_state.level == -1 or game_state.level == 0 or game_state.level == 0.5:
+        if game_state.level in [-1, 0, 0.5]:
             if symbol == key.SPACE:
+                game_state.change_level = True
+            return
+        if game_state.level in [3, 4]:
+            if symbol == key.R:
                 game_state.change_level = True
             return
 
@@ -150,11 +154,17 @@ def run():
             if obj.type == "player":
                 obj.update_rotation(x, y)
 
-    def load_title_screen():
-        # this is the title screen
+    def load_screen(level_name):
+        name_to_id = {
+            "title": -1,
+            "instructions": 0.5,
+            "won": 3,
+            "game_over": 4,
+        }
+
         game_state.background_sprite = Background(
             assets,
-            level=-1,
+            level=name_to_id[level_name],
             x=game_state.stage_width // 2,
             y=game_state.stage_height // 2,
             batch=main_batch,
@@ -165,20 +175,7 @@ def run():
         # reset the camera
         reset_camera()
 
-    def load_instructions_screen():
-        # this is the instructions screen
-        game_state.background_sprite = Background(
-            assets,
-            level=0.5,
-            x=game_state.stage_width // 2,
-            y=game_state.stage_height // 2,
-            batch=main_batch,
-            group=groups[0],
-        )
-        # reset the view_port
-        game_state.reset_viewport()
-        # reset the camera
-        reset_camera()
+
 
     def load_story():
         # create an instance of the background centred on the stage
@@ -258,6 +255,12 @@ def run():
             group=groups[0],
         )
 
+        # create some forground neublae
+        fg_1 = Foreground(assets, x=500, y=300, batch=main_batch, group=groups[8])
+        fg_2 = Foreground(assets, x=1000, y=1200, batch=main_batch, group=groups[8])
+        game_objects.append(fg_1)
+        game_objects.append(fg_2)
+
         # spawn the player
         player_1 = Player(
             assets, game_state, x=200, y=200, batch=main_batch, group=groups[5]
@@ -279,36 +282,6 @@ def run():
         window.push_handlers(player_1.mouse_handler)
         game_objects.append(player_1)
         game_objects.extend(dark_matter_objects)
-
-        # reset the camera
-        reset_camera()
-
-    def load_stage_won():
-        # create an instance of the background centred on the stage
-        game_state.background_sprite = Background(
-            assets,
-            level=2,
-            x=game_state.stage_width // 2,
-            y=game_state.stage_height // 2,
-            batch=main_batch,
-            group=groups[0],
-        )
-
-        # reset the view_port
-        game_state.reset_viewport()
-
-        # spawn text saying game won
-        game_won_label = pyglet.text.Label(
-            "You won!",
-            font_name="Arial",
-            font_size=50,
-            x=game_state.viewport_x,
-            y=game_state.viewport_y,
-            anchor_x="center",
-            anchor_y="center",
-            batch=main_batch,
-            group=groups[9],
-        )
 
         # reset the camera
         reset_camera()
@@ -490,7 +463,10 @@ def run():
         enemy_spawner.reset()
         powerup_spawner.reset()
         dark_matter_spawner.reset()
+        game_state.dark_matter_positions.clear()
+        game_state.revealed_dark_matter = 0
         boss_spawner.reset()
+
 
     def remove_non_essential_objects():
         for obj in game_objects:
@@ -516,7 +492,7 @@ def run():
             
     def handle_level_change():
         if game_state.level == -2:
-            load_title_screen()
+            load_screen("title")
             game_state.level = -1
 
         if game_state.level == -1:
@@ -531,7 +507,7 @@ def run():
             if game_state.change_level:
                 remove_non_essential_objects()
                 reset_spawners()
-                load_instructions_screen()
+                load_screen("instructions")
                 game_state.level = 0.5
                 game_state.change_level = False
 
@@ -546,7 +522,6 @@ def run():
 
         elif game_state.level == 1:
             check_dark_matter_reveal_status_and_spawn_boss()
-
             if game_state.change_level:
                 # remove all objects
                 remove_non_essential_objects()
@@ -560,33 +535,54 @@ def run():
 
         elif game_state.level == 2:
             check_dark_matter_reveal_status_and_spawn_boss()
-
             if game_state.change_level:
                 # remove all objects
                 remove_non_essential_objects()
                 # reset spawners
                 reset_spawners()
-                load_stage_won()
+                if game_state.game_won:
+                    print("game won")
+                    load_screen("won")
+                    game_state.level = 3
+                else:
+                    print("game over")
+                    load_screen("game_over")
+                    game_state.level = 4
                 game_state.change_level = False
-                game_state.level = 3
+                game_state.should_spawn_boss = False
+                damage_labels.clear()
+                nonlocal score_label
+                score_label.batch = None
+                score_label.delete()
+                score_label = None
+
+        elif game_state.level == 3 or game_state.level == 4:
+            if game_state.change_level:
+                # remove all objects
+                remove_non_essential_objects()
+                # reset spawners
+                reset_spawners()
+                game_state.change_level = True
+                game_state.level = 0.5
+                game_state.should_spawn_boss = True
 
     # update loop
     def update(dt):
         handle_level_change()
         health_bars.clear()
 
+        # return early for these levels
         if game_state.level == -1:
             return
-
-        if game_state.level == 0:
+        elif game_state.level == 0:
             for obj in game_objects:
                 obj.update_object(dt)
             return
-        
-        if game_state.level == 0.5:
+        elif game_state.level == 0.5:
             return
-
-        if game_state.level == 3:
+        elif game_state.level == 3:
+            return
+        elif game_state.level == 4:
             return
 
         objects_to_add = []  # list of new objects to add
@@ -646,24 +642,29 @@ def run():
                         score += obj.score  # increase score
                     asteroid_spawner.remove(obj)
                 # if it is an enemy remove it from the list of enemies
-                if obj.type == "enemy":
+                elif obj.type == "enemy":
                     if obj.died_by_player:
                         score += obj.score  # increase score
                     enemy_spawner.remove(obj)
                 # if it is a powerup remove it from the list of powerups
-                if obj.type == "powerup":
+                elif obj.type == "powerup":
                     powerup_spawner.remove(obj)
                 # if player is dead, game over
-                if obj.type == "player":
-                    print("Game over")
-                    pyglet.app.exit()
-                if obj.type == "dark_matter":
+                elif obj.type == "player":
+                    game_state.level = 2
+                    game_state.change_level = True
+                    game_state.game_won = False
+                    game_state.revealed_dark_matter = 0
+                    game_state.dark_matter_positions.clear()                    
+                elif obj.type == "dark_matter":
                     dark_matter_spawner.remove(obj)
-                if obj.type == "boss":
+                elif obj.type == "boss":
                     boss_spawner.remove(obj)
                     game_state.revealed_dark_matter = 0
                     game_state.dark_matter_positions.clear()
                     game_state.change_level = True
+                    if game_state.level == 2:
+                        game_state.game_won = True
 
         # remove dead objects from game_objects
         game_objects[:] = [obj for obj in game_objects if not obj.dead]

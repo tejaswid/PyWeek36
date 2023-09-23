@@ -4,29 +4,40 @@ from modules.game_object import GameObject
 
 class Background(GameObject):
     def __init__(self, game_assets, level, *args, **kwargs):
-        
         images = []
         if level == -1:
+            # title page
             images = [
                 game_assets.image_assets["img_bkg_title"],
             ]
         elif level == 0:
+            # story
             images = [
                 game_assets.image_assets["img_bkg_default"],
             ]
         elif level == 0.5:
+            # instructions
             images = [
                 game_assets.image_assets["img_bkg_instructions"],
             ]
         elif level == 1:
+            # level 1
             images = [
                 game_assets.image_assets["img_bkg_1_1"],
                 game_assets.image_assets["img_bkg_1_2"],
             ]
-        else:
+        elif level == 2:
+            # level 2
             images = [
-                game_assets.image_assets["img_bkg_2_1"]
+                game_assets.image_assets["img_bkg_2_1"],
+                game_assets.image_assets["img_bkg_2_2"],
             ]
+        elif level == 3:
+            # player won
+            images = [game_assets.image_assets["img_bkg_won"]]
+        elif level == 4:
+            # game over
+            images = [game_assets.image_assets["img_bkg_game_over"]]
 
         anim = pyglet.image.Animation.from_image_sequence(
             images, duration=0.5, loop=True
