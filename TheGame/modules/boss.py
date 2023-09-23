@@ -1,6 +1,8 @@
 import math
 import random
 
+from pyglet.image import Animation
+
 from modules import utils
 from modules.game_object import GameObject
 from modules.bullet import Bullet
@@ -8,7 +10,13 @@ from modules.bullet import Bullet
 
 class Boss(GameObject):
     def __init__(self, game_assets, game_state, *args, **kwargs):
-        self.default_sprite = game_assets.image_assets["img_boss_3"]
+        self.boss_1_sprites = [game_assets.image_assets["img_boss_1_s1"],
+                               game_assets.image_assets["img_boss_1_s2"],
+                               game_assets.image_assets["img_boss_1_s3"],
+                               game_assets.image_assets["img_boss_1_s4"]]
+        self.boss_1_animation = Animation.from_image_sequence(self.boss_1_sprites, duration=0.3, loop=True)
+        self.default_sprite = self.boss_1_animation
+
         if game_state.level == 2:
             self.default_sprite = game_assets.image_assets["img_boss_2"]
 
