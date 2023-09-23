@@ -45,7 +45,7 @@ class Boss(GameObject):
         # collision
         self.collision_radius = 50
         # health
-        self.max_health = 1000
+        self.max_health = 2500
         self.current_health = self.max_health
         # damage to other objects
         self.damage = 40
@@ -189,6 +189,7 @@ class Boss(GameObject):
         bullet.image = self.boss_bullet_2_animation
         bullet.set_rotation(target_x, target_y)
         bullet.set_velocity(target_x, target_y, self.sp_bullet_speed)
+        bullet.collision_radius = 20
         self.child_objects.append(bullet)
         self.assets.sound_assets["snd_bullet_fire"].play()
 
@@ -206,6 +207,7 @@ class Boss(GameObject):
         bullet.set_type("boss")
         bullet.set_rotation(target_x, target_y)
         bullet.set_velocity(target_x, target_y, self.sf_bullet_speed)
+        bullet.collision_radius = 20
         self.child_objects.append(bullet)
         self.assets.sound_assets["snd_bullet_fire"].play()
 

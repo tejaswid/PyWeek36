@@ -47,8 +47,8 @@ class Enemy(GameObject):
         # parameters for shooter
         self.shooter_bullet_cooldown = 3
         self.shooter_bullet_timer = 0
-        self.shooter_bullet_speed = 100
-        self.shooter_bullet_radius = 10
+        self.shooter_bullet_speed = 180
+        self.shooter_bullet_radius = 15
 
         self.enemy_shooter_sprites = [self.assets.image_assets["img_enemy_shooter_s1"],
                                     self.assets.image_assets["img_enemy_shooter_s2"],
@@ -59,11 +59,11 @@ class Enemy(GameObject):
 
         # parameters for spear
         self.spear_speed = 600
-        self.spear_activation_distance = 300
+        self.spear_activation_distance = 500
         self.spear_active = False
         self.spear_start_x = self.x
         self.spear_start_y = self.y
-        self.spear_max_distance = 500
+        self.spear_max_distance = 900
         self.spear_current_distance = 0
         self.spear_cooldown = 2
         self.spear_timer = 0
@@ -77,10 +77,13 @@ class Enemy(GameObject):
     def update_sprite(self):
         if self.enemy_type == "seeker":
             self.image = self.enemy_seeker_animation
+            # self.collision_radius = 75
         elif self.enemy_type == "shooter":
             self.image = self.enemy_shooter_animation
+            # self.collision_radius = 75
         elif self.enemy_type == "spear":
             self.image = self.enemy_spear_animation
+            # self.collision_radius = 90
         else:
             self.image = self.assets.image_assets["img_enemy"]
 
