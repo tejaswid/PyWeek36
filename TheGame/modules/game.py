@@ -9,6 +9,7 @@ from modules.player import Player
 from modules.background import Background
 from modules.foreground import Foreground
 from modules.game_state import GameState
+from modules.story import Story
 
 from modules.powerup_spawner import PowerupSpawner
 from modules.asteroid_spawner import AsteroidSpawner
@@ -109,6 +110,10 @@ def run():
     def on_key_press(symbol, modifiers):
         if symbol == key.A:
             pass
+        if game_state.level == -1 or game_state.level == 0:
+            if symbol == key.SPACE:
+                game_state.change_level = True
+            return
 
     # handle mouse inputs
     @window.event
@@ -135,7 +140,49 @@ def run():
             if obj.type == "player":
                 obj.update_rotation(x, y)
 
-    # loads the main scene
+    def load_title_screen():
+        # this is the title screen
+        game_state.background_sprite = Background(
+            assets,
+            level=-1,
+            x=game_state.stage_width // 2,
+            y=game_state.stage_height // 2,
+            batch=main_batch,
+            group=groups[0],
+        )
+        # reset the view_port
+        game_state.reset_viewport()
+        # reset the camera
+        reset_camera()
+
+    def load_story():
+        # create an instance of the background centred on the stage
+        game_state.background_sprite = Background(
+            assets,
+            level=0,
+            x=game_state.stage_width // 2,
+            y=game_state.stage_height // 2,
+            batch=main_batch,
+            group=groups[0],
+        )
+
+        story_object = Story(
+            assets,
+            game_state,
+            x=game_state.stage_width // 2,
+            y=game_state.viewport_y - game_state.viewport_height // 2 - 200,
+            batch=main_batch,
+            group=groups[9],
+        )
+
+        game_objects.append(story_object)
+
+        # reset the view_port
+        game_state.reset_viewport()
+        # reset the camera
+        reset_camera()
+
+    # loads the first stage
     def load_stage_1():
         # create an instance of the background centred on the stage
         game_state.background_sprite = Background(
@@ -311,6 +358,11 @@ def run():
                 obj.velocity[1] = -obj.velocity[1]
                 obj.y = game_state.stage_height - obj.height // 2
 
+        if obj.type == "story":
+            if obj.y >= 1.5 * game_state.viewport_height:
+                obj.dead = True
+                game_objects.remove(obj)
+
     def update_viewport():
         diff_x = 0
         diff_y = 0
@@ -425,7 +477,10 @@ def run():
         game_state.background_sprite.batch = None
 
     def check_dark_matter_reveal_status_and_spawn_boss():
-        if game_state.revealed_dark_matter == len(game_state.dark_matter_positions) and game_state.should_spawn_boss:
+        if (
+            game_state.revealed_dark_matter == len(game_state.dark_matter_positions)
+            and game_state.should_spawn_boss
+        ):
             print("revealed all dark matter. changing level")
             print("revealed dark matter: ", game_state.revealed_dark_matter)
             print("total dark matter: ", len(game_state.dark_matter_positions))
@@ -433,13 +488,32 @@ def run():
             game_objects.extend(boss_spawner.spawn(0.1))
 
     def handle_level_change():
-        # if change_level
-        if game_state.level == 0:
-            load_stage_1()
-            game_state.level = 1
+        if game_state.level == -2:
+            load_title_screen()
+            game_state.level = -1
+
+        if game_state.level == -1:
+            if game_state.change_level:
+                remove_non_essential_objects()
+                reset_spawners()
+                game_state.level = 0
+                game_state.change_level = False
+                # this is the story
+                load_story()
+
+        elif game_state.level == 0:
+            
+            if game_state.change_level:
+                remove_non_essential_objects()
+                reset_spawners()
+                load_stage_1()
+                game_state.level = 1
+                game_state.change_level = False
+                game_state.should_spawn_boss = True
+
         elif game_state.level == 1:
             check_dark_matter_reveal_status_and_spawn_boss()
-            
+
             if game_state.change_level:
                 # remove all objects
                 remove_non_essential_objects()
@@ -466,6 +540,14 @@ def run():
     def update(dt):
         handle_level_change()
         health_bars.clear()
+
+        if game_state.level == -1:
+            return
+
+        if game_state.level == 0:
+            for obj in game_objects:
+                obj.update_object(dt)
+            return
 
         if game_state.level == 3:
             return

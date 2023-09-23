@@ -14,17 +14,20 @@ class DarkMatter(GameObject):
         self.collision_radius = 30
         # damage to other objects
         self.damage = 40
+        self.rotation = 0
 
     def update_object(self, dt):
-        pass
+        self.rotation += 10 * dt
 
     def reveal(self):
-        images = [self.assets.image_assets["img_dark_matter_revealed_1"],
-                  self.assets.image_assets["img_dark_matter_revealed_2"]]
-        anim = pyglet.image.Animation.from_image_sequence(
-            images, duration=0.5, loop=True
-        )
-        self.image = anim
+        # images = [self.assets.image_assets["img_dark_matter_revealed_1"],
+        #           self.assets.image_assets["img_dark_matter_revealed_2"]]
+        # anim = pyglet.image.Animation.from_image_sequence(
+        #     images, duration=0.5, loop=True
+        # )
+        # self.image = anim
+        
+        self.image = self.assets.image_assets["img_dark_matter_revealed_3"]
         self.game_state.revealed_dark_matter += 1
 
     def handle_collision_with(self, other_object):
