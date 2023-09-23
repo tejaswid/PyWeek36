@@ -168,7 +168,8 @@ class Boss(GameObject):
         self.velocity = utils.compute_velocity(
             self.sp_speed, self.x, self.y, player_x, player_y
         )
-        self.rotation = -math.degrees(math.atan2(player_y - self.y, player_x - self.x))
+        # self.rotation = -math.degrees(math.atan2(player_y - self.y, player_x - self.x))
+        self.rotation = 0
         self.x += self.velocity[0] * dt
         self.y += self.velocity[1] * dt
 
@@ -215,9 +216,11 @@ class Boss(GameObject):
                 player_y,
             )
 
-            self.rotation = -math.degrees(
-                math.atan2(player_y - self.y, player_x - self.x)
-            )
+            # self.rotation = -math.degrees(
+            #     math.atan2(player_y - self.y, player_x - self.x)
+            # )
+            # boss looks odd when rotating
+            self.rotation = 0
 
             self.x += self.velocity[0] * dt
             self.y += self.velocity[1] * dt
@@ -259,12 +262,13 @@ class Boss(GameObject):
                 self.sdm_closest_dm_y,
             )
 
-            self.rotation = -math.degrees(
-                math.atan2(
-                    self.sdm_closest_dm_y - self.y,
-                    self.sdm_closest_dm_x - self.x,
-                )
-            )
+            # self.rotation = -math.degrees(
+            #     math.atan2(
+            #         self.sdm_closest_dm_y - self.y,
+            #         self.sdm_closest_dm_x - self.x,
+            #     )
+            # )
+            self.rotation = 0
             self.x += self.velocity[0] * dt
             self.y += self.velocity[1] * dt
         else:
