@@ -110,7 +110,7 @@ def run():
     def on_key_press(symbol, modifiers):
         if symbol == key.A:
             pass
-        if game_state.level == -1 or game_state.level == 0:
+        if game_state.level == -1 or game_state.level == 0 or game_state.level == 0.5:
             if symbol == key.SPACE:
                 game_state.change_level = True
             return
@@ -145,6 +145,21 @@ def run():
         game_state.background_sprite = Background(
             assets,
             level=-1,
+            x=game_state.stage_width // 2,
+            y=game_state.stage_height // 2,
+            batch=main_batch,
+            group=groups[0],
+        )
+        # reset the view_port
+        game_state.reset_viewport()
+        # reset the camera
+        reset_camera()
+
+    def load_instructions_screen():
+        # this is the instructions screen
+        game_state.background_sprite = Background(
+            assets,
+            level=0.5,
             x=game_state.stage_width // 2,
             y=game_state.stage_height // 2,
             batch=main_batch,
@@ -496,13 +511,19 @@ def run():
             if game_state.change_level:
                 remove_non_essential_objects()
                 reset_spawners()
+                load_story()
                 game_state.level = 0
                 game_state.change_level = False
-                # this is the story
-                load_story()
 
-        elif game_state.level == 0:
-            
+        if game_state.level == 0:
+            if game_state.change_level:
+                remove_non_essential_objects()
+                reset_spawners()
+                load_instructions_screen()
+                game_state.level = 0.5
+                game_state.change_level = False
+
+        elif game_state.level == 0.5:
             if game_state.change_level:
                 remove_non_essential_objects()
                 reset_spawners()
@@ -547,6 +568,9 @@ def run():
         if game_state.level == 0:
             for obj in game_objects:
                 obj.update_object(dt)
+            return
+        
+        if game_state.level == 0.5:
             return
 
         if game_state.level == 3:

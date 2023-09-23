@@ -26,7 +26,7 @@ class DarkMatter(GameObject):
         #     images, duration=0.5, loop=True
         # )
         # self.image = anim
-        
+
         self.image = self.assets.image_assets["img_dark_matter_revealed_3"]
         self.game_state.revealed_dark_matter += 1
 
@@ -62,7 +62,10 @@ class DarkMatter(GameObject):
             if self.has_collided_with(other_object):
                 print("dark matter collided with boss")
                 self.dead = True
-                self.game_state.dark_matter_positions.pop(other_object.sdm_closest_dm_index)
+                if other_object.sdm_closest_dm_index is None:
+                    print("dark matter object already removed")
+                else:
+                    self.game_state.dark_matter_positions.pop(other_object.sdm_closest_dm_index)
                 other_object.sdm_closest_dm_x = None
                 other_object.sdm_closest_dm_y = None
                 other_object.sdm_closest_dm_index = None
