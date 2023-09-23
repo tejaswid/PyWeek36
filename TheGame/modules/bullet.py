@@ -55,13 +55,20 @@ class Bullet(GameObject):
                                self.assets.image_assets["img_bullet_enemy_green_s3"]]
         self.bullet_green_animation = Animation.from_image_sequence(self.bullet_green_sprites, duration=0.3, loop=True)
 
+        self.bullet_player_sprites = [self.assets.image_assets["img_bullet_player_s1"],
+                                 self.assets.image_assets["img_bullet_player_s2"],
+                                 self.assets.image_assets["img_bullet_player_s3"]]
+        self.bullet_player_animation = Animation.from_image_sequence(self.bullet_player_sprites, duration=0.3, loop=True)
+
 
     def set_type(self, bullet_type):
         self.bullet_type = bullet_type
         if self.bullet_type == "player":
-            self.image = self.assets.image_assets["img_bullet_player"]
+            self.image = self.bullet_player_animation
         elif self.bullet_type == "enemy":
             self.image = self.bullet_green_animation
+        elif self.bullet_type == "boss":
+            pass
         elif self.bullet_type == "tracer":
             self.image = self.assets.image_assets["img_bullet_tracer"]
         else:
@@ -142,7 +149,7 @@ class Bullet(GameObject):
                 return
             
         # handle collision with player
-        if other_object.type == "player" and self.bullet_type == "enemy":
+        if other_object.type == "player" and self.bullet_type in ["enemy", "boss"]:
             if self.has_collided_with(other_object):
                 print("enemy bullet collided with player")
                 self.assets.sound_assets["snd_bullet_hit"].play()

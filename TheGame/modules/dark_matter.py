@@ -16,6 +16,7 @@ class DarkMatter(GameObject):
         self.damage = 40
         self.rotation = 0
         self.revealed = False
+        self.reveal()
 
     def update_object(self, dt):
         self.rotation += 10 * dt

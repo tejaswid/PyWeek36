@@ -240,7 +240,7 @@ class Player(GameObject):
                 self.initiate_arbitrary_motion()
 
         # handle collision with bullet
-        if other_object.type == "bullet" and other_object.bullet_type == "enemy":
+        if other_object.type == "bullet" and other_object.bullet_type in ["enemy", "boss"]:
             if self.has_collided_with(other_object):
                 print("player collided with enemy bullet")
                 self.assets.sound_assets["snd_bullet_hit"].play()

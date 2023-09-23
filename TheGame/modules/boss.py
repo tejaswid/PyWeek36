@@ -10,17 +10,25 @@ from modules.bullet import Bullet
 
 class Boss(GameObject):
     def __init__(self, game_assets, game_state, *args, **kwargs):
-        self.boss_1_sprites = [game_assets.image_assets["img_boss_1_s1"],
-                               game_assets.image_assets["img_boss_1_s2"],
-                               game_assets.image_assets["img_boss_1_s3"],
-                               game_assets.image_assets["img_boss_1_s4"]]
-        self.boss_1_animation = Animation.from_image_sequence(self.boss_1_sprites, duration=0.3, loop=True)
+        self.boss_1_sprites = [
+            game_assets.image_assets["img_boss_1_s1"],
+            game_assets.image_assets["img_boss_1_s2"],
+            game_assets.image_assets["img_boss_1_s3"],
+            game_assets.image_assets["img_boss_1_s4"],
+        ]
+        self.boss_1_animation = Animation.from_image_sequence(
+            self.boss_1_sprites, duration=0.3, loop=True
+        )
         self.default_sprite = self.boss_1_animation
 
         if game_state.level == 2:
-            self.boss_2_sprites = [game_assets.image_assets["img_boss_2_s1"],
-                               game_assets.image_assets["img_boss_2_s2"]]
-            self.boss_2_animation = Animation.from_image_sequence(self.boss_2_sprites, duration=0.3, loop=True)
+            self.boss_2_sprites = [
+                game_assets.image_assets["img_boss_2_s1"],
+                game_assets.image_assets["img_boss_2_s2"],
+            ]
+            self.boss_2_animation = Animation.from_image_sequence(
+                self.boss_2_sprites, duration=0.3, loop=True
+            )
             self.default_sprite = self.boss_2_animation
 
         super(Boss, self).__init__(img=self.default_sprite, *args, **kwargs)
@@ -75,17 +83,65 @@ class Boss(GameObject):
         self.shield_current_health = self.shield_max_health
         self.shield_active = False
 
-        self.boss_1_shield_sprites = [game_assets.image_assets["img_boss_1_with_shield_s1"],
-                               game_assets.image_assets["img_boss_1_with_shield_s2"],
-                               game_assets.image_assets["img_boss_1_with_shield_s3"]]
-        self.boss_1_shield_animation = Animation.from_image_sequence(self.boss_1_shield_sprites, duration=0.3, loop=True)
+        self.boss_1_shield_sprites = [
+            game_assets.image_assets["img_boss_1_with_shield_s1"],
+            game_assets.image_assets["img_boss_1_with_shield_s2"],
+            game_assets.image_assets["img_boss_1_with_shield_s3"],
+        ]
+        self.boss_1_shield_animation = Animation.from_image_sequence(
+            self.boss_1_shield_sprites, duration=0.3, loop=True
+        )
         self.shield_sprite = self.boss_1_shield_animation
 
-        self.boss_2_shield_sprites = [game_assets.image_assets["img_boss_2_with_shield_s1"],
-                               game_assets.image_assets["img_boss_2_with_shield_s2"]]
-        self.boss_2_shield_animation = Animation.from_image_sequence(self.boss_2_shield_sprites, duration=0.3, loop=True)
+        self.boss_2_shield_sprites = [
+            game_assets.image_assets["img_boss_2_with_shield_s1"],
+            game_assets.image_assets["img_boss_2_with_shield_s2"],
+        ]
+        self.boss_2_shield_animation = Animation.from_image_sequence(
+            self.boss_2_shield_sprites, duration=0.3, loop=True
+        )
         if game_state.level == 2:
             self.shield_sprite = self.boss_2_shield_animation
+
+        self.bullet_boss_1_1_sprites = [
+            game_assets.image_assets["img_bullet_boss_1_s1"],
+            game_assets.image_assets["img_bullet_boss_1_s2"],
+        ]
+        self.bullet_boss_2_1_sprites = [
+            game_assets.image_assets["img_bullet_boss_3_s1"],
+            game_assets.image_assets["img_bullet_boss_3_s2"],
+            game_assets.image_assets["img_bullet_boss_3_s3"],
+            game_assets.image_assets["img_bullet_boss_3_s4"],
+            game_assets.image_assets["img_bullet_boss_3_s5"],
+            game_assets.image_assets["img_bullet_boss_3_s6"],
+            game_assets.image_assets["img_bullet_boss_3_s7"],
+        ]
+        if game_state.level == 1:
+            self.boss_bullet_1_animation = Animation.from_image_sequence(
+                self.bullet_boss_1_1_sprites, duration=0.3, loop=True
+            )
+        else:
+            self.boss_bullet_1_animation = Animation.from_image_sequence(
+                self.bullet_boss_2_1_sprites, duration=0.3, loop=True
+            )
+
+        self.bullet_boss_1_2_sprites = [
+            game_assets.image_assets["img_bullet_boss_4_s1"],
+            game_assets.image_assets["img_bullet_boss_4_s2"],
+        ]
+        self.bullet_boss_2_2_sprites = [
+            game_assets.image_assets["img_bullet_boss_2_s1"],
+            game_assets.image_assets["img_bullet_boss_2_s2"],
+        ]
+
+        if game_state.level == 1:
+            self.boss_bullet_2_animation = Animation.from_image_sequence(
+                self.bullet_boss_1_2_sprites, duration=0.3, loop=True
+            )
+        else:
+            self.boss_bullet_2_animation = Animation.from_image_sequence(
+                self.bullet_boss_2_2_sprites, duration=0.3, loop=True
+            )
 
         # parameters for dash to player mode
         self.dash_start_x = self.x
@@ -130,6 +186,7 @@ class Boss(GameObject):
         bullet = Bullet(
             self.assets, x=self.x, y=self.y, batch=self.batch, group=self.group
         )
+        bullet.image = self.boss_bullet_2_animation
         bullet.set_rotation(target_x, target_y)
         bullet.set_velocity(target_x, target_y, self.sp_bullet_speed)
         self.child_objects.append(bullet)
@@ -145,7 +202,8 @@ class Boss(GameObject):
         bullet = Bullet(
             self.assets, x=start_x, y=start_y, batch=self.batch, group=self.group
         )
-        bullet.set_type("enemy")
+        bullet.image = self.boss_bullet_1_animation
+        bullet.set_type("boss")
         bullet.set_rotation(target_x, target_y)
         bullet.set_velocity(target_x, target_y, self.sf_bullet_speed)
         self.child_objects.append(bullet)
@@ -308,7 +366,10 @@ class Boss(GameObject):
                 self.assets.sound_assets["snd_collision"].play()
                 self.take_damage(other_object.damage)
                 other_object.take_damage(self.damage)
-        if other_object.type == "dark_matter" and self.current_movement_mode == "seek_dark_matter":
+        if (
+            other_object.type == "dark_matter"
+            and self.current_movement_mode == "seek_dark_matter"
+        ):
             if self.has_collided_with(other_object):
                 print("boss collided with dark matter")
                 other_object.dead = True
