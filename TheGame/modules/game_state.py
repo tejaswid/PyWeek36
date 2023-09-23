@@ -18,7 +18,7 @@ class GameState(object):
         self.score = 0
         self.player_position = [0, 0]
 
-        self.level = -1 # this is the title screen
+        self.level = -2
         self.score_level_2 = 100  # can remove this later
         self.change_level = False
 

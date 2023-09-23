@@ -80,6 +80,7 @@ class GameAssets(object):
         self.create_image_asset("img_powerup_health", "images/powerup_health.png", True)
         self.create_image_asset("img_powerup_shield", "images/powerup_shield.png", True)
         self.create_image_asset("img_bkg_title", "images/screen_title.png", True)
+        self.create_image_asset("img_bkg_default", "images/screen_default.png", True)
         self.create_image_asset("img_bkg_game_over", "images/screen_game_over.png", True)
         self.create_image_asset("img_bkg_won", "images/screen_won.png", True)
         self.create_image_asset("img_bkg_1_1", "images/bkg_1_1.png", True)
@@ -100,4 +101,5 @@ class GameAssets(object):
         self.create_image_asset("img_boss_3", "images/boss_3.png", True)
         self.create_image_asset("img_boss_with_shield", "images/boss_with_shield.png", True)
         self.create_image_asset("img_boss_shield", "images/boss_shield.png", True)
+        self.create_image_asset("img_story", "images/story.png", True)
         

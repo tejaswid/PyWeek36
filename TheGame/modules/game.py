@@ -8,6 +8,7 @@ from modules.game_assets import GameAssets
 from modules.player import Player
 from modules.background import Background
 from modules.game_state import GameState
+from modules.story import Story
 
 from modules.powerup_spawner import PowerupSpawner
 from modules.asteroid_spawner import AsteroidSpawner
@@ -163,6 +164,17 @@ def run():
             batch=main_batch,
             group=groups[0],
         )
+
+        story_object = Story(
+            assets,
+            game_state,
+            x=game_state.stage_width // 2,
+            y=game_state.viewport_y - game_state.viewport_height // 2 - 200,
+            batch=main_batch,
+            group=groups[9],
+        )
+
+        game_objects.append(story_object)
 
         # reset the view_port
         game_state.reset_viewport()
@@ -339,6 +351,11 @@ def run():
                 obj.velocity[1] = -obj.velocity[1]
                 obj.y = game_state.stage_height - obj.height // 2
 
+        if obj.type == "story":
+            if obj.y >= 1.5 * game_state.viewport_height:
+                obj.dead = True
+                game_objects.remove(obj)
+
     def update_viewport():
         diff_x = 0
         diff_y = 0
@@ -464,20 +481,21 @@ def run():
             game_objects.extend(boss_spawner.spawn(0.1))
 
     def handle_level_change():
-        # if change_level
-        if game_state.level == -1:
+        if game_state.level == -2:
             load_title_screen()
+            game_state.level = -1
 
+        if game_state.level == -1:
             if game_state.change_level:
                 remove_non_essential_objects()
                 reset_spawners()
                 game_state.level = 0
                 game_state.change_level = False
+                # this is the story
+                load_story()
 
         elif game_state.level == 0:
-            # this is the story
-            load_story()
-
+            
             if game_state.change_level:
                 remove_non_essential_objects()
                 reset_spawners()
@@ -516,7 +534,12 @@ def run():
         handle_level_change()
         health_bars.clear()
 
-        if game_state.level in [-1, 0]:
+        if game_state.level == -1:
+            return
+
+        if game_state.level == 0:
+            for obj in game_objects:
+                obj.update_object(dt)
             return
 
         if game_state.level == 3:

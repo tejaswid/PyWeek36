@@ -26,6 +26,7 @@ class DarkMatter(GameObject):
         #     images, duration=0.5, loop=True
         # )
         # self.image = anim
+        
         self.image = self.assets.image_assets["img_dark_matter_revealed_3"]
         self.game_state.revealed_dark_matter += 1
 

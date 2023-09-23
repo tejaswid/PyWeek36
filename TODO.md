@@ -55,11 +55,11 @@
 
 ## Art
 - [x] Player ship
-- [ ] Player ship exhaust
-- [ ] Player ship afterburner
+- [x] Player ship exhaust
+- [x] Player ship afterburner
 - [x] Player bullet
 - [x] Player tracer bullet
-- [ ] Explosions
+- [x] Explosions
 - [x] Dark matter (transparent)
 - [x] Dark matter revealed
 - [x] Enemy shooter
@@ -77,15 +77,15 @@
 - [x] Powerup (shield)
 - [x] Asteroid 1 (save in a few sizes)
 - [x] Asteriod 2 (save in a few sizes)
-- [ ] Background stars (static)
-- [ ] Background stars (twinkling)
+- [x] Background stars (static)
+- [x] Background stars (twinkling)
 - [ ] Foreground nebulae (static)
 - [ ] Foreground nebulae (twinkling)
-- [ ] Foreground/background constellations to identify dark matter
-- [ ] Title page
+- [x] Foreground/background constellations to identify dark matter
+- [x] Title page
 - [ ] Menu page
 - [ ] Instructions page
-- [ ] Game over page
+- [x] Game over page
 
 ## Music
 - [ ] Background score

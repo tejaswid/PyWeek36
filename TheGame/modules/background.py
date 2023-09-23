@@ -12,7 +12,7 @@ class Background(GameObject):
             ]
         elif level == 0:
             images = [
-                game_assets.image_assets["img_bkg_won"],
+                game_assets.image_assets["img_bkg_default"],
             ]
         elif level == 1:
             images = [
