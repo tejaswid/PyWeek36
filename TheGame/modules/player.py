@@ -234,7 +234,7 @@ class Player(GameObject):
                 and self.in_arbitrary_motion is False
             ):
                 print("player collided with dark matter")
-                self.assets.sound_assets["snd_darkmatter_collision"].play()
+                self.assets.sound_assets["snd_darkmatter_collide"].play()
                 self.take_damage(other_object.damage)
                 # deflect the player in an arbitrary direction and spin
                 self.initiate_arbitrary_motion()

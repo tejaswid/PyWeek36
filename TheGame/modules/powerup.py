@@ -30,7 +30,7 @@ class Powerup(GameObject):
         self.powerup_types = ["health", "shield", "speed", "damage"]
         self.powerup_type = random.choice(self.powerup_types)
         self.update_sprite()
-        self.assets.sound_assets["powerup_spawn"].play()
+        self.assets.sound_assets["snd_powerup_spawn"].play()
 
     def update_sprite(self):
         if self.powerup_type == "health":
