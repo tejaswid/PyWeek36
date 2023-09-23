@@ -9,7 +9,7 @@
 - [x] Bounds
 - [ ] Levels - partially done, implement difficulty
 - [ ] Titles and screens
-- [ ] Story
+- [x] Story
 - [ ] Sound effects
 - [ ] Music
 - [ ] Deployment in browser and executables
@@ -66,9 +66,9 @@
 - [x] Enemy spear
 - [x] Enemy seeker
 - [x] Enemy bullet 1
-- [ ] Enemy bullet 2
+- [x] Enemy bullet 2
 - [x] Boss 1
-- [ ] Boss 2
+- [x] Boss 2
 - [x] Boss bullet 1
 - [x] Boss bullet 2
 - [x] Powerup (health)
@@ -82,8 +82,7 @@
 - [x] Foreground nebulae (static)
 - [x] Foreground/background constellations to identify dark matter
 - [x] Title page
-- [ ] Menu page
-- [ ] Instructions page
+- [x] Instructions page
 - [x] Game over page
 
 ## Music
