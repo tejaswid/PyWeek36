@@ -37,11 +37,25 @@ class Enemy(GameObject):
         self.enemy_type = random.choice(self.enemy_types)
         self.update_sprite()
 
+        # parameters for seeker
+        self.enemy_seeker_sprites = [self.assets.image_assets["img_enemy_seeker_s1"],
+                               self.assets.image_assets["img_enemy_seeker_s2"],
+                               self.assets.image_assets["img_enemy_seeker_s1"],
+                               self.assets.image_assets["img_enemy_seeker_s3"]]
+        self.enemy_seeker_animation = Animation.from_image_sequence(self.enemy_seeker_sprites, duration=0.3, loop=True)
+
         # parameters for shooter
         self.shooter_bullet_cooldown = 3
         self.shooter_bullet_timer = 0
         self.shooter_bullet_speed = 100
         self.shooter_bullet_radius = 10
+
+        self.enemy_shooter_sprites = [self.assets.image_assets["img_enemy_shooter_s1"],
+                                    self.assets.image_assets["img_enemy_shooter_s2"],
+                                    self.assets.image_assets["img_enemy_shooter_s3"],
+                                    self.assets.image_assets["img_enemy_shooter_s4"],
+                                    self.assets.image_assets["img_enemy_shooter_s5"]]
+        self.enemy_shooter_animation = Animation.from_image_sequence(self.enemy_shooter_sprites, duration=0.3, loop=True)
 
         # parameters for spear
         self.spear_speed = 600
@@ -54,25 +68,17 @@ class Enemy(GameObject):
         self.spear_cooldown = 2
         self.spear_timer = 0
 
+        self.enemy_spear_sprites = [self.assets.image_assets["img_enemy_spear_s1"],
+                                    self.assets.image_assets["img_enemy_spear_s2"]]
+        self.enemy_spear_animation = Animation.from_image_sequence(self.enemy_spear_sprites, duration=0.5, loop=True)
+
     def update_sprite(self):
         if self.enemy_type == "seeker":
-            # self.image = self.assets.image_assets["img_enemy_seeker"]
-            self.enemy_seeker_sprites = [self.assets.image_assets["img_enemy_seeker_s1"],
-                               self.assets.image_assets["img_enemy_seeker_s2"],
-                               self.assets.image_assets["img_enemy_seeker_s1"],
-                               self.assets.image_assets["img_enemy_seeker_s3"]]
-            self.enemy_seeker_animation = Animation.from_image_sequence(self.enemy_seeker_sprites, duration=0.3, loop=True)
             self.image = self.enemy_seeker_animation
         elif self.enemy_type == "shooter":
-            self.enemy_shooter_sprites = [self.assets.image_assets["img_enemy_shooter_s1"],
-                               self.assets.image_assets["img_enemy_shooter_s2"],
-                               self.assets.image_assets["img_enemy_shooter_s3"],
-                               self.assets.image_assets["img_enemy_shooter_s4"],
-                               self.assets.image_assets["img_enemy_shooter_s5"]]
-            self.enemy_shooter_animation = Animation.from_image_sequence(self.enemy_shooter_sprites, duration=0.3, loop=True)
             self.image = self.enemy_shooter_animation
         elif self.enemy_type == "spear":
-            self.image = self.assets.image_assets["img_enemy_spear"]
+            self.image = self.enemy_spear_animation
         else:
             self.image = self.assets.image_assets["img_enemy"]
 
@@ -151,6 +157,7 @@ class Enemy(GameObject):
             # activate spear
             if distance < self.spear_activation_distance:
                 self.spear_active = True
+                self.image = self.assets.image_assets["img_enemy_spear_s3"]
                 self.spear_start_x = self.x
                 self.spear_start_y = self.y
                 self.spear_current_distance = 0
@@ -168,6 +175,7 @@ class Enemy(GameObject):
         else:
             if self.spear_current_distance >= self.spear_max_distance:
                 self.spear_active = False
+                # do this with two booleans self.image = self.enemy_spear_animation
                 self.spear_current_distance = 0
                 self.velocity = [0, 0]
                 self.spear_timer = 0
