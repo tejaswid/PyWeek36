@@ -186,7 +186,9 @@ def run():
 
         # spawn dark matter
         dark_matter_objects = dark_matter_spawner.spawn(0.1)
-        game_state.dark_matter_positions.clear()
+        if len(game_state.dark_matter_positions) > 0:
+            raise RuntimeError("dark matter positions not empty")
+
         for obj in dark_matter_objects:
             game_state.dark_matter_positions.append((obj.x, obj.y))
 
@@ -415,17 +417,22 @@ def run():
 
         game_state.background_sprite.batch = None
 
+    def check_dark_matter_reveal_status_and_spawn_boss():
+        if game_state.revealed_dark_matter == len(game_state.dark_matter_positions) and game_state.should_spawn_boss:
+            print("revealed all dark matter. changing level")
+            print("revealed dark matter: ", game_state.revealed_dark_matter)
+            print("total dark matter: ", len(game_state.dark_matter_positions))
+            game_state.should_spawn_boss = False
+            game_objects.extend(boss_spawner.spawn(0.1))
+
     def handle_level_change():
         # if change_level
         if game_state.level == 0:
             load_stage_1()
             game_state.level = 1
         elif game_state.level == 1:
-            # check if the level has to change based on the score
-            if game_state.revealed_dark_matter == len(game_state.dark_matter_positions):
-                print("revealed all dark matter. changing level")
-                game_objects.extend(boss_spawner.spawn(0.1))
-
+            check_dark_matter_reveal_status_and_spawn_boss()
+            
             if game_state.change_level:
                 # remove all objects
                 remove_non_essential_objects()
@@ -434,11 +441,10 @@ def run():
                 load_stage_2()
                 game_state.level = 2
                 game_state.change_level = False
+                game_state.should_spawn_boss = True
 
         elif game_state.level == 2:
-            if game_state.revealed_dark_matter == len(game_state.dark_matter_positions):
-                print("revealed all dark matter. changing level")
-                game_objects.extend(boss_spawner.spawn(0.1))
+            check_dark_matter_reveal_status_and_spawn_boss()
 
             if game_state.change_level:
                 # remove all objects
@@ -530,6 +536,7 @@ def run():
                 if obj.type == "boss":
                     boss_spawner.remove(obj)
                     game_state.revealed_dark_matter = 0
+                    game_state.dark_matter_positions.clear()
                     game_state.change_level = True
 
         # remove dead objects from game_objects
