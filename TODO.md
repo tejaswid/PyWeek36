@@ -67,7 +67,7 @@
 - [x] Enemy seeker
 - [x] Enemy bullet 1
 - [ ] Enemy bullet 2
-- [ ] Boss 1
+- [x] Boss 1
 - [ ] Boss 2
 - [x] Boss bullet 1
 - [x] Boss bullet 2
@@ -79,8 +79,7 @@
 - [x] Asteriod 2 (save in a few sizes)
 - [x] Background stars (static)
 - [x] Background stars (twinkling)
-- [ ] Foreground nebulae (static)
-- [ ] Foreground nebulae (twinkling)
+- [x] Foreground nebulae (static)
 - [x] Foreground/background constellations to identify dark matter
 - [x] Title page
 - [ ] Menu page

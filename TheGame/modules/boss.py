@@ -74,7 +74,18 @@ class Boss(GameObject):
         self.shield_max_health = 100
         self.shield_current_health = self.shield_max_health
         self.shield_active = False
-        self.shield_sprite = self.assets.image_assets["img_boss_with_shield"]
+
+        self.boss_1_shield_sprites = [game_assets.image_assets["img_boss_1_with_shield_s1"],
+                               game_assets.image_assets["img_boss_1_with_shield_s2"],
+                               game_assets.image_assets["img_boss_1_with_shield_s3"]]
+        self.boss_1_shield_animation = Animation.from_image_sequence(self.boss_1_shield_sprites, duration=0.3, loop=True)
+        self.shield_sprite = self.boss_1_shield_animation
+
+        self.boss_2_shield_sprites = [game_assets.image_assets["img_boss_2_with_shield_s1"],
+                               game_assets.image_assets["img_boss_2_with_shield_s2"]]
+        self.boss_2_shield_animation = Animation.from_image_sequence(self.boss_2_shield_sprites, duration=0.3, loop=True)
+        if game_state.level == 2:
+            self.shield_sprite = self.boss_2_shield_animation
 
         # parameters for dash to player mode
         self.dash_start_x = self.x
