@@ -177,8 +177,7 @@ class Enemy(GameObject):
         else:
             if self.spear_current_distance >= self.spear_max_distance:
                 self.spear_active = False
-                # do this with two booleans 
-                self.image = self.enemy_spear_animation
+                self.image = self.enemy_spear_animation # this works for some reason
                 self.spear_current_distance = 0
                 self.velocity = [0, 0]
                 self.spear_timer = 0
