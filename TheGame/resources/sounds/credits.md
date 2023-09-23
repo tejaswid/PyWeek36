@@ -5,6 +5,7 @@ snd_default_bkg_2, PatreonGoalRewardLoops-Track10-Layer_04.wav Track by Abstract
 snd_boss_bkg, 198415__divinux__ambientdanger.wav, CC0  
 snd_bullet_fire, 697730__sustainededed__small-laser.mp3, CC BY 4.0  
 snd_bullet_hit, 319226__worthahep88__single-rock-hitting-wood.wav, CC0  
+snd_bullet_hit, 516073__logicogonist__kick-mystic-1b.wav, CC0
 snd_explosion, 536548__cascoes__explosion.wav, CC0  
 snd_collision, 391658__jeckkech__collision, CC0  
 snd_asteroid_destroyed, 546957__sieuamthanh__nolonduoinuoc1.wav, CC0  

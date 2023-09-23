@@ -161,6 +161,7 @@ class GameAssets(object):
         self.create_sound_asset("snd_boss_bkg", "sounds/Boss_bgm_198415__divinux__ambientdanger.wav", True)
         self.create_sound_asset("snd_bullet_fire", "sounds/Bullet_fire_697730__sustainededed__small-laser.mp3", False)
         self.create_sound_asset("snd_bullet_hit", "sounds/Bullet_impact_319226__worthahep88__single-rock-hitting-wood.wav", False)
+        self.create_sound_asset("snd_bullet_hit", "sounds/Bullet_impact_516073__logicogonist__kick-mystic-1b.wav", False)
         self.create_sound_asset("snd_explosion", "sounds/Explosion_536548__cascoes__explosion.wav", False)
         self.create_sound_asset("snd_collision", "sounds/collision_391658__jeckkech__collision.wav", False)
         self.create_sound_asset("snd_asteroid_destroyed", "sounds/Asteroid_explosion_546957__sieuamthanh__nolonduoinuoc1.wav", False)
