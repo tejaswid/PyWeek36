@@ -9,8 +9,8 @@ class GameState(object):
         self.stage_height = 2048
 
         # viewport size - this is the size of the window that we see
-        self.viewport_width = 1024
-        self.viewport_height = 1024
+        self.viewport_width = 800
+        self.viewport_height = 800
         self.viewport_x = self.stage_width // 2  # centre of the stage
         self.viewport_y = self.stage_height // 2  # centre of the stage
         self.viewport_margin = 150  # margin to move the screen when player moves
