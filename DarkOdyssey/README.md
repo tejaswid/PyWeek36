@@ -65,9 +65,9 @@ pip install -r requirements.txt
 - The file `game_state.py` has behind the scenes management.
 
 ## Credits
-Game Design, Programming, Artwork: ballipilla, ele-phant-astic, pillitoka, dark knight
-Sounds: freesound.org. 
-Music: Patreon Goal Reward Loops - Track10 - Layer_04.wav Track by Abstraction (http://abstractionmusic.bandcamp.com/)
+- Game Design, Programming, Artwork: ballipilla, ele-phant-astic, pillitoka, dark knight  
+- Sounds: freesound.org. Individual licences are mentioned next to the specific files  
+- Music: Patreon Goal Reward Loops - Track10 - Layer_04.wav Track by Abstraction (http://abstractionmusic.bandcamp.com/)  
 
 ## License
-This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
+This work (apart from files mentioned specifically) is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
