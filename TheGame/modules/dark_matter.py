@@ -15,7 +15,7 @@ class DarkMatter(GameObject):
         # damage to other objects
         self.damage = 40
         self.rotation = 0
-        self.reveal()
+        self.revealed = False
 
     def update_object(self, dt):
         self.rotation += 10 * dt
@@ -28,8 +28,10 @@ class DarkMatter(GameObject):
         # )
         # self.image = anim
 
-        self.image = self.assets.image_assets["img_dark_matter_revealed_3"]
-        self.game_state.revealed_dark_matter += 1
+        if not self.revealed:
+            self.image = self.assets.image_assets["img_dark_matter_revealed_3"]
+            self.game_state.revealed_dark_matter += 1
+        self.revealed = True
 
     def handle_collision_with(self, other_object):
         # handle collision with player
