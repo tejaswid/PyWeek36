@@ -18,7 +18,10 @@ class Boss(GameObject):
         self.default_sprite = self.boss_1_animation
 
         if game_state.level == 2:
-            self.default_sprite = game_assets.image_assets["img_boss_2"]
+            self.boss_2_sprites = [game_assets.image_assets["img_boss_2_s1"],
+                               game_assets.image_assets["img_boss_2_s2"]]
+            self.boss_2_animation = Animation.from_image_sequence(self.boss_2_sprites, duration=0.3, loop=True)
+            self.default_sprite = self.boss_2_animation
 
         super(Boss, self).__init__(img=self.default_sprite, *args, **kwargs)
 
