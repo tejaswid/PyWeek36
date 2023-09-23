@@ -10,7 +10,7 @@ from modules import utils
 
 class Enemy(GameObject):
     def __init__(self, game_assets, game_state, *args, **kwargs):
-        default_sprite = game_assets.image_assets["img_enemy"]
+        default_sprite = game_assets.image_assets["img_enemy_seeker_s1"]
         super(Enemy, self).__init__(img=default_sprite, *args, **kwargs)
 
         self.assets = game_assets

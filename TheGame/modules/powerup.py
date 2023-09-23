@@ -6,7 +6,7 @@ import pyglet.clock
 
 class Powerup(GameObject):
     def __init__(self, game_assets, game_state, *args, **kwargs):
-        self.img = game_assets.image_assets["img_powerup"]
+        self.img = game_assets.image_assets["img_powerup_health"]
         self.max_time = 12
 
         super(Powerup, self).__init__(img=self.img, *args, **kwargs)

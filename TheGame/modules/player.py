@@ -50,7 +50,7 @@ class Player(GameObject):
         self.arbitrary_recover_speed = 10
 
         # powerup related variables
-        self.powerup_sp_boosted_speed = self.speed + 600
+        self.powerup_sp_boosted_speed = self.speed + 400
         self.powerup_sp_original_speed = self.speed
         self.powerup_sp_max_time = 7
         self.powerup_sp_current_time = 0

@@ -11,7 +11,7 @@ from modules import utils
 
 class Bullet(GameObject):
     def __init__(self, game_assets, *args, **kwargs):
-        self.img = game_assets.image_assets["img_bullet"]
+        self.img = game_assets.image_assets["img_bullet_enemy_green_s1"]
         super(Bullet, self).__init__(img=self.img, *args, **kwargs)
         clock.schedule_once(
             self.die, 6
