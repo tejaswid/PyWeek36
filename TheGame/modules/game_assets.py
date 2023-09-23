@@ -147,6 +147,14 @@ class GameAssets(object):
         self.create_image_asset("img_boss_shield", "images/boss_shield.png", True)
         self.create_image_asset("img_story", "images/story.png", True)
         
+        self.create_image_asset("img_explosion_1", "images/explosion_1.png", True)
+        self.create_image_asset("img_explosion_2", "images/explosion_2.png", True)
+        self.create_image_asset("img_explosion_3", "images/explosion_3.png", True)
+        self.create_image_asset("img_explosion_4", "images/explosion_4.png", True)
+        self.create_image_asset("img_explosion_5", "images/explosion_5.png", True)
+        self.create_image_asset("img_explosion_6", "images/explosion_6.png", True)
+        self.create_image_asset("img_explosion_7", "images/explosion_7.png", True)
+
         ## load audio assets
         self.create_sound_asset("snd_default_bkg", "sounds/Dafault_bgm_428858__supervanz__duskwalkin_loop.wav", True)
         self.create_sound_asset("snd_boss_bkg", "sounds/Boss_bgm_198415__divinux__ambientdanger.wav", True)

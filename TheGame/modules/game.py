@@ -10,6 +10,7 @@ from modules.background import Background
 from modules.foreground import Foreground
 from modules.game_state import GameState
 from modules.story import Story
+from modules.explosion import Explosion
 
 from modules.powerup_spawner import PowerupSpawner
 from modules.asteroid_spawner import AsteroidSpawner
@@ -175,8 +176,6 @@ def run():
         # reset the camera
         reset_camera()
 
-
-
     def load_story():
         # create an instance of the background centred on the stage
         game_state.background_sprite = Background(
@@ -287,7 +286,7 @@ def run():
         reset_camera()
 
     def draw_health_bar(obj):
-        if obj.type in ["bullet", "dark_matter"]:
+        if obj.type in ["bullet", "dark_matter", "story", "explosion"]:
             return
 
         # Draw a health bar for the game object
@@ -467,7 +466,6 @@ def run():
         game_state.revealed_dark_matter = 0
         boss_spawner.reset()
 
-
     def remove_non_essential_objects():
         for obj in game_objects:
             obj.dead = True
@@ -489,7 +487,7 @@ def run():
             game_objects.extend(boss_spawner.spawn(0.1))
             p.next_source()
             p.loop = True
-            
+
     def handle_level_change():
         if game_state.level == -2:
             load_screen("title")
@@ -530,7 +528,7 @@ def run():
                 load_stage_2()
                 game_state.level = 2
                 game_state.change_level = False
-                game_state.should_spawn_boss = True                
+                game_state.should_spawn_boss = True
                 p.next_source()
 
         elif game_state.level == 2:
@@ -640,11 +638,17 @@ def run():
                 if obj.type == "asteroid":
                     if obj.died_by_player:
                         score += obj.score  # increase score
+                        game_objects.append(
+                            Explosion(assets, x=obj.x, y=obj.y, batch=main_batch, group=groups[6])
+                        )
                     asteroid_spawner.remove(obj)
                 # if it is an enemy remove it from the list of enemies
                 elif obj.type == "enemy":
                     if obj.died_by_player:
                         score += obj.score  # increase score
+                        game_objects.append(
+                            Explosion(assets, x=obj.x, y=obj.y, batch=main_batch, group=groups[6])
+                        )
                     enemy_spawner.remove(obj)
                 # if it is a powerup remove it from the list of powerups
                 elif obj.type == "powerup":
@@ -655,10 +659,13 @@ def run():
                     game_state.change_level = True
                     game_state.game_won = False
                     game_state.revealed_dark_matter = 0
-                    game_state.dark_matter_positions.clear()                    
+                    game_state.dark_matter_positions.clear()
                 elif obj.type == "dark_matter":
                     dark_matter_spawner.remove(obj)
                 elif obj.type == "boss":
+                    game_objects.append(
+                            Explosion(assets, x=obj.x, y=obj.y, batch=main_batch, group=groups[6])
+                        )
                     boss_spawner.remove(obj)
                     game_state.revealed_dark_matter = 0
                     game_state.dark_matter_positions.clear()

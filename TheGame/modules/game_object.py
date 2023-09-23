@@ -42,7 +42,7 @@ class GameObject(pyglet.sprite.Sprite):
         self.shield_active = False  # whether the shield is active or not
         self.shield_current_health = 0  # health of the shield
         self.shield_max_health = 100  # maximum health of the shield
-        self.shield_sprite = None  # sprite for the object with the shield 
+        self.shield_sprite = None  # sprite for the object with the shield
 
     def update_object(self, dt):
         """
@@ -69,7 +69,7 @@ class GameObject(pyglet.sprite.Sprite):
         Virtual function to remove the shield from the sprite
         """
         pass
-            
+
     def has_collided_with(self, other_object):
         """
         Function to check if this object has collided with another object
@@ -80,7 +80,7 @@ class GameObject(pyglet.sprite.Sprite):
         distance = utils.distance((self.x, self.y), (other_object.x, other_object.y))
         if distance < self.collision_radius + other_object.collision_radius:
             # add a rebound effect to the objects
-            no_rebound_list = ["bullet", "powerup", "dark_matter"]
+            no_rebound_list = ["bullet", "powerup", "dark_matter", 'explosion']
             if self.type in no_rebound_list or other_object.type in no_rebound_list:
                 return True
 
@@ -112,7 +112,7 @@ class GameObject(pyglet.sprite.Sprite):
                 self.remove_shield_sprite()
                 self.shield_current_health = self.shield_max_health
             return
-        
+
         self.damage_taken = damage
         self.current_health = min(self.max_health, max(0, self.current_health - damage))
         if self.current_health <= 0:
