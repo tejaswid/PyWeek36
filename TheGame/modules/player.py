@@ -7,6 +7,7 @@ from pyglet.image import Animation
 from modules.game_object import GameObject
 from modules.bullet import Bullet
 from modules import utils
+from modules.flame import Flame
 
 
 class Player(GameObject):
@@ -73,11 +74,18 @@ class Player(GameObject):
                                self.assets.image_assets["img_player_ship_with_shield_s5"]]
         self.shield_animation = Animation.from_image_sequence(self.shield_sprites, duration=0.2, loop=True)
 
+        # add flame
+        self.flame = Flame(self.assets, x=self.x, y=self.y, batch=self.batch, group=self.group)
+        self.child_objects.append(self.flame)
+        
+
     def update_object(self, dt):
         if not self.in_arbitrary_motion:
             self.acceleration = [0, 0]
+            self.flame.set_long_flame_status(False)
             if self.key_handler[key.A]:
                 self.update_velocity(dt)
+                self.flame.set_long_flame_status(True)
             self.update_position(dt)
         else:
             self.move_arbitraryly(dt)
@@ -92,6 +100,10 @@ class Player(GameObject):
         if self.powerup_sp_active:
             self.powerup_sp_current_time += dt
             self.check_powerup_sp_status()
+
+        self.flame.set_rotation(self.rotation)
+        self.flame.set_position(self.x, self.y)
+        
 
     # updates the position of the player
     def update_position(self, dt):

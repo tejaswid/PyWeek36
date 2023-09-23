@@ -49,6 +49,10 @@ class GameAssets(object):
         self.create_image_asset("img_player_ship_with_shield_s3", "images/player_ship_with_shield_s3.png", True)
         self.create_image_asset("img_player_ship_with_shield_s4", "images/player_ship_with_shield_s4.png", True)
         self.create_image_asset("img_player_ship_with_shield_s5", "images/player_ship_with_shield_s5.png", True)
+        self.create_image_asset("img_player_ship_flame_s1", "images/ship_flame_1.png", True)
+        self.create_image_asset("img_player_ship_flame_s2", "images/ship_flame_2.png", True)
+        self.create_image_asset("img_player_ship_long_flame_s1", "images/ship_long_flame_1.png", True)
+        self.create_image_asset("img_player_ship_long_flame_s2", "images/ship_long_flame_2.png", True)
         self.create_image_asset("img_bullet", "images/bullet.png", True)
         self.create_image_asset("img_bullet_player", "images/bullet_player.png", True)
         self.create_image_asset("img_bullet_enemy", "images/bullet_enemy.png", True)
@@ -77,4 +81,4 @@ class GameAssets(object):
         self.create_image_asset("img_boss_3", "images/boss_3.png", True)
         self.create_image_asset("img_boss_with_shield", "images/boss_with_shield.png", True)
         self.create_image_asset("img_boss_shield", "images/boss_shield.png", True)
-
+        
