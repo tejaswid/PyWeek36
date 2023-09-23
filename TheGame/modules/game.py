@@ -45,7 +45,10 @@ def run():
 
     # background music score
     background_music = assets.sound_assets["snd_default_bkg"]
+    boss_bgm = assets.sound_assets["snd_boss_bkg"]
     p = pyglet.media.Player()
+    p.queue(background_music)
+    p.queue(boss_bgm)
     p.queue(background_music)
     p.loop = True
     p.play()
@@ -508,7 +511,9 @@ def run():
             print("total dark matter: ", len(game_state.dark_matter_positions))
             game_state.should_spawn_boss = False
             game_objects.extend(boss_spawner.spawn(0.1))
-
+            p.next_source()
+            p.loop = True
+            
     def handle_level_change():
         if game_state.level == -2:
             load_title_screen()
@@ -550,7 +555,8 @@ def run():
                 load_stage_2()
                 game_state.level = 2
                 game_state.change_level = False
-                game_state.should_spawn_boss = True
+                game_state.should_spawn_boss = True                
+                p.next_source()
 
         elif game_state.level == 2:
             check_dark_matter_reveal_status_and_spawn_boss()
