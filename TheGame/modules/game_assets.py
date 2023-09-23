@@ -73,6 +73,8 @@ class GameAssets(object):
         self.create_image_asset("img_bullet_enemy_green_s1", "images/bullet_enemy_green_s1.png", True)
         self.create_image_asset("img_bullet_enemy_green_s2", "images/bullet_enemy_green_s2.png", True)
         self.create_image_asset("img_bullet_enemy_green_s3", "images/bullet_enemy_green_s3.png", True)
+        self.create_image_asset("img_bullet_boss_1_s1", "images/bullet_boss_1_s1.png", True)
+        self.create_image_asset("img_bullet_boss_1_s2", "images/bullet_boss_1_s2.png", True)
         self.create_image_asset("img_bullet_tracer", "images/bullet_tracer.png", True)
         self.create_image_asset("img_enemy", "images/enemy.png", True)
         # self.create_image_asset("img_enemy_seeker", "images/enemy_seeker.png", True)
