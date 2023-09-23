@@ -133,6 +133,7 @@ class Boss(GameObject):
         bullet.set_rotation(target_x, target_y)
         bullet.set_velocity(target_x, target_y, self.sp_bullet_speed)
         self.child_objects.append(bullet)
+        self.assets.sound_assets["snd_bullet_fire"].play()
 
     def fire_spiral_bullet(self, firing_angle):
         start_x = self.x + self.collision_radius * math.cos(firing_angle)
@@ -148,6 +149,7 @@ class Boss(GameObject):
         bullet.set_rotation(target_x, target_y)
         bullet.set_velocity(target_x, target_y, self.sf_bullet_speed)
         self.child_objects.append(bullet)
+        self.assets.sound_assets["snd_bullet_fire"].play()
 
     def stand_and_fire_bullets_in_spiral(self, dt):
         # fire bullets in a spiral
@@ -294,6 +296,7 @@ class Boss(GameObject):
         if other_object.type == "bullet" and other_object.bullet_type == "player":
             if self.has_collided_with(other_object):
                 print("boss collided with player bullet")
+                self.assets.sound_assets["snd_bullet_hit"].play()
                 self.take_damage(other_object.damage)
                 # if I am dead, then I was killed by the player
                 if self.dead:
@@ -302,6 +305,7 @@ class Boss(GameObject):
         if other_object.type == "player":
             if self.has_collided_with(other_object):
                 print("boss collided with player")
+                self.assets.sound_assets["snd_collision"].play()
                 self.take_damage(other_object.damage)
                 other_object.take_damage(self.damage)
         if other_object.type == "dark_matter" and self.current_movement_mode == "seek_dark_matter":

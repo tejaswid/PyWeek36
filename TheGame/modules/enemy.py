@@ -127,6 +127,7 @@ class Enemy(GameObject):
                 bullet.set_velocity(player_x, player_y, self.shooter_bullet_speed)
                 bullet.collision_radius = self.shooter_bullet_radius
                 self.child_objects.append(bullet)
+                self.assets.sound_assets["snd_bullet_fire"].play()
 
             # small random velocity
             self.velocity = utils.random_velocity(self.speed)
@@ -217,6 +218,7 @@ class Enemy(GameObject):
         if other_object.type == "bullet" and other_object.bullet_type == "player":
             if self.has_collided_with(other_object):
                 print("enemy collided with player bullet")
+                self.assets.sound_assets["snd_bullet_hit"].play()
                 self.take_damage(other_object.damage)
                 # remove bullet. again needed to possibly overcome the framerate issue
                 other_object.dead = True
@@ -227,6 +229,7 @@ class Enemy(GameObject):
         if other_object.type in ["player", "asteroid"]:
             if self.has_collided_with(other_object):
                 print("enemy collided with ", other_object.type)
+                self.assets.sound_assets["snd_collision"].play()
                 self.take_damage(other_object.damage)
                 # player takes damage, needed to possibly overcome the framerate issue
                 other_object.take_damage(self.damage)

@@ -111,6 +111,7 @@ class Bullet(GameObject):
         if other_object.type in ["enemy", "asteroid"] and self.bullet_type == "player":
             if self.has_collided_with(other_object):
                 print("player bullet collided with ", other_object.type)
+                self.assets.sound_assets["snd_bullet_hit"].play()
                 # remove bullet
                 self.dead = True
                 # reduce health of enemy. This is needed to possibly overcome the framerate problem
@@ -136,12 +137,14 @@ class Bullet(GameObject):
         if other_object.type == "player" and self.bullet_type == "enemy":
             if self.has_collided_with(other_object):
                 print("enemy bullet collided with player")
+                self.assets.sound_assets["snd_bullet_hit"].play()
                 self.dead = True
                 other_object.take_damage(self.damage)
         # handle collision with boss
         if other_object.type == "boss" and self.bullet_type == "player":
             if self.has_collided_with(other_object):
                 print("player bullet collided with boss")
+                self.assets.sound_assets["snd_bullet_hit"].play()
                 # remove bullet
                 self.dead = True
                 # reduce health of boss. This is needed to possibly overcome the framerate problem

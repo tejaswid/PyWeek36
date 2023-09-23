@@ -30,6 +30,7 @@ class Powerup(GameObject):
         self.powerup_types = ["health", "shield", "speed", "damage"]
         self.powerup_type = random.choice(self.powerup_types)
         self.update_sprite()
+        self.assets.sound_assets["snd_powerup_spawn"].play()
 
     def update_sprite(self):
         if self.powerup_type == "health":
@@ -51,6 +52,7 @@ class Powerup(GameObject):
         # handle collision with player
         if other_object.type == "player":
             if self.has_collided_with(other_object):
+                self.assets.sound_assets["snd_powerup_pickup"].play()
                 self.dead = True
                 print("powerup collided with player")
                 if self.powerup_type == "health":

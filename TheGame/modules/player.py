@@ -158,6 +158,7 @@ class Player(GameObject):
         bullet.set_velocity(target_x, target_y)
         bullet.set_type("player")
         self.child_objects.append(bullet)
+        self.assets.sound_assets["snd_bullet_fire"].play()
 
     def fire_tracer(self, target_x, target_y):
         tracer = Bullet(
@@ -209,12 +210,14 @@ class Player(GameObject):
                 self.take_damage(other_object.damage)
                 # enemy takes damage, needed to possibly overcome the framerate issue
                 other_object.take_damage(self.damage)
+                self.assets.sound_assets["snd_collision"].play()
 
         # handle collision with powerup
         if other_object.type == "powerup":
             if self.has_collided_with(other_object):
                 other_object.dead = True
                 print("player collided with powerup")
+                self.assets.sound_assets["snd_powerup_pickup"].play()
                 if other_object.powerup_type == "health":
                     self.take_damage(-other_object.damage)
                 elif other_object.powerup_type == "shield":
@@ -231,6 +234,7 @@ class Player(GameObject):
                 and self.in_arbitrary_motion is False
             ):
                 print("player collided with dark matter")
+                self.assets.sound_assets["snd_darkmatter_collide"].play()
                 self.take_damage(other_object.damage)
                 # deflect the player in an arbitrary direction and spin
                 self.initiate_arbitrary_motion()
@@ -239,6 +243,7 @@ class Player(GameObject):
         if other_object.type == "bullet" and other_object.bullet_type == "enemy":
             if self.has_collided_with(other_object):
                 print("player collided with enemy bullet")
+                self.assets.sound_assets["snd_bullet_hit"].play()
                 self.take_damage(other_object.damage)
                 other_object.dead = True
 
@@ -246,5 +251,6 @@ class Player(GameObject):
         if other_object.type == "boss":
             if self.has_collided_with(other_object):
                 print("player collided with boss")
+                self.assets.sound_assets["snd_collision"].play()
                 self.take_damage(other_object.damage)
                 other_object.take_damage(self.damage)
