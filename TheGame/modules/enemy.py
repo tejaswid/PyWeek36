@@ -56,7 +56,13 @@ class Enemy(GameObject):
 
     def update_sprite(self):
         if self.enemy_type == "seeker":
-            self.image = self.assets.image_assets["img_enemy_seeker"]
+            # self.image = self.assets.image_assets["img_enemy_seeker"]
+            self.enemy_seeker_sprites = [self.assets.image_assets["img_enemy_seeker_s1"],
+                               self.assets.image_assets["img_enemy_seeker_s2"],
+                               self.assets.image_assets["img_enemy_seeker_s1"],
+                               self.assets.image_assets["img_enemy_seeker_s3"]]
+            self.enemy_seeker_animation = Animation.from_image_sequence(self.enemy_seeker_sprites, duration=0.3, loop=True)
+            self.image = self.enemy_seeker_animation
         elif self.enemy_type == "shooter":
             self.enemy_shooter_sprites = [self.assets.image_assets["img_enemy_shooter_s1"],
                                self.assets.image_assets["img_enemy_shooter_s2"],
