@@ -83,6 +83,7 @@ class GameAssets(object):
         self.create_image_asset("img_bkg_default", "images/screen_default.png", True)
         self.create_image_asset("img_bkg_game_over", "images/screen_game_over.png", True)
         self.create_image_asset("img_bkg_won", "images/screen_won.png", True)
+        self.create_image_asset("img_bkg_instructions", "images/screen_instructions.png", True)
         self.create_image_asset("img_bkg_1_1", "images/bkg_1_1.png", True)
         self.create_image_asset("img_bkg_1_2", "images/bkg_1_2.png", True)
         self.create_image_asset("img_bkg_2_1", "images/Purple_Nebula_06-1024x1024.png", True)

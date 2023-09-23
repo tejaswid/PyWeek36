@@ -14,6 +14,10 @@ class Background(GameObject):
             images = [
                 game_assets.image_assets["img_bkg_default"],
             ]
+        elif level == 0.5:
+            images = [
+                game_assets.image_assets["img_bkg_instructions"],
+            ]
         elif level == 1:
             images = [
                 game_assets.image_assets["img_bkg_1_1"],
