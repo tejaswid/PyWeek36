@@ -7,6 +7,7 @@ from pyglet import shapes
 from modules.game_assets import GameAssets
 from modules.player import Player
 from modules.background import Background
+from modules.foreground import Foreground
 from modules.game_state import GameState
 
 from modules.powerup_spawner import PowerupSpawner
@@ -145,6 +146,12 @@ def run():
             batch=main_batch,
             group=groups[0],
         )
+
+        # create some forground neublae
+        fg_1 = Foreground(assets, x=300, y=500, batch=main_batch, group=groups[8])
+        fg_2 = Foreground(assets, x=1800, y=1700, batch=main_batch, group=groups[8])
+        game_objects.append(fg_1)
+        game_objects.append(fg_2)
 
         # spawn the player
         player_1 = Player(

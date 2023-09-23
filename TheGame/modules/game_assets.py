@@ -83,6 +83,8 @@ class GameAssets(object):
         self.create_image_asset("img_bkg_1_2", "images/bkg_1_2.png", True)
         self.create_image_asset("img_bkg_2_1", "images/Purple_Nebula_06-1024x1024.png", True)
         self.create_image_asset("img_bkg_2_2", "images/Purple_Nebula_07-1024x1024.png", True)
+        self.create_image_asset("img_foreground_1", "images/foreground_1.png", True)
+        self.create_image_asset("img_foreground_2", "images/foreground_2.png", True)
         self.create_image_asset("img_dark_matter", "images/dark_matter.png", True)
         self.create_image_asset("img_dark_matter_invisible", "images/dark_matter_invisible.png", True)
         self.create_image_asset("img_dark_matter_revealed_1", "images/dark_matter_revealed_1.png", True)
