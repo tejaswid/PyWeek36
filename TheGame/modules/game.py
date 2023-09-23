@@ -45,12 +45,12 @@ def run():
     assets = GameAssets()
 
     # background music score
-    background_music = assets.sound_assets["snd_default_bkg"]
+    background_music = assets.sound_assets["snd_default_bkg_2"]
     boss_bgm = assets.sound_assets["snd_boss_bkg"]
+
     p = pyglet.media.Player()
     p.queue(background_music)
     p.queue(boss_bgm)
-    p.queue(background_music)
     p.loop = True
     p.play()
 
@@ -485,8 +485,9 @@ def run():
             print("total dark matter: ", len(game_state.dark_matter_positions))
             game_state.should_spawn_boss = False
             game_objects.extend(boss_spawner.spawn(0.1))
+            p.queue(background_music)
             p.next_source()
-            p.loop = True
+            
 
     def handle_level_change():
         if game_state.level == -2:
@@ -529,6 +530,7 @@ def run():
                 game_state.level = 2
                 game_state.change_level = False
                 game_state.should_spawn_boss = True
+                p.queue(boss_bgm)
                 p.next_source()
 
         elif game_state.level == 2:
@@ -538,7 +540,10 @@ def run():
                 remove_non_essential_objects()
                 # reset spawners
                 reset_spawners()
+                p.queue(background_music)
+                p.next_source()
                 if game_state.game_won:
+                    assets.sound_assets["snd_win"].play()
                     print("game won")
                     load_screen("won")
                     game_state.level = 3
