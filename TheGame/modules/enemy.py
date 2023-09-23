@@ -35,7 +35,7 @@ class Enemy(GameObject):
 
         self.enemy_types = ["seeker", "shooter", "spear"]
         self.enemy_type = random.choice(self.enemy_types)
-        self.update_sprite()
+        
 
         # parameters for seeker
         self.enemy_seeker_sprites = [self.assets.image_assets["img_enemy_seeker_s1"],
@@ -71,6 +71,8 @@ class Enemy(GameObject):
         self.enemy_spear_sprites = [self.assets.image_assets["img_enemy_spear_s1"],
                                     self.assets.image_assets["img_enemy_spear_s2"]]
         self.enemy_spear_animation = Animation.from_image_sequence(self.enemy_spear_sprites, duration=0.5, loop=True)
+
+        self.update_sprite()
 
     def update_sprite(self):
         if self.enemy_type == "seeker":
@@ -175,7 +177,8 @@ class Enemy(GameObject):
         else:
             if self.spear_current_distance >= self.spear_max_distance:
                 self.spear_active = False
-                # do this with two booleans self.image = self.enemy_spear_animation
+                # do this with two booleans 
+                self.image = self.enemy_spear_animation
                 self.spear_current_distance = 0
                 self.velocity = [0, 0]
                 self.spear_timer = 0
