@@ -10,7 +10,8 @@ class GameAssets(object):
         """
         super(GameAssets, self).__init__(*args, **kwargs)
 
-        self.image_assets = dict()  # dictionary of game assets
+        self.image_assets = dict()  # dictionary of image assets
+        self.sound_assets = dict()  # dictionary of sound assets
 
         self.load_assets()
 
@@ -36,6 +37,19 @@ class GameAssets(object):
         if centered:
             self.set_anchor_at_centre(image_asset)
         self.image_assets.update({keyword: image_asset})
+
+    def create_sound_asset(self, keyword, file, shouldStream=False):
+        """
+        Creates an audio asset from the specified file and adds it to the
+        dictionary of sound assets using the specified keyword
+        :param keyword: Keyword with which to name the asset
+        :param file: File from which to create the asset
+        :param shouldStream: True if the source should be streamed from disk
+                          False if it should be entirely decoded into memory immediately.
+        """
+        sound_asset = pyglet.resource.media(file, streaming=shouldStream)
+        self.sound_assets.update({keyword: sound_asset})
+
 
     def load_assets(self):
         pyglet.resource.path = ["resources"]
@@ -112,3 +126,16 @@ class GameAssets(object):
         self.create_image_asset("img_boss_shield", "images/boss_shield.png", True)
         self.create_image_asset("img_story", "images/story.png", True)
         
+        ## load audio assets
+        self.create_sound_asset("snd_default_bkg", "sounds/Dafault_bgm_428858__supervanz__duskwalkin_loop.wav", True)
+        self.create_sound_asset("snd_boss_bkg", "sounds/Boss_bgm_198415__divinux__ambientdanger.wav", True)
+        self.create_sound_asset("snd_bullet_fire", "sounds/Bullet_fire_697730__sustainededed__small-laser.mp3", True)
+        self.create_sound_asset("snd_bullet_hit", "sounds/Bullet_impact_319226__worthahep88__single-rock-hitting-wood.wav", True)
+        self.create_sound_asset("snd_explosion", "sounds/Explosion_536548__cascoes__explosion.wav", True)
+        self.create_sound_asset("snd_collision", "sounds/", True)
+        self.create_sound_asset("snd_asteroid_destroyed", "sounds/Asteroid_explosion_546957__sieuamthanh__nolonduoinuoc1.wav", True)
+        self.create_sound_asset("snd_powerup_spawn", "sounds/Powerup_spawn_657938__matrixxx__scifi-popup-warning-notice-or-note.wav", True)
+        self.create_sound_asset("snd_powerup_pickup", "sounds/Powerup_pickup_523649__matrixxx__powerup-07.wav", True)
+        self.create_sound_asset("snd_win", "sounds/win_341984__unadamlar__winning.wav", True)
+        self.create_sound_asset("snd_gameover", "sounds/gameover.wav", True)
+        self.create_sound_asset("snd_darkmatter_collide", "sounds/Hit_Darkmatter_455215__matrixxx__cartoon-stunned-02.wav", True)
