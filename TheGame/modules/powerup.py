@@ -7,7 +7,7 @@ import pyglet.clock
 class Powerup(GameObject):
     def __init__(self, game_assets, game_state, *args, **kwargs):
         self.img = game_assets.image_assets["img_powerup"]
-        self.max_time = 8
+        self.max_time = 12
 
         super(Powerup, self).__init__(img=self.img, *args, **kwargs)
         pyglet.clock.schedule_once(self.die, self.max_time)
@@ -21,7 +21,7 @@ class Powerup(GameObject):
         # movement - only visual
         self.angular_velocity = random.uniform(-100, 100)
         # collision
-        self.collision_radius = 20
+        self.collision_radius = 40
         # time left
         self.time_left = self.max_time
         # negative damage = positive health
