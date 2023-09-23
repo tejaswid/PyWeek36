@@ -117,6 +117,12 @@ class GameObject(pyglet.sprite.Sprite):
         self.current_health = min(self.max_health, max(0, self.current_health - damage))
         if self.current_health <= 0:
             self.dead = True
+            if self.type == "player":
+                self.assets.sound_assets["snd_gameover"].play()
+            elif self.type in ["boss", "enemy"]:
+                self.assets.sound_assets["snd_explosion"].play()
+            elif self.type == "asteroid":
+                self.assets.sound_assets["snd_asteroid_destroyed"].play()
 
     def draw_damage_label(self, health_bar_batch):
         # draw damage label

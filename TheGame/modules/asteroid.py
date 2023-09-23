@@ -48,6 +48,7 @@ class Asteroid(GameObject):
         if other_object.type == "bullet" and other_object.bullet_type == "player":
             if self.has_collided_with(other_object):
                 print("asteroid collided with player bullet")
+                self.assets.sound_assets["snd_bullet_hit"].play()
                 self.take_damage(other_object.damage)
                 # if I am dead, then I was killed by the player
                 if self.dead:
@@ -57,6 +58,7 @@ class Asteroid(GameObject):
         if other_object.type in ["player", "enemy", "asteroid"]:
             if self.has_collided_with(other_object):
                 print("asteroid collided with player")
+                self.assets.sound_assets["snd_collision"].play()
                 self.take_damage(other_object.damage)
                 other_object.take_damage(self.damage)
 
