@@ -43,7 +43,7 @@ class GameAssets(object):
 
         # load images
         self.create_image_asset("img_player_ship", "images/player_ship.png", True)
-        self.create_image_asset("img_player_ship_with_shield", "images/player_ship_with_shield.png", True)
+        # self.create_image_asset("img_player_ship_with_shield", "images/player_ship_with_shield.png", True)
         self.create_image_asset("img_player_ship_with_shield_s1", "images/player_ship_with_shield_s1.png", True)
         self.create_image_asset("img_player_ship_with_shield_s2", "images/player_ship_with_shield_s2.png", True)
         self.create_image_asset("img_player_ship_with_shield_s3", "images/player_ship_with_shield_s3.png", True)
@@ -60,7 +60,12 @@ class GameAssets(object):
         self.create_image_asset("img_enemy", "images/enemy.png", True)
         self.create_image_asset("img_enemy_seeker", "images/enemy_seeker.png", True)
         self.create_image_asset("img_enemy_spear", "images/enemy_spear.png", True)
-        self.create_image_asset("img_enemy_shooter", "images/enemy_shooter.png", True)
+        # self.create_image_asset("img_enemy_shooter", "images/enemy_shooter.png", True)
+        self.create_image_asset("img_enemy_shooter_s1", "images/enemy_shooter_s1.png", True)
+        self.create_image_asset("img_enemy_shooter_s2", "images/enemy_shooter_s2.png", True)
+        self.create_image_asset("img_enemy_shooter_s3", "images/enemy_shooter_s3.png", True)
+        self.create_image_asset("img_enemy_shooter_s4", "images/enemy_shooter_s4.png", True)
+        self.create_image_asset("img_enemy_shooter_s5", "images/enemy_shooter_s5.png", True)
         self.create_image_asset("img_asteroid", "images/asteroid.png", True)
         self.create_image_asset("img_asteroid_2", "images/asteroid_2.png", True)
         self.create_image_asset("img_powerup", "images/powerup.png", True)

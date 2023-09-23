@@ -1,6 +1,8 @@
 import math
 import random
 
+from pyglet.image import Animation
+
 from modules.game_object import GameObject
 from modules.bullet import Bullet
 from modules import utils
@@ -56,7 +58,13 @@ class Enemy(GameObject):
         if self.enemy_type == "seeker":
             self.image = self.assets.image_assets["img_enemy_seeker"]
         elif self.enemy_type == "shooter":
-            self.image = self.assets.image_assets["img_enemy_shooter"]
+            self.enemy_shooter_sprites = [self.assets.image_assets["img_enemy_shooter_s1"],
+                               self.assets.image_assets["img_enemy_shooter_s2"],
+                               self.assets.image_assets["img_enemy_shooter_s3"],
+                               self.assets.image_assets["img_enemy_shooter_s4"],
+                               self.assets.image_assets["img_enemy_shooter_s5"]]
+            self.enemy_shooter_animation = Animation.from_image_sequence(self.enemy_shooter_sprites, duration=0.3, loop=True)
+            self.image = self.enemy_shooter_animation
         elif self.enemy_type == "spear":
             self.image = self.assets.image_assets["img_enemy_spear"]
         else:

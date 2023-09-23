@@ -65,7 +65,7 @@ class Player(GameObject):
         self.shield_max_health = 100
         self.shield_current_health = self.shield_max_health
         self.shield_active = False
-        self.shield_sprite = self.assets.image_assets["img_player_ship_with_shield"]
+        # self.shield_sprite = self.assets.image_assets["img_player_ship_with_shield"]
 
         self.shield_sprites = [self.assets.image_assets["img_player_ship_with_shield_s1"],
                                self.assets.image_assets["img_player_ship_with_shield_s2"],
