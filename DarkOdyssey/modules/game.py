@@ -28,7 +28,7 @@ def run():
     window = pyglet.window.Window(
         width=game_state.viewport_width,
         height=game_state.viewport_height,
-        caption="The game",
+        caption="Dark Odyssey",
         resizable=False,
     )
 
